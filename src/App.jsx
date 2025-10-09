@@ -79,7 +79,7 @@ const Navbar = () => {
           </div>
           
           {/* Navigation Links */}
-          <div className="flex space-x-8">
+          <div className="flex items-center space-x-8">
             <button 
               onClick={() => scrollToSection('home')}
               className="text-text-secondary hover:text-text-primary transition-colors duration-300 font-medium tracking-wide uppercase text-sm"
@@ -97,6 +97,23 @@ const Navbar = () => {
               className="text-text-secondary hover:text-text-primary transition-colors duration-300 font-medium tracking-wide uppercase text-sm"
             >
               Contact Us
+            </button>
+            
+            {/* Profile Icon */}
+            <button className="p-2 rounded-full bg-surface/30 hover:bg-surface/50 hover:shadow-lg hover:shadow-primary/20 transition-all duration-300 group">
+              <svg 
+                className="w-6 h-6 text-text-secondary group-hover:text-text-primary transition-colors duration-300" 
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24"
+              >
+                <path 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round" 
+                  strokeWidth={2} 
+                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" 
+                />
+              </svg>
             </button>
           </div>
         </div>
@@ -362,6 +379,35 @@ const ContactSection = () => {
   )
 }
 
+// Footer Component
+const Footer = () => {
+  return (
+    <footer className="bg-background border-t border-surface/30">
+      <div className="max-w-7xl mx-auto px-6 py-8">
+        <div className="text-center space-y-4">
+          {/* Copyright */}
+          <p className="text-text-secondary text-sm">
+            © 2025 Apex Care. All rights reserved.
+          </p>
+          
+          {/* Footer Links */}
+          <div className="flex justify-center space-x-8">
+            <button className="text-text-secondary hover:text-text-primary transition-colors duration-300 text-sm font-medium">
+              Privacy Policy
+            </button>
+            <button className="text-text-secondary hover:text-text-primary transition-colors duration-300 text-sm font-medium">
+              Terms of Service
+            </button>
+            <button className="text-text-secondary hover:text-text-primary transition-colors duration-300 text-sm font-medium">
+              Support
+            </button>
+          </div>
+        </div>
+      </div>
+    </footer>
+  )
+}
+
 // Main App Component
 const App = () => {
   return (
@@ -370,6 +416,7 @@ const App = () => {
       <HeroSection />
       <AboutSection />
       <ContactSection />
+      <Footer />
     </div>
   )
 }
