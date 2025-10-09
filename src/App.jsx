@@ -183,17 +183,17 @@ const HeroSection = () => {
             </motion.button>
           </motion.div>
 
-          {/* Card 2: Get Appointment */}
+          {/* Card 2: Our Services */}
           <motion.div
             whileHover={{ scale: 1.05, y: -5 }}
             transition={{ duration: 0.3 }}
             className="bg-surface/50 backdrop-blur-sm border border-surface/30 rounded-xl p-8 text-center hover:shadow-xl hover:shadow-primary/10 transition-all duration-300"
           >
             <h3 className="text-2xl font-bold text-text-primary mb-4 tracking-wide">
-              Get Appointment
+              Our Services
             </h3>
             <p className="text-text-secondary mb-6 leading-relaxed">
-              Book appointments with top specialists anytime.
+              Remote consultations, IoT health monitoring, digital prescriptions, and AI-powered diagnostics for comprehensive care.
             </p>
             <motion.button
               whileHover={{ scale: 1.05 }}
@@ -201,28 +201,28 @@ const HeroSection = () => {
               onClick={scrollToContact}
               className="bg-gradient-to-r from-primary to-accent text-white px-6 py-3 rounded-full text-sm font-semibold tracking-wide uppercase shadow-lg hover:shadow-xl transition-all duration-300 hover:shadow-primary/25"
             >
-              Book Now
+              Learn More
             </motion.button>
           </motion.div>
 
-          {/* Card 3: Get Treatment */}
+          {/* Card 3: Paramedical Staff */}
           <motion.div
             whileHover={{ scale: 1.05, y: -5 }}
             transition={{ duration: 0.3 }}
             className="bg-surface/50 backdrop-blur-sm border border-surface/30 rounded-xl p-8 text-center hover:shadow-xl hover:shadow-primary/10 transition-all duration-300"
           >
             <h3 className="text-2xl font-bold text-text-primary mb-4 tracking-wide">
-              Get Treatment
+              Paramedical Staff
             </h3>
             <p className="text-text-secondary mb-6 leading-relaxed">
-              Connect with doctors for remote diagnosis and care.
+              Board-certified doctors, specialists, and healthcare professionals available 24/7 for expert medical care.
             </p>
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="bg-gradient-to-r from-primary to-accent text-white px-6 py-3 rounded-full text-sm font-semibold tracking-wide uppercase shadow-lg hover:shadow-xl transition-all duration-300 hover:shadow-primary/25"
             >
-              Start Now
+              Meet Our Team
             </motion.button>
           </motion.div>
         </motion.div>
