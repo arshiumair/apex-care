@@ -67,9 +67,16 @@ const Navbar = () => {
       transition={{ duration: 0.8, ease: "easeOut" }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled 
-          ? 'bg-background/80 backdrop-blur-md border-b border-surface/50' 
+          ? 'bg-background/80 backdrop-blur-md' 
           : 'bg-transparent'
       }`}
+      style={{
+        borderBottom: '2px solid transparent',
+        backgroundImage: isScrolled 
+          ? 'linear-gradient(#0F172A, #0F172A) padding-box, linear-gradient(to right, #2563EB, #14B8A6) border-box'
+          : 'linear-gradient(transparent, transparent) padding-box, linear-gradient(to right, #2563EB, #14B8A6) border-box',
+        boxShadow: '0 2px 8px rgba(37, 99, 235, 0.4), 0 2px 8px rgba(20, 184, 166, 0.4)'
+      }}
     >
       <div className="max-w-7xl mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
@@ -132,7 +139,7 @@ const HeroSection = () => {
     <section id="home" className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-surface overflow-hidden">
       <FloatingIcons />
       
-      <div className="relative z-10 text-center px-6 max-w-4xl mx-auto">
+      <div className="relative z-10 text-center px-6 max-w-4xl mx-auto mt-16">
         <motion.h1 
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -166,18 +173,23 @@ const HeroSection = () => {
           <motion.div
             whileHover={{ scale: 1.05, y: -5 }}
             transition={{ duration: 0.3 }}
-            className="bg-surface/50 backdrop-blur-sm border border-surface/30 rounded-xl p-8 text-center hover:shadow-xl hover:shadow-primary/10 transition-all duration-300"
+            className="relative bg-surface/50 backdrop-blur-sm rounded-xl p-6 text-center hover:shadow-xl hover:shadow-primary/10 transition-all duration-300"
+            style={{
+              border: '2px solid transparent',
+              background: 'linear-gradient(#1E293B, #1E293B) padding-box, linear-gradient(135deg, #2563EB, #14B8A6) border-box',
+              boxShadow: '0 0 8px rgba(37, 99, 235, 0.5), 0 0 10px rgba(20, 184, 166, 0.5)'
+            }}
           >
-            <h3 className="text-2xl font-bold text-text-primary mb-4 tracking-wide">
-              Get Sign-In
+            <h3 className="text-2xl font-bold text-text-primary mb-3 tracking-wide">
+              Get-In
             </h3>
-            <p className="text-text-secondary mb-6 leading-relaxed">
+            <p className="text-text-secondary mb-5 leading-relaxed">
               Access your account to manage your health easily.
             </p>
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="bg-gradient-to-r from-primary to-accent text-white px-6 py-3 rounded-full text-sm font-semibold tracking-wide uppercase shadow-lg hover:shadow-xl transition-all duration-300 hover:shadow-primary/25"
+              className="bg-gradient-to-r from-primary to-accent text-white px-4 py-3 rounded-full text-sm font-semibold tracking-wide uppercase shadow-lg hover:shadow-xl transition-all duration-300 hover:shadow-primary/25"
             >
               Sign In
             </motion.button>
@@ -187,13 +199,18 @@ const HeroSection = () => {
           <motion.div
             whileHover={{ scale: 1.05, y: -5 }}
             transition={{ duration: 0.3 }}
-            className="bg-surface/50 backdrop-blur-sm border border-surface/30 rounded-xl p-8 text-center hover:shadow-xl hover:shadow-primary/10 transition-all duration-300"
+            className="relative bg-surface/50 backdrop-blur-sm rounded-xl p-6 text-center hover:shadow-xl hover:shadow-primary/10 transition-all duration-300"
+            style={{
+              border: '2px solid transparent',
+              background: 'linear-gradient(#1E293B, #1E293B) padding-box, linear-gradient(135deg, #2563EB, #14B8A6) border-box',
+              boxShadow: '0 0 8px rgba(37, 99, 235, 0.5), 0 0 10px rgba(20, 184, 166, 0.5)'
+            }}
           >
-            <h3 className="text-2xl font-bold text-text-primary mb-4 tracking-wide">
+            <h3 className="text-2xl font-bold text-text-primary mb-3 tracking-wide">
               Our Services
             </h3>
-            <p className="text-text-secondary mb-6 leading-relaxed">
-              Remote consultations, IoT health monitoring, digital prescriptions, and AI-powered diagnostics for comprehensive care.
+            <p className="text-text-secondary mb-5 leading-relaxed">
+              Find our services to get extensive care.
             </p>
             <motion.button
               whileHover={{ scale: 1.05 }}
@@ -209,13 +226,18 @@ const HeroSection = () => {
           <motion.div
             whileHover={{ scale: 1.05, y: -5 }}
             transition={{ duration: 0.3 }}
-            className="bg-surface/50 backdrop-blur-sm border border-surface/30 rounded-xl p-8 text-center hover:shadow-xl hover:shadow-primary/10 transition-all duration-300"
+            className="relative bg-surface/50 backdrop-blur-sm rounded-xl p-6 text-center hover:shadow-xl hover:shadow-primary/10 transition-all duration-300"
+            style={{
+              border: '2px solid transparent',
+              background: 'linear-gradient(#1E293B, #1E293B) padding-box, linear-gradient(135deg, #2563EB, #14B8A6) border-box',
+              boxShadow: '0 0 8px rgba(37, 99, 235, 0.5), 0 0 10px rgba(20, 184, 166, 0.5)'
+            }}
           >
-            <h3 className="text-2xl font-bold text-text-primary mb-4 tracking-wide">
-              Paramedical Staff
+            <h3 className="text-2xl font-bold text-text-primary mb-3 tracking-wide">
+              Our Staff
             </h3>
-            <p className="text-text-secondary mb-6 leading-relaxed">
-              Board-certified doctors, specialists, and healthcare professionals available 24/7 for expert medical care.
+            <p className="text-text-secondary mb-5 leading-relaxed">
+              Find our Board-certified doctors.
             </p>
             <motion.button
               whileHover={{ scale: 1.05 }}
