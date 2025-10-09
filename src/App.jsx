@@ -107,7 +107,12 @@ const Navbar = () => {
             </button>
             
             {/* Profile Icon */}
-            <button className="p-2 rounded-full bg-surface/30 hover:bg-surface/50 hover:shadow-lg hover:shadow-primary/20 transition-all duration-300 group">
+            <button 
+              className="p-2 rounded-full bg-surface/30 hover:bg-surface/50 hover:shadow-lg hover:shadow-primary/20 transition-all duration-300 group"
+              style={{
+                boxShadow: '0 0 6px rgba(37, 99, 235, 0.3), 0 0 6px rgba(20, 184, 166, 0.3)'
+              }}
+            >
               <svg 
                 className="w-6 h-6 text-text-secondary group-hover:text-text-primary transition-colors duration-300" 
                 fill="none" 
