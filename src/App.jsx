@@ -73,6 +73,11 @@ const Navbar = () => {
     >
       <div className="max-w-7xl mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
+          {/* Brand */}
+          <div className="text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+            Apex Care
+          </div>
+          
           {/* Navigation Links */}
           <div className="flex space-x-8">
             <button 
@@ -93,11 +98,6 @@ const Navbar = () => {
             >
               Contact Us
             </button>
-          </div>
-          
-          {/* Brand */}
-          <div className="text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-            Apex Care
           </div>
         </div>
       </div>
@@ -132,23 +132,83 @@ const HeroSection = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.6 }}
-          className="text-xl md:text-2xl text-text-secondary mb-12 leading-relaxed max-w-3xl mx-auto"
+          className="text-xl md:text-2xl text-text-secondary mb-16 leading-relaxed max-w-3xl mx-auto"
         >
           Apex Care connects doctors and patients through remote appointments, IoT health tracking, 
           and digital prescriptions — all in one platform.
         </motion.p>
         
-        <motion.button
+        {/* Action Cards */}
+        <motion.div 
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 1 }}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={scrollToContact}
-          className="bg-gradient-to-r from-primary to-accent text-white px-8 py-4 rounded-full text-lg font-semibold tracking-wide uppercase shadow-lg hover:shadow-xl transition-all duration-300 hover:shadow-primary/25"
+          className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto"
         >
-          Book Appointment
-        </motion.button>
+          {/* Card 1: Get Sign-In */}
+          <motion.div
+            whileHover={{ scale: 1.05, y: -5 }}
+            transition={{ duration: 0.3 }}
+            className="bg-surface/50 backdrop-blur-sm border border-surface/30 rounded-xl p-8 text-center hover:shadow-xl hover:shadow-primary/10 transition-all duration-300"
+          >
+            <h3 className="text-2xl font-bold text-text-primary mb-4 tracking-wide">
+              Get Sign-In
+            </h3>
+            <p className="text-text-secondary mb-6 leading-relaxed">
+              Access your account to manage your health easily.
+            </p>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="bg-gradient-to-r from-primary to-accent text-white px-6 py-3 rounded-full text-sm font-semibold tracking-wide uppercase shadow-lg hover:shadow-xl transition-all duration-300 hover:shadow-primary/25"
+            >
+              Sign In
+            </motion.button>
+          </motion.div>
+
+          {/* Card 2: Get Appointment */}
+          <motion.div
+            whileHover={{ scale: 1.05, y: -5 }}
+            transition={{ duration: 0.3 }}
+            className="bg-surface/50 backdrop-blur-sm border border-surface/30 rounded-xl p-8 text-center hover:shadow-xl hover:shadow-primary/10 transition-all duration-300"
+          >
+            <h3 className="text-2xl font-bold text-text-primary mb-4 tracking-wide">
+              Get Appointment
+            </h3>
+            <p className="text-text-secondary mb-6 leading-relaxed">
+              Book appointments with top specialists anytime.
+            </p>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={scrollToContact}
+              className="bg-gradient-to-r from-primary to-accent text-white px-6 py-3 rounded-full text-sm font-semibold tracking-wide uppercase shadow-lg hover:shadow-xl transition-all duration-300 hover:shadow-primary/25"
+            >
+              Book Now
+            </motion.button>
+          </motion.div>
+
+          {/* Card 3: Get Treatment */}
+          <motion.div
+            whileHover={{ scale: 1.05, y: -5 }}
+            transition={{ duration: 0.3 }}
+            className="bg-surface/50 backdrop-blur-sm border border-surface/30 rounded-xl p-8 text-center hover:shadow-xl hover:shadow-primary/10 transition-all duration-300"
+          >
+            <h3 className="text-2xl font-bold text-text-primary mb-4 tracking-wide">
+              Get Treatment
+            </h3>
+            <p className="text-text-secondary mb-6 leading-relaxed">
+              Connect with doctors for remote diagnosis and care.
+            </p>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="bg-gradient-to-r from-primary to-accent text-white px-6 py-3 rounded-full text-sm font-semibold tracking-wide uppercase shadow-lg hover:shadow-xl transition-all duration-300 hover:shadow-primary/25"
+            >
+              Start Now
+            </motion.button>
+          </motion.div>
+        </motion.div>
       </div>
     </section>
   )
