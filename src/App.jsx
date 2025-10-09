@@ -267,33 +267,56 @@ const AboutSection = () => {
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 1 }}
         viewport={{ once: true }}
-        className="text-center px-6 max-w-4xl mx-auto"
+        className="px-6 max-w-7xl mx-auto"
       >
-        <h2 className="text-4xl md:text-6xl font-bold text-text-primary mb-8 tracking-tight">
-          About <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">Apex Care</span>
-        </h2>
-        
-        <div className="space-y-6 text-lg md:text-xl text-text-secondary leading-relaxed">
-          <p>
-            Apex Care represents the future of healthcare delivery, seamlessly integrating cutting-edge 
-            Internet of Things (IoT) technology with compassionate patient care. Our platform revolutionizes 
-            how medical professionals connect with patients, breaking down geographical barriers and 
-            making quality healthcare accessible to everyone, everywhere.
-          </p>
-          
-          <p>
-            Through our advanced IoT ecosystem, we enable real-time health monitoring, predictive analytics, 
-            and personalized treatment plans. Our smart devices continuously track vital signs, medication 
-            adherence, and lifestyle factors, providing doctors with comprehensive insights to deliver 
-            proactive, data-driven care.
-          </p>
-          
-          <p>
-            From remote consultations and digital prescriptions to AI-powered health insights and 
-            emergency response systems, Apex Care is building a connected healthcare ecosystem that 
-            puts patients at the center of their own health journey while empowering healthcare 
-            providers with unprecedented tools for diagnosis and treatment.
-          </p>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          {/* Text Content */}
+          <div className="text-center lg:text-left">
+            <h2 className="text-4xl md:text-6xl font-bold text-text-primary mb-8 tracking-tight">
+              About <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">Apex Care</span>
+            </h2>
+            
+            <div className="space-y-6 text-lg md:text-xl text-text-secondary leading-relaxed">
+              <p>
+                Apex Care is redefining healthcare by combining IoT technology with personalized patient care. 
+                Our platform connects doctors and patients beyond geographical limits, making quality healthcare truly accessible.
+
+
+              </p>
+              
+              <p>
+              Using smart IoT devices, we enable real-time health monitoring, predictive insights, and data-driven treatment plans. 
+              Doctors gain instant access to vital signs and lifestyle data to provide proactive, informed care.
+              </p>
+              
+              <p>
+              From remote consultations to digital prescriptions and AI health insights, Apex Care empowers patients to take charge of their well-being while giving doctors the tools for smarter, connected healthcare.
+              </p>
+            </div>
+          </div>
+
+          {/* Image Content */}
+          <div className="flex justify-center lg:justify-end">
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 1, delay: 0.3 }}
+              viewport={{ once: true }}
+              className="relative"
+            >
+              <img
+                // src="https://home.ecri.org/cdn/shop/articles/Utilizing_Data_from_Wearable_Devices.jpg?v=1713757980&width=2048"
+                src="https://img.etimg.com/thumb/msid-123331547,width-480,height-360,imgsize-1351228,resizemode-75/privacy-and-data-safety-concerns.jpg"
+                alt="Modern healthcare technology with doctor using digital devices for remote patient monitoring"
+                className="w-full max-w-md rounded-2xl shadow-lg"
+                style={{
+                  boxShadow: '0 0 8px rgba(37, 99, 235, 0.3), 0 0 8px rgba(20, 184, 166, 0.3)'
+                }}
+              />
+              {/* Overlay gradient for better text contrast if needed */}
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-t from-black/10 to-transparent pointer-events-none"></div>
+            </motion.div>
+          </div>
         </div>
       </motion.div>
     </section>
