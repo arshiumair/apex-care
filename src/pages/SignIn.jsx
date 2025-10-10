@@ -163,7 +163,7 @@ const SignIn = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.4 }}
-                className="relative w-full h-16 mb-8"
+                className="relative w-full h-14 mb-8"
               >
                 {/* Main Toggle Container */}
                 <div className="relative w-full h-full bg-surface/50 backdrop-blur-sm rounded-full border border-white/10 overflow-hidden">
@@ -234,15 +234,12 @@ const SignIn = () => {
                 </div>
               </motion.div>
 
-              {/* Sign In Card */}
+              {/* Sign In Form - No Container Background */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.6 }}
-                className="bg-surface/70 backdrop-blur-xl rounded-2xl border border-white/10 shadow-lg p-8 hover:shadow-xl transition-all duration-300"
-                style={{
-                  boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(20, 184, 166, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
-                }}
+                className="space-y-6"
               >
                 {/* Sign In Form */}
                 <form onSubmit={handleSubmit} className="space-y-6">
@@ -262,9 +259,15 @@ const SignIn = () => {
                       onChange={handleInputChange}
                       required
                       aria-label="Email address"
-                      className="w-full px-4 py-4 bg-background/50 backdrop-blur-sm border border-surface/50 rounded-xl text-text-primary placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent transition-all duration-300 shadow-inner"
+                      className="w-full px-6 py-3 bg-transparent border border-surface/30 rounded-full text-text-primary placeholder-gray-400 focus:outline-none transition-all duration-300"
                       style={{
-                        boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.1)'
+                        boxShadow: '0 0 8px rgba(37, 99, 235, 0.3), 0 0 8px rgba(20, 184, 166, 0.3)'
+                      }}
+                      onFocus={(e) => {
+                        e.target.style.boxShadow = '0 0 12px rgba(37, 99, 235, 0.5), 0 0 12px rgba(20, 184, 166, 0.5)'
+                      }}
+                      onBlur={(e) => {
+                        e.target.style.boxShadow = '0 0 8px rgba(37, 99, 235, 0.3), 0 0 8px rgba(20, 184, 166, 0.3)'
                       }}
                       placeholder="Enter your email"
                     />
@@ -286,9 +289,15 @@ const SignIn = () => {
                       onChange={handleInputChange}
                       required
                       aria-label="Password"
-                      className="w-full px-4 py-4 bg-background/50 backdrop-blur-sm border border-surface/50 rounded-xl text-text-primary placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent transition-all duration-300 shadow-inner"
+                      className="w-full px-6 py-3 bg-transparent border border-surface/30 rounded-full text-text-primary placeholder-gray-400 focus:outline-none transition-all duration-300"
                       style={{
-                        boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.1)'
+                        boxShadow: '0 0 8px rgba(37, 99, 235, 0.3), 0 0 8px rgba(20, 184, 166, 0.3)'
+                      }}
+                      onFocus={(e) => {
+                        e.target.style.boxShadow = '0 0 12px rgba(37, 99, 235, 0.5), 0 0 12px rgba(20, 184, 166, 0.5)'
+                      }}
+                      onBlur={(e) => {
+                        e.target.style.boxShadow = '0 0 8px rgba(37, 99, 235, 0.3), 0 0 8px rgba(20, 184, 166, 0.3)'
                       }}
                       placeholder="Enter your password"
                     />
@@ -303,7 +312,16 @@ const SignIn = () => {
                     whileTap={{ scale: 0.98 }}
                     type="submit"
                     aria-label="Sign In"
-                    className="w-full bg-gradient-to-r from-primary to-accent text-white py-4 rounded-xl text-lg font-semibold shadow-lg hover:shadow-xl hover:ring-2 hover:ring-accent/40 transition-all duration-300"
+                    className="w-full bg-gradient-to-r from-primary to-accent text-white py-3 rounded-full text-lg font-semibold transition-all duration-300"
+                    style={{
+                      boxShadow: '0 0 20px rgba(37, 99, 235, 0.4), 0 0 20px rgba(20, 184, 166, 0.4)'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.target.style.boxShadow = '0 0 30px rgba(37, 99, 235, 0.6), 0 0 30px rgba(20, 184, 166, 0.6)'
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.boxShadow = '0 0 20px rgba(37, 99, 235, 0.4), 0 0 20px rgba(20, 184, 166, 0.4)'
+                    }}
                   >
                     Sign In
                   </motion.button>
