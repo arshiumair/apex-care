@@ -1,11 +1,29 @@
 import React, { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Link } from 'react-router-dom'
-import aboutImage from '../../assets/about-section.jpg'
+import { Link, useNavigate } from 'react-router-dom'
+import signInImage from '../../assets/signin-page3.jpg'
 
 // Navbar Component (reused from main app)
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false)
+  const navigate = useNavigate()
+
+  // Handle navigation to homepage sections
+  const handleSectionNavigation = (sectionId) => {
+    // Navigate to homepage first
+    navigate('/')
+    
+    // Wait for navigation to complete, then scroll to section
+    setTimeout(() => {
+      const element = document.getElementById(sectionId)
+      if (element) {
+        element.scrollIntoView({ 
+          behavior: 'smooth',
+          block: 'start'
+        })
+      }
+    }, 150) // Slightly longer delay to ensure navigation completes
+  }
 
   React.useEffect(() => {
     const handleScroll = () => {
@@ -44,28 +62,31 @@ const Navbar = () => {
             Apex Care
           </Link>
           
-          {/* Navigation Links */}
-          <div className="flex items-center space-x-8">
-            <Link 
-              to="/"
-              className="text-text-secondary hover:text-text-primary transition-colors duration-300 font-medium tracking-wide uppercase text-sm"
-            >
-              Home
-            </Link>
-            <Link 
-              to="/"
-              className="text-text-secondary hover:text-text-primary transition-colors duration-300 font-medium tracking-wide uppercase text-sm"
-            >
-              About
-            </Link>
-            <Link 
-              to="/"
-              className="text-text-secondary hover:text-text-primary transition-colors duration-300 font-medium tracking-wide uppercase text-sm"
-            >
-              Contact Us
-            </Link>
-            
-            {/* Profile Icon */}
+            {/* Navigation Links */}
+            <div className="flex items-center space-x-8">
+              <button
+                onClick={() => handleSectionNavigation('home')}
+                aria-label="Navigate to Home section"
+                className="text-text-secondary hover:text-text-primary transition-colors duration-300 font-medium tracking-wide uppercase text-sm cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent focus:ring-opacity-50 rounded px-2 py-1"
+              >
+                Home
+              </button>
+              <button
+                onClick={() => handleSectionNavigation('about')}
+                aria-label="Navigate to About section"
+                className="text-text-secondary hover:text-text-primary transition-colors duration-300 font-medium tracking-wide uppercase text-sm cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent focus:ring-opacity-50 rounded px-2 py-1"
+              >
+                About
+              </button>
+              <button
+                onClick={() => handleSectionNavigation('contact')}
+                aria-label="Navigate to Contact section"
+                className="text-text-secondary hover:text-text-primary transition-colors duration-300 font-medium tracking-wide uppercase text-sm cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent focus:ring-opacity-50 rounded px-2 py-1"
+              >
+                Contact Us
+              </button>
+              
+              {/* Profile Icon */}
             <button 
               className="p-2 rounded-full bg-surface/30 hover:bg-surface/50 hover:shadow-lg hover:shadow-primary/20 transition-all duration-300 group"
               style={{
@@ -354,7 +375,7 @@ const SignIn = () => {
           >
             <div className="relative">
               <img
-                src={aboutImage}
+                src={signInImage}
                 alt="Doctor using laptop and smartphone with futuristic medical holograms for remote healthcare"
                 className="w-full max-w-lg max-h-[550px] object-cover rounded-2xl shadow-2xl"
               />
