@@ -158,42 +158,80 @@ const SignIn = () => {
                 </p>
               </div>
 
-              {/* User Type Toggle */}
+              {/* User Type Toggle - Diagonal Slash Design */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.4 }}
-                className="relative flex bg-surface/50 backdrop-blur-sm rounded-xl p-1 mb-8 border border-white/10"
+                className="relative w-full h-16 mb-8"
               >
-                <motion.div
-                  layout
-                  className={`absolute top-1 bottom-1 w-1/2 bg-gradient-to-r from-primary to-accent rounded-lg shadow-md ${
-                    userType === 'patient' ? 'translate-x-full' : 'translate-x-0'
-                  }`}
-                  transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                />
-                <button
-                  onClick={() => setUserType('doctor')}
-                  aria-label="Select Doctor role"
-                  className={`relative z-10 flex-1 py-3 px-4 rounded-lg text-sm font-medium transition-all duration-300 ${
-                    userType === 'doctor'
-                      ? 'text-white'
-                      : 'text-text-secondary hover:text-text-primary'
-                  }`}
-                >
-                  As Doctor
-                </button>
-                <button
-                  onClick={() => setUserType('patient')}
-                  aria-label="Select Patient role"
-                  className={`relative z-10 flex-1 py-3 px-4 rounded-lg text-sm font-medium transition-all duration-300 ${
-                    userType === 'patient'
-                      ? 'text-white'
-                      : 'text-text-secondary hover:text-text-primary'
-                  }`}
-                >
-                  As Patient
-                </button>
+                {/* Main Toggle Container */}
+                <div className="relative w-full h-full bg-surface/50 backdrop-blur-sm rounded-full border border-white/10 overflow-hidden">
+                  {/* Diagonal Slash Line */}
+                  <div 
+                    className="absolute top-0 left-1/2 w-px h-full bg-gradient-to-b from-transparent via-accent to-transparent transform -translate-x-1/2"
+                    style={{
+                      background: 'linear-gradient(to bottom, transparent 0%, #14B8A6 20%, #14B8A6 80%, transparent 100%)',
+                      boxShadow: '0 0 8px rgba(20, 184, 166, 0.6)'
+                    }}
+                  />
+                  
+                  {/* Active Background - Doctor Side */}
+                  <motion.div
+                    initial={false}
+                    animate={{
+                      scaleX: userType === 'doctor' ? 1 : 0,
+                      originX: 0
+                    }}
+                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                    className="absolute top-0 left-0 w-1/2 h-full bg-gradient-to-r from-primary to-accent"
+                    style={{
+                      clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)',
+                      boxShadow: '0 0 20px rgba(37, 99, 235, 0.4), 0 0 20px rgba(20, 184, 166, 0.4)'
+                    }}
+                  />
+                  
+                  {/* Active Background - Patient Side */}
+                  <motion.div
+                    initial={false}
+                    animate={{
+                      scaleX: userType === 'patient' ? 1 : 0,
+                      originX: 1
+                    }}
+                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                    className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-r from-primary to-accent"
+                    style={{
+                      clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)',
+                      boxShadow: '0 0 20px rgba(37, 99, 235, 0.4), 0 0 20px rgba(20, 184, 166, 0.4)'
+                    }}
+                  />
+                  
+                  {/* Doctor Button */}
+                  <button
+                    onClick={() => setUserType('doctor')}
+                    aria-label="Select Doctor role"
+                    className={`absolute top-0 left-0 w-1/2 h-full flex items-center justify-center text-sm font-medium transition-all duration-300 ${
+                      userType === 'doctor'
+                        ? 'text-white'
+                        : 'text-text-secondary hover:text-text-primary'
+                    }`}
+                  >
+                    <span className="relative z-10">As Doctor</span>
+                  </button>
+                  
+                  {/* Patient Button */}
+                  <button
+                    onClick={() => setUserType('patient')}
+                    aria-label="Select Patient role"
+                    className={`absolute top-0 right-0 w-1/2 h-full flex items-center justify-center text-sm font-medium transition-all duration-300 ${
+                      userType === 'patient'
+                        ? 'text-white'
+                        : 'text-text-secondary hover:text-text-primary'
+                    }`}
+                  >
+                    <span className="relative z-10">As Patient</span>
+                  </button>
+                </div>
               </motion.div>
 
               {/* Sign In Card */}
