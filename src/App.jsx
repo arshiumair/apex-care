@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
+import aboutImage from '../assets/about-section.jpg'
 
 // IoT Icons as SVG Components
 const HeartIcon = ({ className }) => (
@@ -302,12 +303,11 @@ const AboutSection = () => {
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 1, delay: 0.3 }}
               viewport={{ once: true }}
-              className="relative"
+              className="relative mt-16"
             >
               <img
-                // src="https://home.ecri.org/cdn/shop/articles/Utilizing_Data_from_Wearable_Devices.jpg?v=1713757980&width=2048"
-                src="https://img.etimg.com/thumb/msid-123331547,width-480,height-360,imgsize-1351228,resizemode-75/privacy-and-data-safety-concerns.jpg"
-                alt="Modern healthcare technology with doctor using digital devices for remote patient monitoring"
+                src={aboutImage}
+                alt="Doctor using laptop and smartphone with futuristic medical holograms for remote healthcare"
                 className="w-full max-w-md rounded-2xl shadow-lg"
                 style={{
                   boxShadow: '0 0 8px rgba(37, 99, 235, 0.3), 0 0 8px rgba(20, 184, 166, 0.3)'
