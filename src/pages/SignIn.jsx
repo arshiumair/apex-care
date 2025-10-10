@@ -159,7 +159,7 @@ const SignIn = () => {
       {/* Main Content */}
       <div className="flex items-center justify-center min-h-[calc(100vh-120px)] px-6">
         {/* Two Column Layout */}
-        <div className="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-2 gap-20 items-center px-4 lg:px-8">
+        <div className="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center px-4 lg:px-8">
           
           {/* Left Side - Sign In Form */}
           <motion.div
@@ -167,6 +167,7 @@ const SignIn = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
             className="flex justify-center lg:justify-end"
+            style={{ marginRight: '30px' }}
           >
             <div className="w-full max-w-sm">
               {/* Header */}
@@ -366,21 +367,33 @@ const SignIn = () => {
             </div>
           </motion.div>
 
-          {/* Right Side - Image */}
+          {/* Right Side - Expanded Image */}
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="flex justify-center lg:justify-start"
+            className="flex justify-center lg:justify-start h-full"
           >
-            <div className="relative">
+            <div className="relative w-full h-[350px] lg:h-[450px] xl:h-[550px]">
               <img
                 src={signInImage}
                 alt="Doctor using laptop and smartphone with futuristic medical holograms for remote healthcare"
-                className="w-full max-w-lg max-h-[550px] object-cover rounded-2xl shadow-2xl"
+                className="w-full h-full object-cover rounded-2xl shadow-2xl"
+                style={{
+                  boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1)'
+                }}
               />
-              {/* Darker gradient overlay for better contrast */}
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-t from-black/30 via-black/10 to-transparent pointer-events-none"></div>
+              {/* Enhanced gradient overlay for better contrast */}
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-t from-black/40 via-black/20 to-transparent pointer-events-none"></div>
+              
+              {/* Decorative glow effect */}
+              <div 
+                className="absolute inset-0 rounded-2xl pointer-events-none"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(20, 184, 166, 0.1) 100%)',
+                  boxShadow: '0 0 30px rgba(37, 99, 235, 0.2), 0 0 30px rgba(20, 184, 166, 0.2)'
+                }}
+              ></div>
             </div>
           </motion.div>
         </div>
