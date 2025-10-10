@@ -62,31 +62,31 @@ const Navbar = () => {
             Apex Care
           </Link>
           
-            {/* Navigation Links */}
-            <div className="flex items-center space-x-8">
+          {/* Navigation Links */}
+          <div className="flex items-center space-x-8">
               <button
                 onClick={() => handleSectionNavigation('home')}
                 aria-label="Navigate to Home section"
                 className="text-text-secondary hover:text-text-primary transition-colors duration-300 font-medium tracking-wide uppercase text-sm cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent focus:ring-opacity-50 rounded px-2 py-1"
-              >
-                Home
+            >
+              Home
               </button>
               <button
                 onClick={() => handleSectionNavigation('about')}
                 aria-label="Navigate to About section"
                 className="text-text-secondary hover:text-text-primary transition-colors duration-300 font-medium tracking-wide uppercase text-sm cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent focus:ring-opacity-50 rounded px-2 py-1"
-              >
-                About
+            >
+              About
               </button>
               <button
                 onClick={() => handleSectionNavigation('contact')}
                 aria-label="Navigate to Contact section"
                 className="text-text-secondary hover:text-text-primary transition-colors duration-300 font-medium tracking-wide uppercase text-sm cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent focus:ring-opacity-50 rounded px-2 py-1"
-              >
-                Contact Us
+            >
+              Contact Us
               </button>
-              
-              {/* Profile Icon */}
+            
+            {/* Profile Icon */}
             <button 
               className="p-2 rounded-full bg-surface/30 hover:bg-surface/50 hover:shadow-lg hover:shadow-primary/20 transition-all duration-300 group"
               style={{
@@ -214,45 +214,45 @@ const SignIn = () => {
                   />
                   
                   {/* Active Background - Patient Side */}
-                  <motion.div
+                <motion.div
                     initial={false}
                     animate={{
                       scaleX: userType === 'patient' ? 1 : 0,
                       originX: 1
                     }}
-                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 30 }}
                     className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-r from-primary to-accent"
                     style={{
                       clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)',
                       boxShadow: '0 0 12px rgba(37, 99, 235, 0.6), 0 0 12px rgba(20, 184, 166, 0.6)'
                     }}
-                  />
+                />
                   
                   {/* Doctor Button */}
-                  <button
-                    onClick={() => setUserType('doctor')}
-                    aria-label="Select Doctor role"
+                <button
+                  onClick={() => setUserType('doctor')}
+                  aria-label="Select Doctor role"
                     className={`absolute top-0 left-0 w-1/2 h-full flex items-center justify-center text-sm font-medium transition-all duration-300 ${
-                      userType === 'doctor'
-                        ? 'text-white'
-                        : 'text-text-secondary hover:text-text-primary'
-                    }`}
-                  >
+                    userType === 'doctor'
+                      ? 'text-white'
+                      : 'text-text-secondary hover:text-text-primary'
+                  }`}
+                >
                     <span className="relative z-10">As Doctor</span>
-                  </button>
+                </button>
                   
                   {/* Patient Button */}
-                  <button
-                    onClick={() => setUserType('patient')}
-                    aria-label="Select Patient role"
+                <button
+                  onClick={() => setUserType('patient')}
+                  aria-label="Select Patient role"
                     className={`absolute top-0 right-0 w-1/2 h-full flex items-center justify-center text-sm font-medium transition-all duration-300 ${
-                      userType === 'patient'
-                        ? 'text-white'
-                        : 'text-text-secondary hover:text-text-primary'
-                    }`}
-                  >
+                    userType === 'patient'
+                      ? 'text-white'
+                      : 'text-text-secondary hover:text-text-primary'
+                  }`}
+                >
                     <span className="relative z-10">As Patient</span>
-                  </button>
+                </button>
                 </div>
               </motion.div>
 
