@@ -5,6 +5,7 @@ import { Link, useNavigate } from 'react-router-dom'
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  const [activeSection, setActiveSection] = useState('home')
   const navigate = useNavigate()
   
   // Simulate login state (temporarily set to false)
@@ -25,6 +26,8 @@ const Navbar = () => {
         })
       }
     }, 150) // Slightly longer delay to ensure navigation completes
+    
+    // Don't set activeSection here - let scroll spy handle it
   }
 
   useEffect(() => {
@@ -33,6 +36,54 @@ const Navbar = () => {
     }
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  // Scroll spy effect to track active section
+  useEffect(() => {
+    const sections = ['home', 'about', 'contact']
+    
+    const observerOptions = {
+      root: null,
+      rootMargin: '-10% 0px -10% 0px',
+      threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+    }
+
+    const observerCallback = (entries) => {
+      // Find the section with the highest intersection ratio
+      let mostVisibleSection = null
+      let maxIntersectionRatio = 0
+
+      entries.forEach((entry) => {
+        if (entry.isIntersecting && entry.intersectionRatio > maxIntersectionRatio) {
+          maxIntersectionRatio = entry.intersectionRatio
+          mostVisibleSection = entry.target.id
+        }
+      })
+
+      // Only update if we found a visible section with significant visibility
+      if (mostVisibleSection && maxIntersectionRatio > 0.1) {
+        setActiveSection(mostVisibleSection)
+      }
+    }
+
+    const observer = new IntersectionObserver(observerCallback, observerOptions)
+    
+    // Observe all sections
+    sections.forEach((sectionId) => {
+      const element = document.getElementById(sectionId)
+      if (element) {
+        observer.observe(element)
+      }
+    })
+
+    return () => {
+      sections.forEach((sectionId) => {
+        const element = document.getElementById(sectionId)
+        if (element) {
+          observer.unobserve(element)
+        }
+      })
+    }
   }, [])
 
   // Handle click outside to close dropdown
@@ -82,21 +133,33 @@ const Navbar = () => {
             <button
               onClick={() => handleSectionNavigation('home')}
               aria-label="Navigate to Home section"
-              className="text-text-secondary hover:text-text-primary transition-colors duration-300 font-medium tracking-wide uppercase text-sm cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent focus:ring-opacity-50 rounded px-2 py-1"
+              className={`transition-all duration-300 font-medium tracking-wide uppercase text-sm cursor-pointer focus:outline-none rounded px-2 py-1 ${
+                activeSection === 'home' 
+                  ? 'text-text-primary border-2 border-[#13ad9e]/60' 
+                  : 'text-text-secondary hover:text-text-primary'
+              }`}
             >
               Home
             </button>
             <button
               onClick={() => handleSectionNavigation('about')}
               aria-label="Navigate to About section"
-              className="text-text-secondary hover:text-text-primary transition-colors duration-300 font-medium tracking-wide uppercase text-sm cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent focus:ring-opacity-50 rounded px-2 py-1"
+              className={`transition-all duration-300 font-medium tracking-wide uppercase text-sm cursor-pointer focus:outline-none rounded px-2 py-1 ${
+                activeSection === 'about' 
+                  ? 'text-text-primary border-2 border-[#22BAA3]/60' 
+                  : 'text-text-secondary hover:text-text-primary'
+              }`}
             >
               About
             </button>
             <button
               onClick={() => handleSectionNavigation('contact')}
               aria-label="Navigate to Contact section"
-              className="text-text-secondary hover:text-text-primary transition-colors duration-300 font-medium tracking-wide uppercase text-sm cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent focus:ring-opacity-50 rounded px-2 py-1"
+              className={`transition-all duration-300 font-medium tracking-wide uppercase text-sm cursor-pointer focus:outline-none rounded px-2 py-1 ${
+                activeSection === 'contact' 
+                  ? 'text-text-primary border-2 border-[#22BAA3]/60' 
+                  : 'text-text-secondary hover:text-text-primary'
+              }`}
             >
               Contact Us
             </button>
