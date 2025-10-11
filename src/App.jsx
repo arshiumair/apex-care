@@ -1,3 +1,13 @@
+/**
+ * Apex Care - Smart Healthcare Platform
+ * Main application component with routing and page components
+ * 
+ * @author Apex Care Development Team
+ * @version 1.0.0
+ * @description A comprehensive healthcare platform connecting doctors and patients
+ *              through IoT technology, remote consultations, and digital health tracking
+ */
+
 import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
@@ -9,19 +19,38 @@ import OurDoctors from './pages/OurDoctors'
 import ScrollToTop from './components/ScrollToTop'
 import Navbar from './components/Navbar'
 
-// IoT Icons as SVG Components
+/**
+ * IoT Icons as SVG Components
+ * Reusable SVG icon components for medical and healthcare-related UI elements
+ */
+
+/**
+ * Heart Icon Component
+ * @param {string} className - CSS classes to apply to the SVG
+ * @returns {JSX.Element} Heart-shaped SVG icon
+ */
 const HeartIcon = ({ className }) => (
   <svg className={className} viewBox="0 0 24 24" fill="currentColor">
     <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
   </svg>
 )
 
+/**
+ * ECG Icon Component
+ * @param {string} className - CSS classes to apply to the SVG
+ * @returns {JSX.Element} Electrocardiogram line pattern SVG icon
+ */
 const ECGIcon = ({ className }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <path d="M3 12h4l3-8 4 16 3-8h4"/>
   </svg>
 )
 
+/**
+ * Thermometer Icon Component
+ * @param {string} className - CSS classes to apply to the SVG
+ * @returns {JSX.Element} Medical thermometer SVG icon
+ */
 const ThermometerIcon = ({ className }) => (
   <svg className={className} viewBox="0 0 24 24" fill="currentColor">
     <path d="M15 13V5a3 3 0 0 0-6 0v8a5 5 0 1 0 6 0z"/>
@@ -29,6 +58,11 @@ const ThermometerIcon = ({ className }) => (
   </svg>
 )
 
+/**
+ * Stethoscope Icon Component
+ * @param {string} className - CSS classes to apply to the SVG
+ * @returns {JSX.Element} Medical stethoscope SVG icon
+ */
 const StethoscopeIcon = ({ className }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <path d="M6 4h8a4 4 0 0 1 4 4v8a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8a4 4 0 0 1 4-4z"/>
@@ -38,24 +72,47 @@ const StethoscopeIcon = ({ className }) => (
   </svg>
 )
 
-// Floating IoT Icons Component
+/**
+ * Floating IoT Icons Component
+ * Creates an animated background with floating medical icons
+ * Used to enhance the visual appeal of the hero section
+ * 
+ * @returns {JSX.Element} Container with floating medical icons
+ */
 const FloatingIcons = () => (
   <div className="absolute inset-0 overflow-hidden pointer-events-none">
+    {/* Heart icons positioned at various locations with different animations */}
     <HeartIcon className="absolute top-20 left-10 w-8 h-8 text-accent opacity-20 animate-float drop-shadow-lg" />
-    <ECGIcon className="absolute top-32 right-16 w-12 h-12 text-primary opacity-15 animate-float-delayed drop-shadow-lg" />
-    <ThermometerIcon className="absolute top-48 left-1/4 w-6 h-6 text-accent opacity-25 animate-float-slow drop-shadow-lg" />
-    <StethoscopeIcon className="absolute top-64 right-1/3 w-10 h-10 text-primary opacity-20 animate-float drop-shadow-lg" />
     <HeartIcon className="absolute bottom-32 left-1/3 w-7 h-7 text-accent opacity-15 animate-float-delayed drop-shadow-lg" />
+    
+    {/* ECG icons with different sizes and animation delays */}
+    <ECGIcon className="absolute top-32 right-16 w-12 h-12 text-primary opacity-15 animate-float-delayed drop-shadow-lg" />
     <ECGIcon className="absolute bottom-48 right-20 w-9 h-9 text-primary opacity-25 animate-float-slow drop-shadow-lg" />
+    
+    {/* Thermometer icons with varying opacity and animation speeds */}
+    <ThermometerIcon className="absolute top-48 left-1/4 w-6 h-6 text-accent opacity-25 animate-float-slow drop-shadow-lg" />
     <ThermometerIcon className="absolute bottom-20 left-16 w-5 h-5 text-accent opacity-20 animate-float drop-shadow-lg" />
+    
+    {/* Stethoscope icons positioned strategically */}
+    <StethoscopeIcon className="absolute top-64 right-1/3 w-10 h-10 text-primary opacity-20 animate-float drop-shadow-lg" />
     <StethoscopeIcon className="absolute top-1/2 right-10 w-8 h-8 text-primary opacity-15 animate-float-delayed drop-shadow-lg" />
   </div>
 )
 
 
 
-// Hero Section Component
+/**
+ * Hero Section Component
+ * Main landing section with animated content and call-to-action cards
+ * Features the primary value proposition and navigation to key sections
+ * 
+ * @returns {JSX.Element} Hero section with animated content and action cards
+ */
 const HeroSection = () => {
+  /**
+   * Smooth scroll to contact section
+   * Utility function to navigate to contact form
+   */
   const scrollToContact = () => {
     document.getElementById('contact').scrollIntoView({ behavior: 'smooth' })
   }
@@ -87,14 +144,14 @@ const HeroSection = () => {
           and digital prescriptions — all in one platform.
         </motion.p>
         
-        {/* Action Cards */}
+        {/* Action Cards - Three main navigation options */}
         <motion.div 
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 1 }}
           className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto"
         >
-          {/* Card 1: Get Sign-In */}
+          {/* Card 1: Sign In - Access existing account */}
           <Link to="/signin" className="block">
             <motion.div
               whileHover={{ scale: 1.05, y: -5 }}
@@ -122,7 +179,7 @@ const HeroSection = () => {
             </motion.div>
           </Link>
 
-          {/* Card 2: Our Services */}
+          {/* Card 2: Our Services - Explore healthcare services */}
           <Link to="/services" className="block">
             <motion.div
               whileHover={{ scale: 1.05, y: -5 }}
@@ -150,7 +207,7 @@ const HeroSection = () => {
             </motion.div>
           </Link>
 
-          {/* Card 3: Paramedical Staff */}
+          {/* Card 3: Our Staff - Meet the medical team */}
           <Link to="/our-doctors" className="block">
             <motion.div
               whileHover={{ scale: 1.05, y: -5 }}
@@ -183,7 +240,13 @@ const HeroSection = () => {
   )
 }
 
-// About Section Component
+/**
+ * About Section Component
+ * Displays information about Apex Care platform and its mission
+ * Features company description and visual content
+ * 
+ * @returns {JSX.Element} About section with company information
+ */
 const AboutSection = () => {
   return (
     <section id="about" className="min-h-screen flex items-center justify-center bg-gradient-to-br from-surface to-background">
@@ -195,7 +258,7 @@ const AboutSection = () => {
         className="px-6 max-w-7xl mx-auto"
       >
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          {/* Text Content */}
+          {/* Text Content - Company description and mission */}
           <div className="text-center lg:text-left">
             <h2 className="text-4xl md:text-6xl font-bold text-text-primary mb-8 tracking-tight">
               About <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">Apex Care</span>
@@ -220,7 +283,7 @@ const AboutSection = () => {
             </div>
           </div>
 
-          {/* Image Content */}
+          {/* Image Content - Visual representation of healthcare technology */}
           <div className="flex justify-center lg:justify-end">
             <motion.div
               initial={{ opacity: 0, x: 50 }}
@@ -237,7 +300,7 @@ const AboutSection = () => {
                   boxShadow: '0 0 8px rgba(37, 99, 235, 0.3), 0 0 8px rgba(20, 184, 166, 0.3)'
                 }}
               />
-              {/* Overlay gradient for better text contrast if needed */}
+              {/* Overlay gradient for better text contrast and visual enhancement */}
               <div className="absolute inset-0 rounded-2xl bg-gradient-to-t from-black/10 to-transparent pointer-events-none"></div>
             </motion.div>
           </div>
@@ -247,14 +310,26 @@ const AboutSection = () => {
   )
 }
 
-// Contact Section Component
+/**
+ * Contact Section Component
+ * Features a contact form and embedded map for user inquiries
+ * Includes form validation and submission handling
+ * 
+ * @returns {JSX.Element} Contact section with form and location information
+ */
 const ContactSection = () => {
+  // Form state management
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     message: ''
   })
 
+  /**
+   * Handle form input changes
+   * Updates form state when user types in form fields
+   * @param {Event} e - Input change event
+   */
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -262,9 +337,14 @@ const ContactSection = () => {
     })
   }
 
+  /**
+   * Handle form submission
+   * Processes form data and shows confirmation message
+   * @param {Event} e - Form submit event
+   */
   const handleSubmit = (e) => {
     e.preventDefault()
-    // Handle form submission here
+    // TODO: Implement actual form submission to backend
     console.log('Form submitted:', formData)
     alert('Thank you for your message! We\'ll get back to you soon.')
     setFormData({ name: '', email: '', message: '' })
@@ -273,7 +353,7 @@ const ContactSection = () => {
   return (
     <section id="contact" className="min-h-screen flex items-center justify-center bg-background py-20">
       <div className="max-w-7xl mx-auto px-6 w-full">
-        {/* Header */}
+        {/* Section Header - Contact form title and description */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -289,10 +369,10 @@ const ContactSection = () => {
           </p>
         </motion.div>
 
-        {/* Two-Column Layout */}
+        {/* Two-Column Layout - Form on left, map on right */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 h-full">
           
-          {/* Left Column - Contact Form */}
+          {/* Left Column - Contact Form with input fields */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -406,7 +486,7 @@ const ContactSection = () => {
               </motion.button>
             </form>
 
-            {/* Contact Info - Below Form */}
+            {/* Contact Information - Phone and email details */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -425,7 +505,7 @@ const ContactSection = () => {
             </motion.div>
           </motion.div>
 
-          {/* Right Column - Map */}
+          {/* Right Column - Embedded map and location information */}
           <motion.div
             initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -433,7 +513,7 @@ const ContactSection = () => {
             viewport={{ once: true }}
             className="space-y-6 h-full flex flex-col"
           >
-            {/* Embedded Map */}
+            {/* Embedded Google Maps - Hospital location */}
             <div className="flex-1 rounded-2xl overflow-hidden min-h-[400px]">
               <iframe 
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d651.1131535208974!2d70.9120854722349!3d31.81947185927738!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39266e76cf15ad2b%3A0x8abb2e9d69bb21c7!2sDr%20Abdur%20Rahman%20Hospital!5e1!3m2!1sen!2s!4v1760189766438!5m2!1sen!2s" 
@@ -447,7 +527,7 @@ const ContactSection = () => {
               ></iframe>
             </div>
 
-            {/* Address - Bottom */}
+            {/* Hospital Address - Physical location details */}
             <div className="flex items-center space-x-3">
               <span className="text-2xl">📍</span>
               <span className="text-text-primary font-medium">Dr. Abdur Rahman Hospital, Dera Ismail Khan, Pakistan</span>
@@ -459,13 +539,19 @@ const ContactSection = () => {
   )
 }
 
-// Footer Component
+/**
+ * Footer Component
+ * Contains social media links, footer navigation, and copyright information
+ * Provides additional site navigation and contact options
+ * 
+ * @returns {JSX.Element} Footer with social links and legal information
+ */
 const Footer = () => {
   return (
     <footer className="bg-background border-t border-surface/30">
       <div className="max-w-7xl mx-auto px-6 py-8">
         <div className="text-center space-y-6">
-          {/* Social Media Icons */}
+          {/* Social Media Icons - Twitter, Facebook, LinkedIn */}
           <div className="flex justify-center space-x-4">
             <motion.a
               href="https://twitter.com"
@@ -514,7 +600,7 @@ const Footer = () => {
             </motion.a>
           </div>
           
-          {/* Footer Links */}
+          {/* Footer Navigation Links - Legal and support pages */}
           <div className="flex justify-center space-x-8">
             <button className="text-text-secondary hover:text-text-primary transition-colors duration-300 text-sm font-medium">
               Privacy Policy
@@ -527,7 +613,7 @@ const Footer = () => {
             </button>
           </div>
           
-          {/* Copyright */}
+          {/* Copyright Information */}
           <p className="text-text-secondary text-sm">
             © 2025 Apex Care. All rights reserved.
           </p>
@@ -537,7 +623,13 @@ const Footer = () => {
   )
 }
 
-// Home Page Component
+/**
+ * Home Page Component
+ * Main landing page that combines all sections
+ * Includes navigation, hero, about, contact, and footer
+ * 
+ * @returns {JSX.Element} Complete home page layout
+ */
 const HomePage = () => {
   return (
     <div className="min-h-screen bg-background text-text-primary font-inter">
@@ -550,15 +642,24 @@ const HomePage = () => {
   )
 }
 
-// Main App Component
+/**
+ * Main App Component
+ * Root component that sets up routing and manages application state
+ * Defines all application routes and handles navigation
+ * 
+ * @returns {JSX.Element} Main application with routing configuration
+ */
 const App = () => {
   return (
     <Router>
       <ScrollToTop />
       <Routes>
+        {/* Home page route */}
         <Route path="/" element={<HomePage />} />
+        {/* Authentication routes */}
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
+        {/* Service and information routes */}
         <Route path="/services" element={<OurServices />} />
         <Route path="/our-doctors" element={<OurDoctors />} />
       </Routes>
