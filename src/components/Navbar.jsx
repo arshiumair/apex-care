@@ -78,7 +78,7 @@ const Navbar = () => {
           </Link>
           
           {/* Navigation Links */}
-          <div className="flex items-center space-x-8">
+          <div className="flex items-center space-x-4">
             <button
               onClick={() => handleSectionNavigation('home')}
               aria-label="Navigate to Home section"
