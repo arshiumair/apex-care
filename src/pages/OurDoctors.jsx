@@ -148,7 +148,23 @@ const OurDoctors = () => {
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedSpecialty, setSelectedSpecialty] = useState('')
 
-  // Doctor data with placeholder images
+  // Helper function to check doctor availability
+  const checkDoctorAvailability = (availability) => {
+    const now = new Date()
+    const currentDay = now.toLocaleDateString('en-US', { weekday: 'short' })
+    const currentTime = now.toLocaleTimeString('en-US', { 
+      hour12: false, 
+      hour: '2-digit', 
+      minute: '2-digit' 
+    })
+    
+    const isDayAvailable = availability.days.includes(currentDay)
+    const isTimeAvailable = currentTime >= availability.start && currentTime <= availability.end
+    
+    return isDayAvailable && isTimeAvailable
+  }
+
+  // Doctor data with availability information
   const doctors = [
     {
       id: 1,
@@ -157,7 +173,7 @@ const OurDoctors = () => {
       experience: "12 years",
       description: "Specialized in advanced cardiac treatment and preventive care",
       image: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=300&h=300&fit=crop&crop=face",
-      available: true
+      availability: { days: ["Mon", "Tue", "Wed", "Thu", "Fri"], start: "09:00", end: "17:00" }
     },
     {
       id: 2,
@@ -166,7 +182,7 @@ const OurDoctors = () => {
       experience: "9 years",
       description: "Expert in cosmetic dermatology and skin cancer treatment",
       image: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=300&h=300&fit=crop&crop=face",
-      available: true
+      availability: { days: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"], start: "08:00", end: "18:00" }
     },
     {
       id: 3,
@@ -175,7 +191,7 @@ const OurDoctors = () => {
       experience: "7 years",
       description: "Dedicated to children's health and developmental care",
       image: "https://images.unsplash.com/photo-1659353888906-adb3e0041693?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1170",
-      available: true
+      availability: { days: ["Mon", "Tue", "Wed", "Thu", "Fri"], start: "10:00", end: "16:00" }
     },
     {
       id: 4,
@@ -184,7 +200,7 @@ const OurDoctors = () => {
       experience: "10 years",
       description: "Specialized in joint replacement and sports medicine",
       image: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=300&h=300&fit=crop&crop=face",
-      available: true
+      availability: { days: ["Mon", "Wed", "Fri"], start: "09:00", end: "15:00" }
     },
     {
       id: 5,
@@ -193,25 +209,25 @@ const OurDoctors = () => {
       experience: "8 years",
       description: "Expert in neurological disorders and brain health",
       image: "https://plus.unsplash.com/premium_photo-1702598599506-9ff660bc50f5?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjA5fHxwYWtpc3RhbmklMjBkb2N0b3J8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&q=60&w=600",
-      available: true
+      availability: { days: ["Tue", "Thu", "Sat"], start: "08:30", end: "17:30" }
     },
     {
-        id: 5,
-        name: "Dr. Iqra Urooj",
-        specialty: "Nephrologist",
-        experience: "5 years",
-        description: "Expert in nephrological disorders and kidney health",
-        image: "https://media.licdn.com/dms/image/v2/D5603AQE3eqqmkeWZYA/profile-displayphoto-scale_400_400/B56ZlN085MKAAk-/0/1757947351742?e=1762992000&v=beta&t=6rUQrGI0Jg4h9CLgQonV0xJW6LkIUXEyWuG6rxrvc64",
-        available: true
-      },
-    {
       id: 6,
+      name: "Dr. Iqra Urooj",
+      specialty: "Nephrologist",
+      experience: "5 years",
+      description: "Expert in nephrological disorders and kidney health",
+      image: "https://media.licdn.com/dms/image/v2/D5603AQE3eqqmkeWZYA/profile-displayphoto-scale_400_400/B56ZlN085MKAAk-/0/1757947351742?e=1762992000&v=beta&t=6rUQrGI0Jg4h9CLgQonV0xJW6LkIUXEyWuG6rxrvc64",
+      availability: { days: ["Mon", "Tue", "Wed", "Thu", "Fri"], start: "09:30", end: "16:30" }
+    },
+    {
+      id: 7,
       name: "Dr. Omar Sheikh",
       specialty: "Psychiatrist",
       experience: "11 years",
       description: "Specialized in mental health and behavioral therapy",
       image: "https://plus.unsplash.com/premium_photo-1661578549774-7906388bc733?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1170",
-      available: true
+      availability: { days: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"], start: "10:00", end: "19:00" }
     }
   ]
 
@@ -329,69 +345,101 @@ const OurDoctors = () => {
                 }}
                 className="group relative"
               >
-                <div 
-                  className="bg-surface/30 backdrop-blur-sm rounded-2xl p-6 border border-white/10 transition-all duration-300"
-                  style={{
-                    boxShadow: '0 0 20px rgba(37, 99, 235, 0.3), 0 0 20px rgba(20, 184, 166, 0.3)'
-                  }}
-                >
-                  <div className="flex items-center space-x-6">
-                    {/* Doctor Image */}
-                    <div className="flex-shrink-0">
-                      <img
-                        src={doctor.image}
-                        alt={doctor.name}
-                        className="w-24 h-24 rounded-full object-cover shadow-lg group-hover:scale-105 transition-transform duration-300"
-                        style={{
-                          boxShadow: '0 0 15px rgba(37, 99, 235, 0.4), 0 0 15px rgba(20, 184, 166, 0.4)'
-                        }}
-                      />
-                    </div>
+                 <div 
+                   className="bg-surface/30 backdrop-blur-sm rounded-2xl p-8 border border-white/10 transition-all duration-300"
+                   style={{
+                     boxShadow: '0 0 15px rgba(37, 99, 235, 0.4), 0 0 15px rgba(20, 184, 166, 0.4)'
+                   }}
+                 >
+                   <div className="flex flex-col lg:flex-row items-start lg:items-center space-y-6 lg:space-y-0 lg:space-x-8">
+                     {/* Doctor Image */}
+                     <div className="flex-shrink-0 mx-auto lg:mx-0">
+                       <div className="relative">
+                         <img
+                           src={doctor.image}
+                           alt={doctor.name}
+                           className="w-32 h-32 rounded-full object-cover shadow-lg group-hover:scale-105 transition-transform duration-300"
+                           style={{
+                             boxShadow: '0 0 20px rgba(37, 99, 235, 0.5), 0 0 20px rgba(20, 184, 166, 0.5)'
+                           }}
+                         />
+                         {/* Availability Status Badge */}
+                         <div className="absolute -bottom-2 -right-2">
+                           <div className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                             checkDoctorAvailability(doctor.availability)
+                               ? 'bg-green-500/90 text-white'
+                               : 'bg-red-500/90 text-white'
+                           }`}>
+                             {checkDoctorAvailability(doctor.availability) ? '🟢 Available' : '🔴 Unavailable'}
+                           </div>
+                         </div>
+                       </div>
+                     </div>
 
-                    {/* Doctor Information */}
-                    <div className="flex-1 min-w-0">
-                      <h3 className="text-2xl font-bold text-text-primary mb-2 group-hover:text-accent transition-colors duration-300">
-                        {doctor.name}
-                      </h3>
-                      <p className="text-lg text-accent font-semibold mb-1">
-                        {doctor.specialty}
-                      </p>
-                      <p className="text-text-secondary mb-2">
-                        {doctor.experience} of experience
-                      </p>
-                      <p className="text-text-secondary text-sm leading-relaxed">
-                        {doctor.description}
-                      </p>
-                    </div>
+                     {/* Doctor Information */}
+                     <div className="flex-1 min-w-0 text-center lg:text-left">
+                       <h3 className="text-3xl font-bold text-text-primary mb-3 group-hover:text-accent transition-colors duration-300">
+                         {doctor.name}
+                       </h3>
+                       <p className="text-xl text-accent font-semibold mb-2">
+                         {doctor.specialty}
+                       </p>
+                       <p className="text-text-secondary mb-3 text-lg">
+                         {doctor.experience} of experience
+                       </p>
+                       
+                       {/* Availability Details */}
+                       <div className="mb-4">
+                         <p className="text-text-secondary text-sm mb-1">
+                           Available: {doctor.availability.days.join(', ')}
+                         </p>
+                         <p className="text-text-secondary text-sm">
+                           Hours: {doctor.availability.start} - {doctor.availability.end}
+                         </p>
+                       </div>
+                       
+                       <p className="text-text-secondary text-base leading-relaxed">
+                         {doctor.description}
+                       </p>
+                     </div>
 
-                    {/* Action Button */}
-                    <div className="flex-shrink-0">
-                      <motion.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="px-8 py-3 bg-gradient-to-r from-primary to-accent text-white rounded-full font-semibold transition-all duration-300"
-                        style={{
-                          boxShadow: '0 0 20px rgba(37, 99, 235, 0.4), 0 0 20px rgba(20, 184, 166, 0.4)'
-                        }}
-                        onMouseEnter={(e) => {
-                          e.target.style.boxShadow = '0 0 30px rgba(37, 99, 235, 0.6), 0 0 30px rgba(20, 184, 166, 0.6)'
-                        }}
-                        onMouseLeave={(e) => {
-                          e.target.style.boxShadow = '0 0 20px rgba(37, 99, 235, 0.4), 0 0 20px rgba(20, 184, 166, 0.4)'
-                        }}
-                      >
-                        Book Appointment
-                      </motion.button>
-                    </div>
-                  </div>
-                </div>
+                     {/* Action Button */}
+                     <div className="flex-shrink-0 w-full lg:w-auto">
+                       <motion.button
+                         whileHover={{ scale: 1.05 }}
+                         whileTap={{ scale: 0.95 }}
+                         disabled={!checkDoctorAvailability(doctor.availability)}
+                         className={`w-full lg:w-auto px-8 py-4 rounded-full font-semibold transition-all duration-300 ${
+                           checkDoctorAvailability(doctor.availability)
+                             ? 'bg-gradient-to-r from-primary to-accent text-white hover:shadow-lg'
+                             : 'bg-surface/50 text-text-secondary cursor-not-allowed'
+                         }`}
+                         style={checkDoctorAvailability(doctor.availability) ? {
+                           boxShadow: '0 0 20px rgba(37, 99, 235, 0.4), 0 0 20px rgba(20, 184, 166, 0.4)'
+                         } : {}}
+                         onMouseEnter={(e) => {
+                           if (checkDoctorAvailability(doctor.availability)) {
+                             e.target.style.boxShadow = '0 0 30px rgba(37, 99, 235, 0.6), 0 0 30px rgba(20, 184, 166, 0.6)'
+                           }
+                         }}
+                         onMouseLeave={(e) => {
+                           if (checkDoctorAvailability(doctor.availability)) {
+                             e.target.style.boxShadow = '0 0 20px rgba(37, 99, 235, 0.4), 0 0 20px rgba(20, 184, 166, 0.4)'
+                           }
+                         }}
+                       >
+                         {checkDoctorAvailability(doctor.availability) ? 'Book Appointment' : 'Currently Unavailable'}
+                       </motion.button>
+                     </div>
+                   </div>
+                 </div>
 
                 {/* Enhanced Glow on Hover */}
                 <div 
                   className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
                   style={{
                     background: 'linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(20, 184, 166, 0.1) 100%)',
-                    boxShadow: '0 0 40px rgba(37, 99, 235, 0.4), 0 0 40px rgba(20, 184, 166, 0.4)'
+                    boxShadow: '0 0 25px rgba(37, 99, 235, 0.6), 0 0 25px rgba(20, 184, 166, 0.6)'
                   }}
                 ></div>
               </motion.div>
