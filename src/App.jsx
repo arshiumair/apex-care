@@ -7,6 +7,7 @@ import SignUp from './pages/SignUp'
 import OurServices from './pages/OurServices'
 import OurDoctors from './pages/OurDoctors'
 import ScrollToTop from './components/ScrollToTop'
+import Navbar from './components/Navbar'
 
 // IoT Icons as SVG Components
 const HeartIcon = ({ className }) => (
@@ -51,95 +52,7 @@ const FloatingIcons = () => (
   </div>
 )
 
-// Navbar Component
-const Navbar = () => {
-  const [isScrolled, setIsScrolled] = useState(false)
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50)
-    }
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
-
-  const scrollToSection = (sectionId) => {
-    document.getElementById(sectionId).scrollIntoView({ behavior: 'smooth' })
-  }
-
-  return (
-    <motion.nav 
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.8, ease: "easeOut" }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled 
-          ? 'bg-background/80 backdrop-blur-md' 
-          : 'bg-transparent'
-      }`}
-      style={{
-        borderBottom: '2px solid transparent',
-        backgroundImage: isScrolled 
-          ? 'linear-gradient(#0F172A, #0F172A) padding-box, linear-gradient(to right, #2563EB, #14B8A6) border-box'
-          : 'linear-gradient(transparent, transparent) padding-box, linear-gradient(to right, #2563EB, #14B8A6) border-box',
-        boxShadow: '0 2px 8px rgba(37, 99, 235, 0.4), 0 2px 8px rgba(20, 184, 166, 0.4)'
-      }}
-    >
-      <div className="max-w-7xl mx-auto px-6 py-4">
-        <div className="flex items-center justify-between">
-          {/* Brand */}
-          <div className="text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-            Apex Care
-          </div>
-          
-          {/* Navigation Links */}
-          <div className="flex items-center space-x-8">
-            <button 
-              onClick={() => scrollToSection('home')}
-              className="text-text-secondary hover:text-text-primary transition-colors duration-300 font-medium tracking-wide uppercase text-sm"
-            >
-              Home
-            </button>
-            <button 
-              onClick={() => scrollToSection('about')}
-              className="text-text-secondary hover:text-text-primary transition-colors duration-300 font-medium tracking-wide uppercase text-sm"
-            >
-              About
-            </button>
-            <button 
-              onClick={() => scrollToSection('contact')}
-              className="text-text-secondary hover:text-text-primary transition-colors duration-300 font-medium tracking-wide uppercase text-sm"
-            >
-              Contact Us
-            </button>
-            
-            {/* Profile Icon */}
-            <button 
-              className="p-2 rounded-full bg-surface/30 hover:bg-surface/50 hover:shadow-lg hover:shadow-primary/20 transition-all duration-300 group"
-              style={{
-                boxShadow: '0 0 6px rgba(37, 99, 235, 0.3), 0 0 6px rgba(20, 184, 166, 0.3)'
-              }}
-            >
-              <svg 
-                className="w-6 h-6 text-text-secondary group-hover:text-text-primary transition-colors duration-300" 
-                fill="none" 
-                stroke="currentColor" 
-                viewBox="0 0 24 24"
-              >
-                <path 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round" 
-                  strokeWidth={2} 
-                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" 
-                />
-              </svg>
-            </button>
-          </div>
-        </div>
-      </div>
-    </motion.nav>
-  )
-}
 
 // Hero Section Component
 const HeroSection = () => {
