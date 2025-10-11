@@ -285,7 +285,7 @@ const OurDoctors = () => {
                  <div 
                    className="bg-surface/30 backdrop-blur-sm rounded-2xl p-8 border border-white/10 transition-all duration-300"
                    style={{
-                     boxShadow: '0 0 15px rgba(37, 99, 235, 0.4), 0 0 15px rgba(20, 184, 166, 0.4)'
+                     boxShadow: '0 0 8px rgba(37, 99, 235, 0.3), 0 0 8px rgba(20, 184, 166, 0.3)'
                    }}
                  >
                    <div className="flex flex-col lg:flex-row items-start lg:items-center space-y-6 lg:space-y-0 lg:space-x-8">
@@ -376,7 +376,7 @@ const OurDoctors = () => {
                   className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
                   style={{
                     background: 'linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(20, 184, 166, 0.1) 100%)',
-                    boxShadow: '0 0 25px rgba(37, 99, 235, 0.6), 0 0 25px rgba(20, 184, 166, 0.6)'
+                    boxShadow: '0 0 15px rgba(37, 99, 235, 0.4), 0 0 15px rgba(20, 184, 166, 0.4)'
                   }}
                 ></div>
               </motion.div>
