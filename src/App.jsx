@@ -5,6 +5,7 @@ import aboutImage from '../assets/about-section.jpg'
 import SignIn from './pages/SignIn'
 import SignUp from './pages/SignUp'
 import OurServices from './pages/OurServices'
+import OurDoctors from './pages/OurDoctors'
 
 // IoT Icons as SVG Components
 const HeartIcon = ({ className }) => (
@@ -236,30 +237,32 @@ const HeroSection = () => {
           </Link>
 
           {/* Card 3: Paramedical Staff */}
-          <motion.div
-            whileHover={{ scale: 1.05, y: -5 }}
-            transition={{ duration: 0.3 }}
-            className="relative bg-surface/50 backdrop-blur-sm rounded-xl p-6 text-center hover:shadow-xl hover:shadow-primary/10 transition-all duration-300"
-            style={{
-              border: '2px solid transparent',
-              background: 'linear-gradient(#1E293B, #1E293B) padding-box, linear-gradient(135deg, #2563EB, #14B8A6) border-box',
-              boxShadow: '0 0 8px rgba(37, 99, 235, 0.5), 0 0 10px rgba(20, 184, 166, 0.5)'
-            }}
-          >
-            <h3 className="text-2xl font-bold text-text-primary mb-3 tracking-wide">
-              Our Staff
-            </h3>
-            <p className="text-text-secondary mb-5 leading-relaxed">
-              Find our Board-certified doctors.
-            </p>
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="bg-gradient-to-r from-primary to-accent text-white px-6 py-3 rounded-full text-sm font-semibold tracking-wide uppercase shadow-lg hover:shadow-xl transition-all duration-300 hover:shadow-primary/25"
+          <Link to="/our-doctors" className="block">
+            <motion.div
+              whileHover={{ scale: 1.05, y: -5 }}
+              transition={{ duration: 0.3 }}
+              className="relative bg-surface/50 backdrop-blur-sm rounded-xl p-6 text-center hover:shadow-xl hover:shadow-primary/10 transition-all duration-300 cursor-pointer"
+              style={{
+                border: '2px solid transparent',
+                background: 'linear-gradient(#1E293B, #1E293B) padding-box, linear-gradient(135deg, #2563EB, #14B8A6) border-box',
+                boxShadow: '0 0 8px rgba(37, 99, 235, 0.5), 0 0 10px rgba(20, 184, 166, 0.5)'
+              }}
             >
-              Meet Our Team
-            </motion.button>
-          </motion.div>
+              <h3 className="text-2xl font-bold text-text-primary mb-3 tracking-wide">
+                Our Staff
+              </h3>
+              <p className="text-text-secondary mb-5 leading-relaxed">
+                Find our Board-certified doctors.
+              </p>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="bg-gradient-to-r from-primary to-accent text-white px-6 py-3 rounded-full text-sm font-semibold tracking-wide uppercase shadow-lg hover:shadow-xl transition-all duration-300 hover:shadow-primary/25"
+              >
+                Meet Our Team
+              </motion.button>
+            </motion.div>
+          </Link>
         </motion.div>
       </div>
     </section>
@@ -487,6 +490,7 @@ const App = () => {
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/services" element={<OurServices />} />
+        <Route path="/our-doctors" element={<OurDoctors />} />
       </Routes>
     </Router>
   )
