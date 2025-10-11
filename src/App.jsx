@@ -6,6 +6,7 @@ import SignIn from './pages/SignIn'
 import SignUp from './pages/SignUp'
 import OurServices from './pages/OurServices'
 import OurDoctors from './pages/OurDoctors'
+import ScrollToTop from './components/ScrollToTop'
 
 // IoT Icons as SVG Components
 const HeartIcon = ({ className }) => (
@@ -485,6 +486,7 @@ const HomePage = () => {
 const App = () => {
   return (
     <Router>
+      <ScrollToTop />
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/signin" element={<SignIn />} />

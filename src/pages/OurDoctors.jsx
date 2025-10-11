@@ -286,7 +286,7 @@ const OurDoctors = () => {
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.6 }}
-        className="px-6 py-8"
+        className="px-6 py-8 -mt-5"
       >
         <div className="max-w-4xl mx-auto">
           <div className="flex flex-col md:flex-row gap-4">
@@ -304,22 +304,64 @@ const OurDoctors = () => {
               />
             </div>
             
-            {/* Specialty Filter */}
-            <div className="md:w-64">
-              <select
-                value={selectedSpecialty}
-                onChange={(e) => setSelectedSpecialty(e.target.value)}
-                className="w-full px-6 py-4 bg-surface/30 backdrop-blur-sm border border-white/10 rounded-full text-text-primary focus:outline-none focus:ring-2 focus:ring-accent transition-all duration-300"
-                style={{
-                  boxShadow: '0 0 10px rgba(37, 99, 235, 0.3), 0 0 10px rgba(20, 184, 166, 0.3)'
-                }}
-              >
-                <option value="">All Specialties</option>
-                {specialties.map(specialty => (
-                  <option key={specialty} value={specialty}>{specialty}</option>
-                ))}
-              </select>
-            </div>
+             {/* Specialty Filter */}
+             <div className="md:w-64 relative group">
+               <div className="relative">
+                 <select
+                   value={selectedSpecialty}
+                   onChange={(e) => setSelectedSpecialty(e.target.value)}
+                   className="w-full px-6 py-4 pr-12 bg-surface/30 backdrop-blur-sm border border-white/10 rounded-full text-text-primary focus:outline-none focus:ring-2 focus:ring-accent transition-all duration-300 appearance-none cursor-pointer group-hover:bg-surface/40"
+                   style={{
+                     boxShadow: '0 0 12px rgba(37, 99, 235, 0.4), 0 0 12px rgba(20, 184, 166, 0.4)'
+                   }}
+                   onFocus={(e) => {
+                     e.target.style.boxShadow = '0 0 18px rgba(37, 99, 235, 0.6), 0 0 18px rgba(20, 184, 166, 0.6)'
+                   }}
+                   onBlur={(e) => {
+                     e.target.style.boxShadow = '0 0 12px rgba(37, 99, 235, 0.4), 0 0 12px rgba(20, 184, 166, 0.4)'
+                   }}
+                 >
+                   <option value="" className="bg-surface text-text-primary py-2">All Specialties</option>
+                   {specialties.map(specialty => (
+                     <option 
+                       key={specialty} 
+                       value={specialty}
+                       className="bg-surface text-text-primary py-2 hover:bg-accent/20"
+                     >
+                       {specialty}
+                     </option>
+                   ))}
+                 </select>
+                 
+                 {/* Custom Dropdown Arrow - Perfectly Centered */}
+                 <div className="absolute inset-y-0 right-0 flex items-center justify-center w-12 pointer-events-none">
+                   <motion.svg
+                     className="w-5 h-5 text-text-secondary group-hover:text-accent transition-colors duration-300"
+                     fill="none"
+                     stroke="currentColor"
+                     viewBox="0 0 24 24"
+                     animate={{ rotate: selectedSpecialty ? 180 : 0 }}
+                     transition={{ duration: 0.3, ease: "easeInOut" }}
+                   >
+                     <path
+                       strokeLinecap="round"
+                       strokeLinejoin="round"
+                       strokeWidth={2}
+                       d="M19 9l-7 7-7-7"
+                     />
+                   </motion.svg>
+                 </div>
+               </div>
+               
+               {/* Enhanced Glow Effect on Hover */}
+               <div 
+                 className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+                 style={{
+                   background: 'linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(20, 184, 166, 0.1) 100%)',
+                   boxShadow: '0 0 20px rgba(37, 99, 235, 0.5), 0 0 20px rgba(20, 184, 166, 0.5)'
+                 }}
+               ></div>
+             </div>
           </div>
         </div>
       </motion.section>
