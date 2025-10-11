@@ -349,7 +349,7 @@ const OurDoctors = () => {
                          className={`w-full lg:w-auto px-8 py-4 rounded-full font-semibold transition-all duration-300 ${
                            checkDoctorAvailability(doctor.availability)
                              ? 'bg-gradient-to-r from-primary to-accent text-white hover:shadow-lg'
-                             : 'bg-surface/50 text-text-secondary cursor-not-allowed'
+                             : 'bg-surface/50 text-text-secondary cursor-not-allowed border-2 border-[#13ad9e]/60'
                          }`}
                          style={checkDoctorAvailability(doctor.availability) ? {
                            boxShadow: '0 0 20px rgba(37, 99, 235, 0.4), 0 0 20px rgba(20, 184, 166, 0.4)'
