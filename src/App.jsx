@@ -363,7 +363,7 @@ const ContactSection = () => {
               >
                 <textarea
                   name="message"
-                  placeholder="Your Message"
+                  placeholder="Write your message here"
                   value={formData.message}
                   onChange={handleChange}
                   required
@@ -434,18 +434,23 @@ const ContactSection = () => {
             className="space-y-6 h-full flex flex-col"
           >
             {/* Embedded Map */}
-            <div className="flex-1 bg-gradient-to-br from-primary/20 to-accent/20 rounded-2xl flex items-center justify-center min-h-[400px]">
-              <div className="text-center">
-                <div className="text-6xl mb-4">🗺️</div>
-                <p className="text-text-secondary text-lg font-medium">Interactive Map</p>
-                <p className="text-text-secondary">Islamabad, Pakistan</p>
-              </div>
+            <div className="flex-1 rounded-2xl overflow-hidden min-h-[400px]">
+              <iframe 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d651.1131535208974!2d70.9120854722349!3d31.81947185927738!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39266e76cf15ad2b%3A0x8abb2e9d69bb21c7!2sDr%20Abdur%20Rahman%20Hospital!5e1!3m2!1sen!2s!4v1760189766438!5m2!1sen!2s" 
+                width="100%" 
+                height="100%" 
+                style={{border:0}} 
+                allowFullScreen="" 
+                loading="lazy" 
+                referrerPolicy="no-referrer-when-downgrade"
+                className="w-full h-full"
+              ></iframe>
             </div>
 
             {/* Address - Bottom */}
             <div className="flex items-center space-x-3">
               <span className="text-2xl">📍</span>
-              <span className="text-text-primary font-medium">H-8/3, Islamabad, Pakistan</span>
+              <span className="text-text-primary font-medium">Dr. Abdur Rahman Hospital, Dera Ismail Khan, Pakistan</span>
             </div>
           </motion.div>
         </div>
