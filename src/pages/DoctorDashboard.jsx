@@ -135,26 +135,8 @@ const DoctorDashboard = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#0F172A] to-[#1E293B] font-inter">
       <Navbar />
-      
-      {/* Go Back Button */}
-      <motion.div
-        initial={{ opacity: 0, x: -30 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.8, delay: 0.2 }}
-        className="pt-24 px-6"
-      >
-        <Link 
-          to="/" 
-          className="inline-flex items-center text-[#94A3B8] hover:text-[#F8FAFC] transition-colors duration-300 text-sm font-medium"
-        >
-          <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-          Go Back
-        </Link>
-      </motion.div>
 
-      <div className="flex h-screen pt-4">
+      <div className="flex h-screen pt-24">
         {/* Sidebar */}
         <motion.div
           initial={{ x: -280 }}
