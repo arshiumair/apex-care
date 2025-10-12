@@ -9,7 +9,16 @@ import {
   CreditCard, 
   UserCircle, 
   Settings, 
-  LogOut 
+  LogOut,
+  Users,
+  Building2,
+  Calendar,
+  Phone,
+  FileText,
+  MessageCircle,
+  Check,
+  X,
+  Circle
 } from 'lucide-react'
 
 // Footer Component
@@ -129,15 +138,24 @@ const DoctorDashboard = () => {
 
   const getStatusText = (status) => {
     switch (status) {
-      case 'online': return '🟢 Online'
-      case 'busy': return '🔵 Busy'
-      case 'offline': return '🔴 Offline'
+      case 'online': return 'Online'
+      case 'busy': return 'Busy'
+      case 'offline': return 'Offline'
       case 'ongoing': return 'On Going'
       case 'upcoming': return 'Upcoming'
       case 'pending': return 'Pending'
       case 'confirmed': return 'Confirmed'
       case 'completed': return 'Completed'
       default: return status
+    }
+  }
+
+  const getStatusIcon = (status) => {
+    switch (status) {
+      case 'online': return <Circle size={8} className="text-green-500 fill-current" />
+      case 'busy': return <Circle size={8} className="text-blue-500 fill-current" />
+      case 'offline': return <Circle size={8} className="text-red-500 fill-current" />
+      default: return null
     }
   }
 
@@ -334,9 +352,9 @@ const DoctorDashboard = () => {
               className="grid grid-cols-1 md:grid-cols-3 gap-6"
             >
               {[
-                { title: "Total Patients", value: "2000+", icon: "👥", color: "#2563EB" },
-                { title: "Today Patients", value: "068", icon: "🏥", color: "#14B8A6" },
-                { title: "Today Appointments", value: "085", icon: "📅", color: "#22C55E" }
+                { title: "Total Patients", value: "2000+", icon: Users, color: "#2563EB" },
+                { title: "Today Patients", value: "068", icon: Building2, color: "#14B8A6" },
+                { title: "Today Appointments", value: "085", icon: Calendar, color: "#22C55E" }
               ].map((kpi, index) => (
                 <motion.div
                   key={kpi.title}
@@ -354,8 +372,8 @@ const DoctorDashboard = () => {
                       <p className="text-[#94A3B8] text-sm mb-2">{kpi.title}</p>
                       <p className="text-3xl font-bold" style={{ color: kpi.color }}>{kpi.value}</p>
                     </div>
-                    <div className="w-12 h-12 rounded-full flex items-center justify-center text-2xl" style={{ backgroundColor: `${kpi.color}20` }}>
-                      {kpi.icon}
+                    <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: `${kpi.color}20` }}>
+                      <kpi.icon size={24} style={{ color: kpi.color }} />
                     </div>
                   </div>
                 </motion.div>
@@ -455,12 +473,15 @@ const DoctorDashboard = () => {
                         </div>
                         <div className="text-right">
                           <p className="text-[#F8FAFC] text-xs font-medium">{appointment.time}</p>
-                          <span
-                            className="px-2 py-1 rounded-full text-xs text-white"
-                            style={{ backgroundColor: getStatusColor(appointment.status) }}
-                          >
-                            {getStatusText(appointment.status)}
-                          </span>
+                          <div className="flex items-center justify-end gap-1 mt-1">
+                            {getStatusIcon(appointment.status)}
+                            <span
+                              className="px-2 py-1 rounded-full text-xs text-white"
+                              style={{ backgroundColor: getStatusColor(appointment.status) }}
+                            >
+                              {getStatusText(appointment.status)}
+                            </span>
+                          </div>
                         </div>
                       </motion.div>
                     ))}
@@ -521,14 +542,17 @@ const DoctorDashboard = () => {
                   </div>
 
                   <div className="flex space-x-2">
-                    <button className="flex-1 px-3 py-2 bg-[#14B8A6] text-white rounded-lg text-xs font-medium hover:bg-[#14B8A6]/80 transition-colors">
-                      📞 Call
+                    <button className="flex-1 px-3 py-2 bg-[#14B8A6] text-white rounded-lg text-xs font-medium hover:bg-[#14B8A6]/80 transition-colors flex items-center justify-center gap-1">
+                      <Phone size={14} />
+                      Call
                     </button>
-                    <button className="flex-1 px-3 py-2 bg-[#2563EB] text-white rounded-lg text-xs font-medium hover:bg-[#2563EB]/80 transition-colors">
-                      📄 Document
+                    <button className="flex-1 px-3 py-2 bg-[#2563EB] text-white rounded-lg text-xs font-medium hover:bg-[#2563EB]/80 transition-colors flex items-center justify-center gap-1">
+                      <FileText size={14} />
+                      Document
                     </button>
-                    <button className="flex-1 px-3 py-2 bg-[#22C55E] text-white rounded-lg text-xs font-medium hover:bg-[#22C55E]/80 transition-colors">
-                      💬 Chat
+                    <button className="flex-1 px-3 py-2 bg-[#22C55E] text-white rounded-lg text-xs font-medium hover:bg-[#22C55E]/80 transition-colors flex items-center justify-center gap-1">
+                      <MessageCircle size={14} />
+                      Chat
                     </button>
                   </div>
                 </motion.div>
@@ -561,14 +585,14 @@ const DoctorDashboard = () => {
                         </div>
                       </div>
                       <div className="flex space-x-2">
-                        <button className="px-3 py-1 bg-[#22C55E] text-white rounded text-xs hover:bg-[#22C55E]/80 transition-colors">
-                          ✓
+                        <button className="px-3 py-1 bg-[#22C55E] text-white rounded text-xs hover:bg-[#22C55E]/80 transition-colors flex items-center justify-center">
+                          <Check size={12} />
                         </button>
-                        <button className="px-3 py-1 bg-[#EF4444] text-white rounded text-xs hover:bg-[#EF4444]/80 transition-colors">
-                          ✗
+                        <button className="px-3 py-1 bg-[#EF4444] text-white rounded text-xs hover:bg-[#EF4444]/80 transition-colors flex items-center justify-center">
+                          <X size={12} />
                         </button>
-                        <button className="px-3 py-1 bg-[#2563EB] text-white rounded text-xs hover:bg-[#2563EB]/80 transition-colors">
-                          💬
+                        <button className="px-3 py-1 bg-[#2563EB] text-white rounded text-xs hover:bg-[#2563EB]/80 transition-colors flex items-center justify-center">
+                          <MessageCircle size={12} />
                         </button>
                       </div>
                     </div>
