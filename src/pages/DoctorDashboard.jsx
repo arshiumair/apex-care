@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Link, useNavigate } from 'react-router-dom'
 import Navbar from '../components/Navbar'
@@ -20,7 +20,11 @@ import {
   X,
   Circle,
   Monitor,
-  Building
+  Building,
+  Bell,
+  Mail,
+  Clock,
+  AlertCircle
 } from 'lucide-react'
 
 // Footer Component
@@ -58,6 +62,119 @@ const Footer = () => {
   )
 }
 
+// Chat Modal Component
+const ChatModal = ({ patient, onClose }) => {
+  const [message, setMessage] = useState('')
+  const [chatMessages, setChatMessages] = useState([
+    { id: 1, sender: 'patient', text: 'Hello Doctor, I have a question about my medication.', time: '2:30 PM' },
+    { id: 2, sender: 'doctor', text: 'Hello! I\'m here to help. What would you like to know?', time: '2:31 PM' },
+    { id: 3, sender: 'patient', text: 'Are my reports ready?', time: '2:32 PM' }
+  ])
+
+  const handleSendMessage = () => {
+    if (message.trim()) {
+      const newMessage = {
+        id: chatMessages.length + 1,
+        sender: 'doctor',
+        text: message,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      }
+      setChatMessages([...chatMessages, newMessage])
+      setMessage('')
+    }
+  }
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+      onClick={onClose}
+    >
+      <motion.div
+        initial={{ scale: 0.9, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.9, opacity: 0 }}
+        transition={{ duration: 0.3 }}
+        className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-2xl h-[600px] flex flex-col"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+          <div className="flex items-center space-x-3">
+            <img
+              src={patient.avatar}
+              alt={patient.name}
+              className="w-10 h-10 rounded-full object-cover"
+            />
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{patient.name}</h3>
+              <div className="flex items-center space-x-2">
+                <div className={`w-2 h-2 rounded-full ${patient.online ? 'bg-green-500' : 'bg-gray-400'}`}></div>
+                <span className="text-sm text-gray-500 dark:text-gray-400">
+                  {patient.online ? 'Online' : 'Offline'}
+                </span>
+              </div>
+            </div>
+          </div>
+          <button
+            onClick={onClose}
+            className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+          >
+            <X size={24} />
+          </button>
+        </div>
+
+        {/* Messages */}
+        <div className="flex-1 overflow-y-auto p-6 space-y-4">
+          {chatMessages.map((msg) => (
+            <div
+              key={msg.id}
+              className={`flex ${msg.sender === 'doctor' ? 'justify-end' : 'justify-start'}`}
+            >
+              <div
+                className={`max-w-xs lg:max-w-md px-4 py-2 rounded-2xl ${
+                  msg.sender === 'doctor'
+                    ? 'bg-[#14B8A6] text-white'
+                    : 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white'
+                }`}
+              >
+                <p className="text-sm">{msg.text}</p>
+                <p className={`text-xs mt-1 ${
+                  msg.sender === 'doctor' ? 'text-white/70' : 'text-gray-500 dark:text-gray-400'
+                }`}>
+                  {msg.time}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Input */}
+        <div className="p-6 border-t border-gray-200 dark:border-gray-700">
+          <div className="flex space-x-3">
+            <input
+              type="text"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+              placeholder="Type your message..."
+              className="flex-1 px-4 py-3 bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#14B8A6] focus:border-transparent"
+            />
+            <button
+              onClick={handleSendMessage}
+              className="px-6 py-3 bg-gradient-to-r from-[#2563EB] to-[#14B8A6] text-white rounded-xl hover:from-[#1D4ED8] hover:to-[#0F766E] transition-all duration-300 font-medium"
+            >
+              Send
+            </button>
+          </div>
+        </div>
+      </motion.div>
+    </motion.div>
+  )
+}
+
 const DoctorDashboard = () => {
   const navigate = useNavigate()
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
@@ -75,6 +192,17 @@ const DoctorDashboard = () => {
   const [statusFilter, setStatusFilter] = useState('All')
   const [selectedAppointment, setSelectedAppointment] = useState(null)
   const [showAppointmentModal, setShowAppointmentModal] = useState(false)
+  const [showMessagesDropdown, setShowMessagesDropdown] = useState(false)
+  const [showNotificationsDropdown, setShowNotificationsDropdown] = useState(false)
+  const [activeChat, setActiveChat] = useState(null)
+  const [showChatModal, setShowChatModal] = useState(false)
+  const [notificationAlerts, setNotificationAlerts] = useState([
+    { id: 1, text: "New appointment booked by Ali Raza at 3:00 PM", time: "5m ago", type: "calendar", read: false },
+    { id: 2, text: "Prescription updated for Sara Khan", time: "30m ago", type: "file", read: false },
+    { id: 3, text: "System update scheduled tonight", time: "1h ago", type: "alert", read: true },
+    { id: 4, text: "Patient Ayesha Khan uploaded new reports", time: "2h ago", type: "file", read: true },
+    { id: 5, text: "Appointment reminder: Bilal Ahmed at 4:30 PM", time: "3h ago", type: "calendar", read: true }
+  ])
 
   // Doctor profile data
   const doctorProfile = {
@@ -104,6 +232,16 @@ const DoctorDashboard = () => {
     { id: 2, patientName: "Sarah Johnson", reason: "Follow-up visit", time: "2:00 PM", date: "2025-01-20" },
     { id: 3, patientName: "Mike Wilson", reason: "Health screening", time: "4:00 PM", date: "2025-01-21" }
   ]
+
+  // Mock data for messages and notifications
+  const messages = [
+    { id: 1, name: "Ayesha Khan", message: "Doctor, are my reports ready?", time: "2m ago", online: true, avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face" },
+    { id: 2, name: "Bilal Ahmed", message: "Thanks for your help!", time: "15m ago", online: false, avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face" },
+    { id: 3, name: "Fatima Ali", message: "Can I schedule a follow-up?", time: "1h ago", online: true, avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face" },
+    { id: 4, name: "Hassan Khan", message: "The medication is working well", time: "2h ago", online: false, avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face" },
+    { id: 5, name: "Sara Ahmed", message: "Thank you for the consultation", time: "3h ago", online: true, avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop&crop=face" }
+  ]
+
 
   // Extended appointments data for the appointments page
   const allAppointments = [
@@ -220,6 +358,79 @@ const DoctorDashboard = () => {
     // In a real app, this would update the backend
   }
 
+  const handleMessagesToggle = () => {
+    setShowMessagesDropdown(!showMessagesDropdown)
+    setShowNotificationsDropdown(false) // Close notifications if open
+  }
+
+  const handleNotificationsToggle = () => {
+    setShowNotificationsDropdown(!showNotificationsDropdown)
+    setShowMessagesDropdown(false) // Close messages if open
+  }
+
+  const handleMessageClick = (message) => {
+    console.log(`Opening chat with ${message.name}`)
+    setActiveChat(message)
+    setShowChatModal(true)
+    // Close dropdown with smooth transition
+    setTimeout(() => setShowMessagesDropdown(false), 200)
+  }
+
+  const handleNotificationClick = (notificationId) => {
+    console.log(`Handling notification ${notificationId}`)
+    // Mark notification as read
+    setNotificationAlerts(prev => 
+      prev.map(n => 
+        n.id === notificationId ? { ...n, read: true } : n
+      )
+    )
+    // Close dropdown with smooth transition
+    setTimeout(() => setShowNotificationsDropdown(false), 200)
+  }
+
+  const markAllNotificationsRead = () => {
+    console.log('Marking all notifications as read')
+    setNotificationAlerts(prev => 
+      prev.map(n => ({ ...n, read: true }))
+    )
+  }
+
+  const closeChatModal = () => {
+    setShowChatModal(false)
+    setActiveChat(null)
+  }
+
+  const getNotificationIcon = (type) => {
+    switch (type) {
+      case 'calendar': return <Calendar size={16} className="text-[#2563EB]" />
+      case 'file': return <FileText size={16} className="text-[#14B8A6]" />
+      case 'alert': return <AlertCircle size={16} className="text-[#F59E0B]" />
+      default: return <Bell size={16} className="text-[#6B7280]" />
+    }
+  }
+
+  const unreadNotificationsCount = notificationAlerts.filter(n => !n.read).length
+
+  // Click outside to close dropdowns
+  const messagesRef = useRef(null)
+  const notificationsRef = useRef(null)
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (messagesRef.current && !messagesRef.current.contains(event.target)) {
+        setShowMessagesDropdown(false)
+      }
+      if (notificationsRef.current && !notificationsRef.current.contains(event.target)) {
+        setShowNotificationsDropdown(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
+
   const getAppointmentStatusColor = (status) => {
     switch (status) {
       case 'Upcoming': return '#22C55E'
@@ -296,17 +507,152 @@ const DoctorDashboard = () => {
          <div className="flex items-center justify-between">
            <h1 className="text-3xl font-bold text-[#F8FAFC] ml-16">Dashboard</h1>
            <div className="flex items-center space-x-4">
-             <button className="p-2 text-[#94A3B8] hover:text-[#F8FAFC] transition-colors">
-               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-               </svg>
-             </button>
-             <button className="p-2 text-[#94A3B8] hover:text-[#F8FAFC] transition-colors relative">
-               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-5 5v-5zM4 19h6v-2H4v2zM4 13h6v-2H4v2zM4 7h6V5H4v2z" />
-               </svg>
-               <div className="absolute -top-1 -right-1 w-3 h-3 bg-[#EF4444] rounded-full"></div>
-             </button>
+             {/* Messages Icon */}
+             <div className="relative" ref={messagesRef}>
+               <button 
+                 onClick={handleMessagesToggle}
+                 className="p-2 text-[#94A3B8] hover:text-[#F8FAFC] transition-colors relative"
+               >
+                 <MessageCircle className="w-6 h-6" />
+               </button>
+               
+               {/* Messages Dropdown */}
+               <AnimatePresence>
+                 {showMessagesDropdown && (
+                   <motion.div
+                     initial={{ opacity: 0, scale: 0.95, y: -10 }}
+                     animate={{ opacity: 1, scale: 1, y: 0 }}
+                     exit={{ opacity: 0, scale: 0.95, y: -10 }}
+                     transition={{ duration: 0.2 }}
+                     className="absolute right-0 top-full mt-2 w-80 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 z-50"
+                   >
+                     <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+                       <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Messages</h3>
+                     </div>
+                     <div className="max-h-80 overflow-y-auto">
+                       {messages.map((message) => (
+                         <motion.div
+                           key={message.id}
+                           initial={{ opacity: 0, x: -10 }}
+                           animate={{ opacity: 1, x: 0 }}
+                           transition={{ delay: 0.1 }}
+                           onClick={() => handleMessageClick(message)}
+                           className="p-4 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors border-b border-gray-100 dark:border-gray-700 last:border-b-0"
+                         >
+                           <div className="flex items-start space-x-3">
+                             <div className="relative">
+                               <img
+                                 src={message.avatar}
+                                 alt={message.name}
+                                 className="w-10 h-10 rounded-full object-cover"
+                               />
+                               <div className={`absolute -bottom-1 -right-1 w-3 h-3 rounded-full border-2 border-white dark:border-gray-800 ${
+                                 message.online ? 'bg-green-500' : 'bg-gray-400'
+                               }`}></div>
+                             </div>
+                             <div className="flex-1 min-w-0">
+                               <div className="flex items-center justify-between">
+                                 <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                                   {message.name}
+                                 </p>
+                                 <p className="text-xs text-gray-500 dark:text-gray-400">
+                                   {message.time}
+                                 </p>
+                               </div>
+                               <p className="text-sm text-gray-600 dark:text-gray-300 truncate mt-1">
+                                 {message.message}
+                               </p>
+                             </div>
+                           </div>
+                         </motion.div>
+                       ))}
+                     </div>
+                   </motion.div>
+                 )}
+               </AnimatePresence>
+             </div>
+
+             {/* Notifications Icon */}
+             <div className="relative" ref={notificationsRef}>
+               <button 
+                 onClick={handleNotificationsToggle}
+                 className="p-2 text-[#94A3B8] hover:text-[#F8FAFC] transition-colors relative"
+               >
+                 <Bell className="w-6 h-6" />
+                 {unreadNotificationsCount > 0 && (
+                   <div className="absolute -top-1 -right-1 w-4 h-4 bg-[#EF4444] rounded-full flex items-center justify-center">
+                     <span className="text-xs text-white font-medium">
+                       {unreadNotificationsCount > 9 ? '9+' : unreadNotificationsCount}
+                     </span>
+                   </div>
+                 )}
+               </button>
+               
+               {/* Notifications Dropdown */}
+               <AnimatePresence>
+                 {showNotificationsDropdown && (
+                   <motion.div
+                     initial={{ opacity: 0, scale: 0.95, y: -10 }}
+                     animate={{ opacity: 1, scale: 1, y: 0 }}
+                     exit={{ opacity: 0, scale: 0.95, y: -10 }}
+                     transition={{ duration: 0.2 }}
+                     className="absolute right-0 top-full mt-2 w-80 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 z-50"
+                   >
+                     <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+                       <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Notifications</h3>
+                       {unreadNotificationsCount > 0 && (
+                         <button
+                           onClick={markAllNotificationsRead}
+                           className="text-sm text-[#14B8A6] hover:text-[#14B8A6]/80 transition-colors"
+                         >
+                           Mark all read
+                         </button>
+                       )}
+                     </div>
+                     <div className="max-h-80 overflow-y-auto">
+                       {notificationAlerts.map((notification) => (
+                         <motion.div
+                           key={notification.id}
+                           initial={{ opacity: 0, x: -10 }}
+                           animate={{ opacity: 1, x: 0 }}
+                           transition={{ delay: 0.1 }}
+                           onClick={() => handleNotificationClick(notification.id)}
+                           className={`p-4 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-all duration-200 border-b border-gray-100 dark:border-gray-700 last:border-b-0 ${
+                             !notification.read ? 'bg-blue-50 dark:bg-blue-900/20' : 'bg-transparent'
+                           }`}
+                         >
+                           <div className="flex items-start space-x-3">
+                             <div className="flex-shrink-0 mt-1">
+                               {getNotificationIcon(notification.type)}
+                             </div>
+                             <div className="flex-1 min-w-0">
+                               <div className="flex items-center justify-between">
+                                 <p className="text-sm text-gray-900 dark:text-white">
+                                   {notification.text}
+                                 </p>
+                                 <p className="text-xs text-gray-500 dark:text-gray-400 ml-2">
+                                   {notification.time}
+                                 </p>
+                               </div>
+                               <div className="flex items-center justify-between mt-2">
+                                 {!notification.read ? (
+                                   <div className="w-2 h-2 bg-[#2563EB] rounded-full"></div>
+                                 ) : (
+                                   <div className="flex items-center space-x-1">
+                                     <Check size={12} className="text-green-500" />
+                                     <span className="text-xs text-green-500">Read</span>
+                                   </div>
+                                 )}
+                               </div>
+                             </div>
+                           </div>
+                         </motion.div>
+                       ))}
+                     </div>
+                   </motion.div>
+                 )}
+               </AnimatePresence>
+             </div>
            </div>
          </div>
       </motion.div>
@@ -1124,6 +1470,16 @@ const DoctorDashboard = () => {
               </div>
             </motion.div>
           </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Chat Modal */}
+      <AnimatePresence>
+        {showChatModal && activeChat && (
+          <ChatModal
+            patient={activeChat}
+            onClose={closeChatModal}
+          />
         )}
       </AnimatePresence>
 
