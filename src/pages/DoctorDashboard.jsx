@@ -147,7 +147,7 @@ const DoctorDashboard = () => {
         }}
       >
         <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-bold text-[#F8FAFC]">Dashboard</h1>
+          <h1 className="text-3xl font-bold text-[#F8FAFC] ml-16">Dashboard</h1>
           <div className="flex items-center space-x-4">
             <input
               type="text"
@@ -190,7 +190,9 @@ const DoctorDashboard = () => {
           <div className="relative w-full">
             <button
               onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-              className="absolute top-4 right-4 p-3 text-[#94A3B8] hover:text-[#F8FAFC] transition-colors z-30 bg-[#111827] rounded-lg hover:bg-[#1E293B] border border-[#1E293B] shadow-lg"
+              className={`absolute p-3 text-[#94A3B8] hover:text-[#F8FAFC] transition-all duration-300 z-30 bg-[#111827] rounded-lg hover:bg-[#1E293B] border border-[#1E293B] shadow-lg ${
+                sidebarCollapsed ? 'top-2 right-2' : 'top-4 right-4'
+              }`}
               aria-label={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
             >
               <motion.svg 
