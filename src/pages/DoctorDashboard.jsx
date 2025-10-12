@@ -174,34 +174,37 @@ const DoctorDashboard = () => {
         </div>
       </motion.div>
 
-      <div className="flex h-screen">
+      <div className="flex" style={{ minHeight: 'calc(100vh - 120px)' }}>
         {/* Sidebar */}
         <motion.div
           initial={{ x: -280 }}
           animate={{ x: 0 }}
           transition={{ duration: 0.5 }}
-          className={`${sidebarCollapsed ? 'w-18' : 'w-70'} bg-[#111827] rounded-r-xl transition-all duration-300 sticky top-0 h-full flex flex-col`}
+          className={`${sidebarCollapsed ? 'w-18' : 'w-70'} bg-[#111827] rounded-r-xl transition-all duration-300 flex flex-col`}
           style={{
-            boxShadow: '0 2px 10px rgba(0, 0, 0, 0.15)'
+            boxShadow: '0 2px 10px rgba(0, 0, 0, 0.15)',
+            minHeight: 'calc(100vh - 120px)'
           }}
         >
           {/* Toggle Button */}
-          <button
-            onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-            className="absolute top-4 right-4 p-2 text-[#94A3B8] hover:text-[#F8FAFC] transition-colors z-10"
-            aria-label={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-          >
-            <motion.svg 
-              className="w-5 h-5" 
-              fill="none" 
-              stroke="currentColor" 
-              viewBox="0 0 24 24"
-              animate={{ rotate: sidebarCollapsed ? 180 : 0 }}
-              transition={{ duration: 0.3 }}
+          <div className="relative w-full">
+            <button
+              onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+              className="absolute top-4 right-4 p-3 text-[#94A3B8] hover:text-[#F8FAFC] transition-colors z-30 bg-[#111827] rounded-lg hover:bg-[#1E293B] border border-[#1E293B] shadow-lg"
+              aria-label={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
             >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-            </motion.svg>
-          </button>
+              <motion.svg 
+                className="w-5 h-5" 
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24"
+                animate={{ rotate: sidebarCollapsed ? 180 : 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </motion.svg>
+            </button>
+          </div>
 
           {/* Doctor Profile */}
           <div className={`${sidebarCollapsed ? 'p-2 pt-16' : 'p-6 pt-16'}`}>
@@ -302,7 +305,7 @@ const DoctorDashboard = () => {
         </motion.div>
 
         {/* Main Content */}
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto" style={{ minHeight: 'calc(100vh - 120px)' }}>
 
           <div className="p-6 space-y-6">
             {/* KPI Cards */}
