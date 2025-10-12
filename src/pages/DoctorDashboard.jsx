@@ -2,6 +2,15 @@ import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Link, useNavigate } from 'react-router-dom'
 import Navbar from '../components/Navbar'
+import { 
+  LayoutDashboard, 
+  CalendarDays, 
+  ClipboardList, 
+  CreditCard, 
+  UserCircle, 
+  Settings, 
+  LogOut 
+} from 'lucide-react'
 
 // Footer Component
 const Footer = () => {
@@ -9,7 +18,7 @@ const Footer = () => {
     <footer className="bg-[#0F172A] border-t border-[#1E293B]/30 mt-20">
       <div className="max-w-7xl mx-auto px-6 py-8">
         <div className="text-center">
-          <p className="text-[#94A3B8] text-sm mb-4">
+          <p className="text-[#94A3B8] text-sm mb-4"> 
             © 2025 Apex Care. All rights reserved.
           </p>
           <div className="flex justify-center space-x-6">
@@ -82,13 +91,13 @@ const DoctorDashboard = () => {
   ]
 
   const menuItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: '📊' },
-    { id: 'appointments', label: 'Appointments', icon: '📅' },
-    { id: 'appointment-page', label: 'Appointment Page', icon: '📋' },
-    { id: 'payments', label: 'Payments', icon: '💳' },
-    { id: 'profile', label: 'Profile', icon: '👤' },
-    { id: 'settings', label: 'Settings', icon: '⚙️' },
-    { id: 'logout', label: 'Logout', icon: '🚪' }
+    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { id: 'appointments', label: 'Appointments', icon: CalendarDays },
+    { id: 'appointment-page', label: 'Appointment Page', icon: ClipboardList },
+    { id: 'payments', label: 'Payments', icon: CreditCard },
+    { id: 'profile', label: 'Profile', icon: UserCircle },
+    { id: 'settings', label: 'Settings', icon: Settings },
+    { id: 'logout', label: 'Logout', icon: LogOut }
   ]
 
   const handleAvailabilityToggle = (status) => {
@@ -286,7 +295,14 @@ const DoctorDashboard = () => {
                   } : {}}
                   title={sidebarCollapsed ? item.label : ''}
                 >
-                  <span className="text-lg">{item.icon}</span>
+                  <item.icon 
+                    size={22} 
+                    className={`transition-colors duration-300 ${
+                      activeMenu === item.id 
+                        ? 'text-[#F8FAFC]' 
+                        : 'text-[#94A3B8] group-hover:text-[#F8FAFC]'
+                    }`}
+                  />
                   <AnimatePresence>
                     {!sidebarCollapsed && (
                       <motion.span
