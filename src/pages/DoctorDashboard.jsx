@@ -369,7 +369,7 @@ const DoctorDashboard = () => {
                 >
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-[#94A3B8] text-sm mb-2">{kpi.title}</p>
+                      <p className="text-gray-200 font-semibold text-sm mb-2">{kpi.title}</p>
                       <p className="text-3xl font-bold" style={{ color: kpi.color }}>{kpi.value}</p>
                     </div>
                     <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: `${kpi.color}20` }}>
