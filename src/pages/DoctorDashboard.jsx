@@ -136,7 +136,45 @@ const DoctorDashboard = () => {
     <div className="min-h-screen bg-gradient-to-br from-[#0F172A] to-[#1E293B] font-inter">
       <Navbar />
 
-      <div className="flex h-screen pt-24">
+      {/* Header */}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+        className="sticky top-0 bg-[#0F172A]/80 backdrop-blur-md border-b border-[#1E293B]/30 p-6 z-10 pt-24"
+        style={{
+          boxShadow: '0 2px 10px rgba(0, 0, 0, 0.15)'
+        }}
+      >
+        <div className="flex items-center justify-between">
+          <h1 className="text-3xl font-bold text-[#F8FAFC]">Dashboard</h1>
+          <div className="flex items-center space-x-4">
+            <input
+              type="text"
+              placeholder="Search..."
+              className="px-4 py-2 bg-[#1E293B] border border-[#1E293B]/50 rounded-lg text-[#F8FAFC] placeholder-[#94A3B8] focus:outline-none focus:ring-2 focus:ring-[#14B8A6] transition-all duration-300"
+            />
+            <button className="p-2 text-[#94A3B8] hover:text-[#F8FAFC] transition-colors">
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+            </button>
+            <button className="p-2 text-[#94A3B8] hover:text-[#F8FAFC] transition-colors relative">
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-5 5v-5zM4 19h6v-2H4v2zM4 13h6v-2H4v2zM4 7h6V5H4v2z" />
+              </svg>
+              <div className="absolute -top-1 -right-1 w-3 h-3 bg-[#EF4444] rounded-full"></div>
+            </button>
+            <img
+              src={doctorProfile.image}
+              alt="Profile"
+              className="w-8 h-8 rounded-full object-cover"
+            />
+          </div>
+        </div>
+      </motion.div>
+
+      <div className="flex h-screen">
         {/* Sidebar */}
         <motion.div
           initial={{ x: -280 }}
@@ -265,43 +303,6 @@ const DoctorDashboard = () => {
 
         {/* Main Content */}
         <div className="flex-1 overflow-y-auto">
-          {/* Header */}
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="sticky top-0 bg-[#0F172A]/80 backdrop-blur-md border-b border-[#1E293B]/30 p-6 z-10"
-            style={{
-              boxShadow: '0 2px 10px rgba(0, 0, 0, 0.15)'
-            }}
-          >
-            <div className="flex items-center justify-between">
-              <h1 className="text-3xl font-bold text-[#F8FAFC]">Dashboard</h1>
-              <div className="flex items-center space-x-4">
-                <input
-                  type="text"
-                  placeholder="Search..."
-                  className="px-4 py-2 bg-[#1E293B] border border-[#1E293B]/50 rounded-lg text-[#F8FAFC] placeholder-[#94A3B8] focus:outline-none focus:ring-2 focus:ring-[#14B8A6] transition-all duration-300"
-                />
-                <button className="p-2 text-[#94A3B8] hover:text-[#F8FAFC] transition-colors">
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                </button>
-                <button className="p-2 text-[#94A3B8] hover:text-[#F8FAFC] transition-colors relative">
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-5 5v-5zM4 19h6v-2H4v2zM4 13h6v-2H4v2zM4 7h6V5H4v2z" />
-                  </svg>
-                  <div className="absolute -top-1 -right-1 w-3 h-3 bg-[#EF4444] rounded-full"></div>
-                </button>
-                <img
-                  src={doctorProfile.image}
-                  alt="Profile"
-                  className="w-8 h-8 rounded-full object-cover"
-                />
-              </div>
-            </div>
-          </motion.div>
 
           <div className="p-6 space-y-6">
             {/* KPI Cards */}
