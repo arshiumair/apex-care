@@ -422,11 +422,19 @@ const DoctorDashboard = () => {
               >
                 <h3 className="text-xl font-bold text-[#F8FAFC] mb-6">Patients Summary</h3>
                 
-                {/* Donut Chart Placeholder */}
+                {/* Donut Chart */}
                 <div className="flex items-center justify-center mb-6">
-                  <div className="w-48 h-48 rounded-full bg-gradient-to-r from-[#2563EB] to-[#14B8A6] flex items-center justify-center">
-                    <div className="w-32 h-32 rounded-full bg-[#1E293B] flex items-center justify-center">
-                      <span className="text-2xl font-bold text-[#F8FAFC]">75%</span>
+                  <div className="relative w-48 h-48">
+                    {/* Single conic gradient for both segments */}
+                    <div 
+                      className="w-48 h-48 rounded-full"
+                      style={{
+                        background: `conic-gradient(from 0deg, #2563EB 0deg, #2563EB ${57 * 3.6}deg, #14B8A6 ${57 * 3.6}deg, #14B8A6 360deg)`
+                      }}
+                    ></div>
+                    {/* Center circle */}
+                    <div className="absolute top-6 left-6 w-36 h-36 rounded-full bg-[#1E293B] flex items-center justify-center">
+                      <span className="text-2xl font-bold text-[#F8FAFC]">57%</span>
                     </div>
                   </div>
                 </div>
