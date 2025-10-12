@@ -17,6 +17,7 @@ import SignUp from './pages/SignUp'
 import OurServices from './pages/OurServices'
 import OurDoctors from './pages/OurDoctors'
 import DoctorDashboard from './pages/DoctorDashboard'
+import LiveAppointment from './pages/LiveAppointment'
 import ScrollToTop from './components/ScrollToTop'
 import { Phone, Mail, MapPin } from 'lucide-react'
 import Navbar from './components/Navbar'
@@ -666,6 +667,8 @@ const App = () => {
         <Route path="/our-doctors" element={<OurDoctors />} />
         {/* Doctor dashboard route */}
         <Route path="/doctor-dashboard" element={<DoctorDashboard />} />
+        {/* Live appointment route */}
+        <Route path="/live-appointment" element={<LiveAppointment />} />
       </Routes>
     </Router>
   )

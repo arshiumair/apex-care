@@ -328,7 +328,7 @@ const DoctorDashboard = () => {
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'appointments', label: 'Appointments', icon: CalendarDays },
-    { id: 'appointment-page', label: 'Appointment Page', icon: ClipboardList },
+    { id: 'appointment-page', label: 'Appointment Page', icon: ClipboardList, isExternal: true },
     { id: 'payments', label: 'Payments', icon: CreditCard },
     { id: 'profile', label: 'Profile', icon: UserCircle },
     { id: 'settings', label: 'Settings', icon: Settings },
@@ -786,7 +786,26 @@ const DoctorDashboard = () => {
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.5 + index * 0.1 }}
-                  onClick={() => setActiveMenu(item.id)}
+                  onClick={() => {
+                    if (item.isExternal) {
+                      // Navigate to LiveAppointment page with mock data
+                      navigate('/live-appointment', {
+                        state: {
+                          id: 'APT-DEMO-001',
+                          patientName: 'Demo Patient',
+                          patientAge: 30,
+                          patientGender: 'Not specified',
+                          patientId: 'PAT-DEMO-001',
+                          consultationType: 'Video Consultation',
+                          startTime: new Date(),
+                          medicalHistory: 'Demo consultation for testing purposes.',
+                          lastVisit: '2024-12-15'
+                        }
+                      })
+                    } else {
+                      setActiveMenu(item.id)
+                    }
+                  }}
                   className={`w-full flex items-center ${sidebarCollapsed ? 'px-2 py-3 justify-center' : 'px-4 py-3'} rounded-lg transition-all duration-300 group ${
                     activeMenu === item.id
                       ? 'bg-gradient-to-r from-[#2563EB]/20 to-[#14B8A6]/20 border border-[#2563EB]/30 text-[#F8FAFC]'
@@ -1236,6 +1255,32 @@ const DoctorDashboard = () => {
                       </span>
                       
                       <div className="flex gap-2">
+                        {appointment.status === 'Upcoming' && (
+                          <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              navigate('/live-appointment', { 
+                                state: {
+                                  id: `APT-${appointment.id}`,
+                                  patientName: appointment.name,
+                                  patientAge: appointment.age,
+                                  patientGender: 'Not specified',
+                                  patientId: `PAT-${appointment.id}`,
+                                  consultationType: appointment.mode === 'Online' ? 'Video Consultation' : 'In-Person Consultation',
+                                  startTime: new Date(),
+                                  medicalHistory: 'Previous consultation records available.',
+                                  lastVisit: '2024-12-15'
+                                }
+                              })
+                            }}
+                            className="px-3 py-1 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg hover:from-green-700 hover:to-green-800 transition-all duration-300 text-xs font-medium"
+                            title="Join Live Appointment"
+                          >
+                            Join Live
+                          </motion.button>
+                        )}
                         <button
                           onClick={(e) => {
                             e.stopPropagation()
