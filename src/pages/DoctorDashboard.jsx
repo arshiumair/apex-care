@@ -273,20 +273,48 @@ const DoctorDashboard = () => {
                   transition={{ duration: 0.3, delay: 0.1 }}
                   className="mt-6"
                 >
-                  <div className="flex space-x-1 bg-[#1E293B] rounded-lg p-1">
-                    {['online', 'busy', 'offline'].map((status) => (
-                      <button
-                        key={status}
-                        onClick={() => handleAvailabilityToggle(status)}
-                        className={`flex-1 px-3 py-2 rounded-md text-xs font-medium transition-all duration-300 ${
-                          availabilityStatus === status
-                            ? 'bg-gradient-to-r from-[#2563EB] to-[#14B8A6] text-white'
-                            : 'text-[#94A3B8] hover:text-[#F8FAFC]'
-                        }`}
-                      >
-                        {status.charAt(0).toUpperCase() + status.slice(1)}
-                      </button>
-                    ))}
+                  <div className="flex h-10 w-full sm:w-96 border border-gray-700 rounded-full overflow-hidden bg-transparent gap-0">
+                    <button
+                      onClick={() => handleAvailabilityToggle('online')}
+                      className={`w-1/3 flex items-center justify-center text-sm sm:text-base font-medium transition-all duration-300 ease-in-out ${
+                        availabilityStatus === 'online'
+                          ? 'bg-green-600 text-white shadow-[0_0_8px_#22c55e]'
+                          : 'text-gray-400 hover:bg-gray-800'
+                      } rounded-l-full`}
+                      style={{
+                        clipPath: 'polygon(0% 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%)'
+                      }}
+                    >
+                      Online
+                    </button>
+
+                    <button
+                      onClick={() => handleAvailabilityToggle('busy')}
+                      className={`w-1/3 flex items-center justify-center text-sm sm:text-base font-medium transition-all duration-300 ease-in-out ${
+                        availabilityStatus === 'busy'
+                          ? 'bg-blue-600 text-white shadow-[0_0_8px_#2563eb]'
+                          : 'text-gray-400 hover:bg-gray-800'
+                      }`}
+                      style={{
+                        transform: 'skewX(-15deg)'
+                      }}
+                    >
+                      <span style={{ transform: 'skewX(15deg)' }}>Busy</span>
+                    </button>
+
+                    <button
+                      onClick={() => handleAvailabilityToggle('offline')}
+                      className={`w-1/3 flex items-center justify-center text-sm sm:text-base font-medium transition-all duration-300 ease-in-out ${
+                        availabilityStatus === 'offline'
+                          ? 'bg-red-600 text-white shadow-[0_0_8px_#dc2626]'
+                          : 'text-gray-400 hover:bg-gray-800'
+                      } rounded-r-full`}
+                      style={{
+                        clipPath: 'polygon(10px 0%, 100% 0%, 100% 100%, 0% 100%)'
+                      }}
+                    >
+                      Offline
+                    </button>
                   </div>
                 </motion.div>
               )}
