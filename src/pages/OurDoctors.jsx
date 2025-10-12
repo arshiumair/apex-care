@@ -42,6 +42,7 @@ const Footer = () => {
 const OurDoctors = () => {
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedSpecialty, setSelectedSpecialty] = useState('')
+  const navigate = useNavigate()
 
   // Helper function to check doctor availability
   const checkDoctorAvailability = (availability) => {
@@ -56,7 +57,14 @@ const OurDoctors = () => {
     const isDayAvailable = availability.days.includes(currentDay)
     const isTimeAvailable = currentTime >= availability.start && currentTime <= availability.end
     
-    return isDayAvailable && isTimeAvailable
+    if (!isDayAvailable || !isTimeAvailable) {
+      return 'unavailable'
+    }
+    
+    // Check if doctor is temporarily busy (random simulation for demo)
+    const isBusy = Math.random() < 0.3 // 30% chance of being busy
+    
+    return isBusy ? 'busy' : 'available'
   }
 
   // Doctor data with availability information
@@ -99,20 +107,20 @@ const OurDoctors = () => {
     },
     {
       id: 5,
-      name: "Dr. Maryam Noor",
+      name: "Dr. Iqra Urooj",
       specialty: "Neurologist",
       experience: "8 years",
       description: "Expert in neurological disorders and brain health",
-      image: "https://plus.unsplash.com/premium_photo-1702598599506-9ff660bc50f5?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjA5fHxwYWtpc3RhbmklMjBkb2N0b3J8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&q=60&w=600",
+      image: "https://media.licdn.com/dms/image/v2/D5603AQE3eqqmkeWZYA/profile-displayphoto-scale_400_400/B56ZlN085MKAAk-/0/1757947351742?e=1762992000&v=beta&t=6rUQrGI0Jg4h9CLgQonV0xJW6LkIUXEyWuG6rxrvc64",
       availability: { days: ["Tue", "Thu", "Sat"], start: "08:30", end: "17:30" }
     },
     {
       id: 6,
-      name: "Dr. Iqra Urooj",
+      name: "Dr. Maryam Noor",
       specialty: "Nephrologist",
       experience: "5 years",
       description: "Expert in nephrological disorders and kidney health",
-      image: "https://media.licdn.com/dms/image/v2/D5603AQE3eqqmkeWZYA/profile-displayphoto-scale_400_400/B56ZlN085MKAAk-/0/1757947351742?e=1762992000&v=beta&t=6rUQrGI0Jg4h9CLgQonV0xJW6LkIUXEyWuG6rxrvc64",
+      image: "https://plus.unsplash.com/premium_photo-1702598599506-9ff660bc50f5?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjA5fHxwYWtpc3RhbmklMjBkb2N0b3J8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&q=60&w=600",
       availability: { days: ["Mon", "Tue", "Wed", "Thu", "Fri"], start: "09:30", end: "16:30" }
     },
     {
@@ -303,11 +311,18 @@ const OurDoctors = () => {
                          {/* Availability Status Badge */}
                          <div className="absolute -bottom-2 -right-2">
                            <div className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                             checkDoctorAvailability(doctor.availability)
+                             checkDoctorAvailability(doctor.availability) === 'available'
                                ? 'bg-green-500/90 text-white'
+                               : checkDoctorAvailability(doctor.availability) === 'busy'
+                               ? 'bg-blue-500/90 text-white'
                                : 'bg-red-500/90 text-white'
                            }`}>
-                             {checkDoctorAvailability(doctor.availability) ? '🟢 Available' : '🔴 Unavailable'}
+                             {checkDoctorAvailability(doctor.availability) === 'available' 
+                               ? '🟢 Available' 
+                               : checkDoctorAvailability(doctor.availability) === 'busy'
+                               ? '🔵 Busy'
+                               : '🔴 Unavailable'
+                             }
                            </div>
                          </div>
                        </div>
@@ -345,27 +360,34 @@ const OurDoctors = () => {
                        <motion.button
                          whileHover={{ scale: 1.05 }}
                          whileTap={{ scale: 0.95 }}
-                         disabled={!checkDoctorAvailability(doctor.availability)}
+                         disabled={checkDoctorAvailability(doctor.availability) !== 'available'}
                          className={`w-full lg:w-auto px-8 py-4 rounded-full font-semibold transition-all duration-300 ${
-                           checkDoctorAvailability(doctor.availability)
+                           checkDoctorAvailability(doctor.availability) === 'available'
                              ? 'bg-gradient-to-r from-primary to-accent text-white hover:shadow-lg'
+                             : checkDoctorAvailability(doctor.availability) === 'busy'
+                             ? 'bg-surface/50 text-text-secondary cursor-not-allowed border-2 border-blue-500/60'
                              : 'bg-surface/50 text-text-secondary cursor-not-allowed border-2 border-[#13ad9e]/60'
                          }`}
-                         style={checkDoctorAvailability(doctor.availability) ? {
+                         style={checkDoctorAvailability(doctor.availability) === 'available' ? {
                            boxShadow: '0 0 20px rgba(37, 99, 235, 0.4), 0 0 20px rgba(20, 184, 166, 0.4)'
                          } : {}}
                          onMouseEnter={(e) => {
-                           if (checkDoctorAvailability(doctor.availability)) {
+                           if (checkDoctorAvailability(doctor.availability) === 'available') {
                              e.target.style.boxShadow = '0 0 30px rgba(37, 99, 235, 0.6), 0 0 30px rgba(20, 184, 166, 0.6)'
                            }
                          }}
                          onMouseLeave={(e) => {
-                           if (checkDoctorAvailability(doctor.availability)) {
+                           if (checkDoctorAvailability(doctor.availability) === 'available') {
                              e.target.style.boxShadow = '0 0 20px rgba(37, 99, 235, 0.4), 0 0 20px rgba(20, 184, 166, 0.4)'
                            }
                          }}
                        >
-                         {checkDoctorAvailability(doctor.availability) ? 'Book Appointment' : 'Currently Unavailable'}
+                         {checkDoctorAvailability(doctor.availability) === 'available' 
+                           ? 'Book Appointment' 
+                           : checkDoctorAvailability(doctor.availability) === 'busy'
+                           ? 'Temporarily Busy'
+                           : 'Currently Unavailable'
+                         }
                        </motion.button>
                      </div>
                    </div>
@@ -414,7 +436,17 @@ const OurDoctors = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
-              to="/contact"
+              to="/"
+              onClick={(e) => {
+                e.preventDefault()
+                navigate('/')
+                setTimeout(() => {
+                  const contactSection = document.getElementById('contact')
+                  if (contactSection) {
+                    contactSection.scrollIntoView({ behavior: 'smooth' })
+                  }
+                }, 150)
+              }}
               className="inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-primary to-accent text-white rounded-full font-semibold hover:shadow-lg transition-all duration-300"
               style={{
                 boxShadow: '0 0 20px rgba(37, 99, 235, 0.4), 0 0 20px rgba(20, 184, 166, 0.4)'
