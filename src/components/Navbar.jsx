@@ -128,8 +128,11 @@ const Navbar = () => {
             Apex Care
           </Link>
           
+          {/* Spacer to push navigation to the right */}
+          <div className="flex-1"></div>
+          
           {/* Navigation Links */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-4 ml-0">
             <button
               onClick={() => handleSectionNavigation('home')}
               aria-label="Navigate to Home section"

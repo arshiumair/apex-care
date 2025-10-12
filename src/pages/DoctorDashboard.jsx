@@ -18,7 +18,9 @@ import {
   MessageCircle,
   Check,
   X,
-  Circle
+  Circle,
+  Monitor,
+  Building
 } from 'lucide-react'
 
 // Footer Component
@@ -69,6 +71,10 @@ const DoctorDashboard = () => {
     email: true,
     sms: false
   })
+  const [searchTerm, setSearchTerm] = useState('')
+  const [statusFilter, setStatusFilter] = useState('All')
+  const [selectedAppointment, setSelectedAppointment] = useState(null)
+  const [showAppointmentModal, setShowAppointmentModal] = useState(false)
 
   // Doctor profile data
   const doctorProfile = {
@@ -99,6 +105,88 @@ const DoctorDashboard = () => {
     { id: 3, patientName: "Mike Wilson", reason: "Health screening", time: "4:00 PM", date: "2025-01-21" }
   ]
 
+  // Extended appointments data for the appointments page
+  const allAppointments = [
+    {
+      id: 1,
+      name: "Ayesha Khan",
+      age: 27,
+      date: "2025-01-20",
+      time: "10:00 AM",
+      purpose: "Follow-up on test results",
+      mode: "Online",
+      status: "Upcoming",
+      avatar: "https://media.istockphoto.com/id/1206181103/photo/face-of-happy-young-persian-woman-smiling-in-traditional-clothing.jpg?s=612x612&w=0&k=20&c=6Kos894F11JWo5BmnqFladEquUeHTmvv6UK8m4gHJRk=",
+      phone: "+92 300 1234567",
+      email: "ayesha.khan@email.com"
+    },
+    {
+      id: 2,
+      name: "Bilal Ahmed",
+      age: 35,
+      date: "2025-01-19",
+      time: "4:30 PM",
+      purpose: "General Consultation",
+      mode: "In-person",
+      status: "Completed",
+      avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face",
+      phone: "+92 300 2345678",
+      email: "bilal.ahmed@email.com"
+    },
+    {
+      id: 3,
+      name: "Fatima Ali",
+      age: 42,
+      date: "2025-01-21",
+      time: "2:00 PM",
+      purpose: "Blood pressure check",
+      mode: "Online",
+      status: "Upcoming",
+      avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face",
+      phone: "+92 300 3456789",
+      email: "fatima.ali@email.com"
+    },
+    {
+      id: 4,
+      name: "Hassan Khan",
+      age: 29,
+      date: "2025-01-18",
+      time: "11:30 AM",
+      purpose: "Chest pain evaluation",
+      mode: "In-person",
+      status: "Completed",
+      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
+      phone: "+92 300 4567890",
+      email: "hassan.khan@email.com"
+    },
+    {
+      id: 5,
+      name: "Sara Ahmed",
+      age: 31,
+      date: "2025-01-22",
+      time: "3:15 PM",
+      purpose: "Diabetes management",
+      mode: "Online",
+      status: "Upcoming",
+      avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop&crop=face",
+      phone: "+92 300 5678901",
+      email: "sara.ahmed@email.com"
+    },
+    {
+      id: 6,
+      name: "Omar Sheikh",
+      age: 45,
+      date: "2025-01-17",
+      time: "9:00 AM",
+      purpose: "Annual health checkup",
+      mode: "In-person",
+      status: "Cancelled",
+      avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=face",
+      phone: "+92 300 6789012",
+      email: "omar.sheikh@email.com"
+    }
+  ]
+
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'appointments', label: 'Appointments', icon: CalendarDays },
@@ -121,6 +209,38 @@ const DoctorDashboard = () => {
     setSelectedPatient(patient)
     setShowPatientDetails(true)
   }
+
+  const handleAppointmentSelect = (appointment) => {
+    setSelectedAppointment(appointment)
+    setShowAppointmentModal(true)
+  }
+
+  const handleStatusChange = (appointmentId, newStatus) => {
+    console.log(`Changing appointment ${appointmentId} status to ${newStatus}`)
+    // In a real app, this would update the backend
+  }
+
+  const getAppointmentStatusColor = (status) => {
+    switch (status) {
+      case 'Upcoming': return '#22C55E'
+      case 'Completed': return '#2563EB'
+      case 'Cancelled': return '#EF4444'
+      default: return '#6B7280'
+    }
+  }
+
+  const getModeIcon = (mode) => {
+    return mode === 'Online' ? <Monitor size={16} className="text-[#14B8A6]" /> : <Building size={16} className="text-[#2563EB]" />
+  }
+
+  // Filter appointments based on search and status
+  const filteredAppointments = allAppointments.filter(appointment => {
+    const matchesSearch = appointment.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         appointment.date.includes(searchTerm) ||
+                         appointment.purpose.toLowerCase().includes(searchTerm.toLowerCase())
+    const matchesStatus = statusFilter === 'All' || appointment.status === statusFilter
+    return matchesSearch && matchesStatus
+  })
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -173,32 +293,22 @@ const DoctorDashboard = () => {
           boxShadow: '0 2px 10px rgba(0, 0, 0, 0.15)'
         }}
       >
-        <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-bold text-[#F8FAFC] ml-16">Dashboard</h1>
-          <div className="flex items-center space-x-4">
-            <input
-              type="text"
-              placeholder="Search..."
-              className="px-4 py-2 bg-[#1E293B] border border-[#1E293B]/50 rounded-lg text-[#F8FAFC] placeholder-[#94A3B8] focus:outline-none focus:ring-2 focus:ring-[#14B8A6] transition-all duration-300"
-            />
-            <button className="p-2 text-[#94A3B8] hover:text-[#F8FAFC] transition-colors">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-              </svg>
-            </button>
-            <button className="p-2 text-[#94A3B8] hover:text-[#F8FAFC] transition-colors relative">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-5 5v-5zM4 19h6v-2H4v2zM4 13h6v-2H4v2zM4 7h6V5H4v2z" />
-              </svg>
-              <div className="absolute -top-1 -right-1 w-3 h-3 bg-[#EF4444] rounded-full"></div>
-            </button>
-            <img
-              src={doctorProfile.image}
-              alt="Profile"
-              className="w-8 h-8 rounded-full object-cover"
-            />
-          </div>
-        </div>
+         <div className="flex items-center justify-between">
+           <h1 className="text-3xl font-bold text-[#F8FAFC] ml-16">Dashboard</h1>
+           <div className="flex items-center space-x-4">
+             <button className="p-2 text-[#94A3B8] hover:text-[#F8FAFC] transition-colors">
+               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+               </svg>
+             </button>
+             <button className="p-2 text-[#94A3B8] hover:text-[#F8FAFC] transition-colors relative">
+               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-5 5v-5zM4 19h6v-2H4v2zM4 13h6v-2H4v2zM4 7h6V5H4v2z" />
+               </svg>
+               <div className="absolute -top-1 -right-1 w-3 h-3 bg-[#EF4444] rounded-full"></div>
+             </button>
+           </div>
+         </div>
       </motion.div>
 
       <div className="flex" style={{ minHeight: 'calc(100vh - 120px)' }}>
@@ -371,7 +481,9 @@ const DoctorDashboard = () => {
         {/* Main Content */}
         <div className="flex-1 overflow-y-auto" style={{ minHeight: 'calc(100vh - 120px)' }}>
 
-          <div className="p-6 space-y-6">
+          {/* Dashboard Content */}
+          {activeMenu === 'dashboard' && (
+            <div className="p-6 space-y-6">
             {/* KPI Cards */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -678,6 +790,145 @@ const DoctorDashboard = () => {
               </motion.div>
             </div>
           </div>
+          )}
+
+          {/* Appointments Page */}
+          {activeMenu === 'appointments' && (
+            <div className="p-6 space-y-6">
+              {/* Page Header */}
+              <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4"
+              >
+                <h1 className="text-3xl font-bold text-[#F8FAFC]">Appointments</h1>
+                
+                {/* Search and Filter */}
+                <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+                  <input
+                    type="text"
+                    placeholder="Search by name, date, or purpose..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="px-4 py-2 bg-[#1E293B] border border-[#1E293B]/50 rounded-lg text-[#F8FAFC] placeholder-[#94A3B8] focus:outline-none focus:ring-2 focus:ring-[#14B8A6] transition-all duration-300 w-full sm:w-80"
+                  />
+                  <select
+                    value={statusFilter}
+                    onChange={(e) => setStatusFilter(e.target.value)}
+                    className="px-4 py-2 bg-[#1E293B] border border-[#1E293B]/50 rounded-lg text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#14B8A6] transition-all duration-300"
+                  >
+                    <option value="All">All Status</option>
+                    <option value="Upcoming">Upcoming</option>
+                    <option value="Completed">Completed</option>
+                    <option value="Cancelled">Cancelled</option>
+                  </select>
+                </div>
+              </motion.div>
+
+              {/* Appointments Grid */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+              >
+                {filteredAppointments.map((appointment, index) => (
+                  <motion.div
+                    key={appointment.id}
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                    whileHover={{ scale: 1.02 }}
+                    className="bg-[#1E293B] rounded-xl p-6 border border-[#1E293B]/50 cursor-pointer hover:bg-[#1E293B]/80 transition-all duration-300"
+                    style={{
+                      boxShadow: '0 2px 10px rgba(0, 0, 0, 0.15)'
+                    }}
+                    onClick={() => handleAppointmentSelect(appointment)}
+                  >
+                    {/* Patient Info */}
+                    <div className="flex items-center mb-4">
+                      <img
+                        src={appointment.avatar}
+                        alt={appointment.name}
+                        className="w-12 h-12 rounded-full object-cover mr-3"
+                      />
+                      <div>
+                        <h3 className="text-lg font-semibold text-[#F8FAFC]">{appointment.name}</h3>
+                        <p className="text-[#94A3B8] text-sm">Age: {appointment.age}</p>
+                      </div>
+                    </div>
+
+                    {/* Appointment Details */}
+                    <div className="space-y-3 mb-4">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[#94A3B8] text-sm">Date & Time</span>
+                        <span className="text-[#F8FAFC] text-sm font-medium">{appointment.date} at {appointment.time}</span>
+                      </div>
+                      
+                      <div className="flex items-center justify-between">
+                        <span className="text-[#94A3B8] text-sm">Purpose</span>
+                        <span className="text-[#F8FAFC] text-sm">{appointment.purpose}</span>
+                      </div>
+                      
+                      <div className="flex items-center justify-between">
+                        <span className="text-[#94A3B8] text-sm">Mode</span>
+                        <div className="flex items-center gap-2">
+                          {getModeIcon(appointment.mode)}
+                          <span className="text-[#F8FAFC] text-sm">{appointment.mode}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Status and Actions */}
+                    <div className="flex items-center justify-between">
+                      <span
+                        className="px-3 py-1 rounded-full text-xs font-medium text-white"
+                        style={{ backgroundColor: getAppointmentStatusColor(appointment.status) }}
+                      >
+                        {appointment.status}
+                      </span>
+                      
+                      <div className="flex gap-2">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            // Handle call action
+                          }}
+                          className="p-2 bg-[#14B8A6] text-white rounded-lg hover:bg-[#14B8A6]/80 transition-colors"
+                          title="Call Patient"
+                        >
+                          <Phone size={16} />
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            // Handle chat action
+                          }}
+                          className="p-2 bg-[#2563EB] text-white rounded-lg hover:bg-[#2563EB]/80 transition-colors"
+                          title="Chat with Patient"
+                        >
+                          <MessageCircle size={16} />
+                        </button>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </motion.div>
+
+              {/* No Results */}
+              {filteredAppointments.length === 0 && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="text-center py-12"
+                >
+                  <div className="text-[#94A3B8] text-lg">No appointments found</div>
+                  <div className="text-[#94A3B8] text-sm mt-2">Try adjusting your search or filter criteria</div>
+                </motion.div>
+              )}
+            </div>
+          )}
         </div>
       </div>
 
@@ -737,6 +988,139 @@ const DoctorDashboard = () => {
                   <p className="text-[#94A3B8] text-sm">Medication: Aspirin 100mg</p>
                   <p className="text-[#94A3B8] text-sm">Dosage: Once daily</p>
                 </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Appointment Details Modal */}
+      <AnimatePresence>
+        {showAppointmentModal && selectedAppointment && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setShowAppointmentModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-[#1E293B] rounded-xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-[#1E293B]/50"
+              style={{
+                boxShadow: '0 2px 10px rgba(0, 0, 0, 0.15)'
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Modal Header */}
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-2xl font-bold text-[#F8FAFC]">Appointment Details</h3>
+                <button
+                  onClick={() => setShowAppointmentModal(false)}
+                  className="p-2 text-[#94A3B8] hover:text-[#F8FAFC] transition-colors"
+                >
+                  <X size={24} />
+                </button>
+              </div>
+
+              {/* Patient Info */}
+              <div className="text-center mb-6">
+                <img
+                  src={selectedAppointment.avatar}
+                  alt={selectedAppointment.name}
+                  className="w-20 h-20 rounded-full object-cover mx-auto mb-4"
+                />
+                <h4 className="text-xl font-bold text-[#F8FAFC]">{selectedAppointment.name}</h4>
+                <p className="text-[#94A3B8]">Age: {selectedAppointment.age}</p>
+              </div>
+
+              {/* Appointment Details */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div className="space-y-4">
+                  <div>
+                    <h5 className="text-[#F8FAFC] font-medium mb-2">Appointment Information</h5>
+                    <div className="space-y-2">
+                      <div className="flex justify-between">
+                        <span className="text-[#94A3B8]">Date:</span>
+                        <span className="text-[#F8FAFC]">{selectedAppointment.date}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-[#94A3B8]">Time:</span>
+                        <span className="text-[#F8FAFC]">{selectedAppointment.time}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-[#94A3B8]">Mode:</span>
+                        <div className="flex items-center gap-2">
+                          {getModeIcon(selectedAppointment.mode)}
+                          <span className="text-[#F8FAFC]">{selectedAppointment.mode}</span>
+                        </div>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-[#94A3B8]">Status:</span>
+                        <span
+                          className="px-3 py-1 rounded-full text-xs font-medium text-white"
+                          style={{ backgroundColor: getAppointmentStatusColor(selectedAppointment.status) }}
+                        >
+                          {selectedAppointment.status}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <div>
+                    <h5 className="text-[#F8FAFC] font-medium mb-2">Contact Information</h5>
+                    <div className="space-y-2">
+                      <div className="flex justify-between">
+                        <span className="text-[#94A3B8]">Phone:</span>
+                        <span className="text-[#F8FAFC]">{selectedAppointment.phone}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-[#94A3B8]">Email:</span>
+                        <span className="text-[#F8FAFC]">{selectedAppointment.email}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Purpose */}
+              <div className="mb-6">
+                <h5 className="text-[#F8FAFC] font-medium mb-2">Purpose / Problem Summary</h5>
+                <p className="text-[#94A3B8] bg-[#0F172A] p-3 rounded-lg">{selectedAppointment.purpose}</p>
+              </div>
+
+              {/* Status Change */}
+              <div className="mb-6">
+                <h5 className="text-[#F8FAFC] font-medium mb-2">Change Status</h5>
+                <select
+                  value={selectedAppointment.status}
+                  onChange={(e) => handleStatusChange(selectedAppointment.id, e.target.value)}
+                  className="w-full px-4 py-2 bg-[#0F172A] border border-[#1E293B]/50 rounded-lg text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#14B8A6] transition-all duration-300"
+                >
+                  <option value="Upcoming">Upcoming</option>
+                  <option value="Completed">Completed</option>
+                  <option value="Cancelled">Cancelled</option>
+                </select>
+              </div>
+
+              {/* Actions */}
+              <div className="flex flex-col sm:flex-row gap-3">
+                <button className="flex-1 px-4 py-2 bg-[#14B8A6] text-white rounded-lg hover:bg-[#14B8A6]/80 transition-colors flex items-center justify-center gap-2">
+                  <Phone size={16} />
+                  Call Patient
+                </button>
+                <button className="flex-1 px-4 py-2 bg-[#2563EB] text-white rounded-lg hover:bg-[#2563EB]/80 transition-colors flex items-center justify-center gap-2">
+                  <MessageCircle size={16} />
+                  Send Message
+                </button>
+                <button className="flex-1 px-4 py-2 bg-[#22C55E] text-white rounded-lg hover:bg-[#22C55E]/80 transition-colors flex items-center justify-center gap-2">
+                  <FileText size={16} />
+                  Add Prescription
+                </button>
               </div>
             </motion.div>
           </motion.div>
