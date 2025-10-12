@@ -18,6 +18,7 @@ import OurServices from './pages/OurServices'
 import OurDoctors from './pages/OurDoctors'
 import DoctorDashboard from './pages/DoctorDashboard'
 import ScrollToTop from './components/ScrollToTop'
+import { Phone, Mail, MapPin } from 'lucide-react'
 import Navbar from './components/Navbar'
 
 /**
@@ -496,11 +497,11 @@ const ContactSection = () => {
               className="space-y-4 mt-8"
             >
               <div className="flex items-center space-x-3">
-                <span className="text-2xl">📞</span>
+                <Phone size={24} className="text-[#14B8A6]" />
                 <span className="text-text-primary font-medium">+92 300 1234567</span>
               </div>
               <div className="flex items-center space-x-3">
-                <span className="text-2xl">✉️</span>
+                <Mail size={24} className="text-[#14B8A6]" />
                 <span className="text-text-primary font-medium">support@healthconnect.pk</span>
               </div>
             </motion.div>
@@ -530,7 +531,7 @@ const ContactSection = () => {
 
             {/* Hospital Address - Physical location details */}
             <div className="flex items-center space-x-3">
-              <span className="text-2xl">📍</span>
+              <MapPin size={24} className="text-[#14B8A6]" />
               <span className="text-text-primary font-medium">Dr. Abdur Rahman Hospital, Dera Ismail Khan, Pakistan</span>
             </div>
           </motion.div>

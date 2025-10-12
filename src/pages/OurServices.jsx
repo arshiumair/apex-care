@@ -2,6 +2,7 @@ import React from 'react'
 import { motion } from 'framer-motion'
 import { Link, useNavigate } from 'react-router-dom'
 import Navbar from '../components/Navbar'
+import { Calendar, ClipboardList, Stethoscope, Shield, AlertTriangle } from 'lucide-react'
 
 
 // Footer Component
@@ -45,14 +46,14 @@ const OurServices = () => {
       id: 1,
       title: "Smart Appointment Booking",
       description: "Book appointments with the right specialists in just a few clicks. Choose your preferred time slot and consultation mode (online or in-clinic).",
-      icon: "📅",
+      icon: Calendar,
       available: true
     },
     {
       id: 2,
       title: "Online Consultation",
       description: "Connect instantly with verified doctors for video or chat consultations — anytime, anywhere. Get digital prescriptions and follow-up reminders with complete privacy.",
-      icon: "🩺",
+      icon: Stethoscope,
       available: false,
       comingSoon: true
     },
@@ -60,7 +61,7 @@ const OurServices = () => {
       id: 3,
       title: "Health Records Management",
       description: "Your health data, securely organized. Upload and access medical reports, prescriptions, and past visits all in one place.",
-      icon: "📋",
+      icon: ClipboardList,
       available: false,
       comingSoon: true
     },
@@ -68,7 +69,7 @@ const OurServices = () => {
       id: 4,
       title: "Emergency & Support",
       description: "24/7 help for urgent cases and quick medical assistance. Our goal — connect you with the nearest available care within minutes.",
-      icon: "🚨",
+      icon: AlertTriangle,
       available: false,
       comingSoon: true
     }
@@ -150,8 +151,8 @@ const OurServices = () => {
                   )}
 
                   {/* Service Icon */}
-                  <div className="text-4xl mb-6 group-hover:scale-110 transition-transform duration-300">
-                    {service.icon}
+                  <div className="mb-6 group-hover:scale-110 transition-transform duration-300">
+                    <service.icon size={48} className="text-[#14B8A6]" />
                   </div>
 
                   {/* Service Title */}
