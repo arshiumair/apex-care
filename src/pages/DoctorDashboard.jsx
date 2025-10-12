@@ -162,73 +162,87 @@ const DoctorDashboard = () => {
           transition={{ duration: 0.5 }}
           className={`${sidebarCollapsed ? 'w-18' : 'w-70'} bg-[#111827] rounded-r-xl transition-all duration-300 sticky top-0 h-full flex flex-col`}
           style={{
-            boxShadow: '0 0 8px rgba(37, 99, 235, 0.25), 0 0 10px rgba(20, 184, 166, 0.15)'
+            boxShadow: '0 2px 10px rgba(0, 0, 0, 0.15)'
           }}
         >
-          {/* Hamburger Toggle */}
+          {/* Toggle Button */}
           <button
             onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-            className="absolute top-4 right-4 p-2 text-[#94A3B8] hover:text-[#F8FAFC] transition-colors"
+            className="absolute top-4 right-4 p-2 text-[#94A3B8] hover:text-[#F8FAFC] transition-colors z-10"
+            aria-label={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <motion.svg 
+              className="w-5 h-5" 
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
+              animate={{ rotate: sidebarCollapsed ? 180 : 0 }}
+              transition={{ duration: 0.3 }}
+            >
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
+            </motion.svg>
           </button>
 
           {/* Doctor Profile */}
-          <div className="p-6 pt-16">
+          <div className={`${sidebarCollapsed ? 'p-2 pt-16' : 'p-6 pt-16'}`}>
             <div className="text-center">
               <img
                 src={doctorProfile.image}
                 alt={doctorProfile.name}
-                className="w-30 h-30 rounded-full object-cover mx-auto mb-4"
+                className={`${sidebarCollapsed ? 'w-12 h-12' : 'w-30 h-30'} rounded-full object-cover mx-auto mb-4 transition-all duration-300`}
                 style={{
-                  boxShadow: '0 0 6px rgba(37, 99, 235, 0.2), 0 0 6px rgba(20, 184, 166, 0.12)'
+                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)'
                 }}
               />
-              {!sidebarCollapsed && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.3 }}
-                >
-                  <h3 className="text-lg font-bold text-[#F8FAFC] mb-1">{doctorProfile.name}</h3>
-                  <p className="text-[#14B8A6] font-semibold text-sm mb-1">{doctorProfile.specialty}</p>
-                  <p className="text-[#94A3B8] text-xs mb-1">{doctorProfile.role}</p>
-                  <p className="text-[#94A3B8] text-xs">{doctorProfile.experience}</p>
-                </motion.div>
-              )}
+              <AnimatePresence>
+                {!sidebarCollapsed && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <h3 className="text-lg font-bold text-[#F8FAFC] mb-1">{doctorProfile.name}</h3>
+                    <p className="text-[#14B8A6] font-semibold text-sm mb-1">{doctorProfile.specialty}</p>
+                    <p className="text-[#94A3B8] text-xs mb-1">{doctorProfile.role}</p>
+                    <p className="text-[#94A3B8] text-xs">{doctorProfile.experience}</p>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
 
             {/* Availability Toggle */}
-            {!sidebarCollapsed && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
-                className="mt-6"
-              >
-                <div className="flex space-x-1 bg-[#1E293B] rounded-lg p-1">
-                  {['online', 'busy', 'offline'].map((status) => (
-                    <button
-                      key={status}
-                      onClick={() => handleAvailabilityToggle(status)}
-                      className={`flex-1 px-3 py-2 rounded-md text-xs font-medium transition-all duration-300 ${
-                        availabilityStatus === status
-                          ? 'bg-gradient-to-r from-[#2563EB] to-[#14B8A6] text-white'
-                          : 'text-[#94A3B8] hover:text-[#F8FAFC]'
-                      }`}
-                    >
-                      {status.charAt(0).toUpperCase() + status.slice(1)}
-                    </button>
-                  ))}
-                </div>
-              </motion.div>
-            )}
+            <AnimatePresence>
+              {!sidebarCollapsed && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.3, delay: 0.1 }}
+                  className="mt-6"
+                >
+                  <div className="flex space-x-1 bg-[#1E293B] rounded-lg p-1">
+                    {['online', 'busy', 'offline'].map((status) => (
+                      <button
+                        key={status}
+                        onClick={() => handleAvailabilityToggle(status)}
+                        className={`flex-1 px-3 py-2 rounded-md text-xs font-medium transition-all duration-300 ${
+                          availabilityStatus === status
+                            ? 'bg-gradient-to-r from-[#2563EB] to-[#14B8A6] text-white'
+                            : 'text-[#94A3B8] hover:text-[#F8FAFC]'
+                        }`}
+                      >
+                        {status.charAt(0).toUpperCase() + status.slice(1)}
+                      </button>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
           {/* Menu Items */}
-          <div className="flex-1 px-4 pb-6">
+          <div className={`flex-1 ${sidebarCollapsed ? 'px-2' : 'px-4'} pb-6`}>
             <div className="space-y-2">
               {menuItems.map((item, index) => (
                 <motion.button
@@ -237,19 +251,30 @@ const DoctorDashboard = () => {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.5 + index * 0.1 }}
                   onClick={() => setActiveMenu(item.id)}
-                  className={`w-full flex items-center px-4 py-3 rounded-lg transition-all duration-300 group ${
+                  className={`w-full flex items-center ${sidebarCollapsed ? 'px-2 py-3 justify-center' : 'px-4 py-3'} rounded-lg transition-all duration-300 group ${
                     activeMenu === item.id
                       ? 'bg-gradient-to-r from-[#2563EB]/20 to-[#14B8A6]/20 border border-[#2563EB]/30 text-[#F8FAFC]'
                       : 'text-[#94A3B8] hover:text-[#F8FAFC] hover:bg-[#1E293B]/50'
                   }`}
                   style={activeMenu === item.id ? {
-                    boxShadow: 'inset 0 0 8px rgba(37, 99, 235, 0.2), 0 0 8px rgba(20, 184, 166, 0.1)'
+                    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)'
                   } : {}}
+                  title={sidebarCollapsed ? item.label : ''}
                 >
-                  <span className="text-lg mr-3">{item.icon}</span>
-                  {!sidebarCollapsed && (
-                    <span className="font-medium">{item.label}</span>
-                  )}
+                  <span className="text-lg">{item.icon}</span>
+                  <AnimatePresence>
+                    {!sidebarCollapsed && (
+                      <motion.span
+                        initial={{ opacity: 0, width: 0 }}
+                        animate={{ opacity: 1, width: 'auto' }}
+                        exit={{ opacity: 0, width: 0 }}
+                        transition={{ duration: 0.3 }}
+                        className="font-medium ml-3"
+                      >
+                        {item.label}
+                      </motion.span>
+                    )}
+                  </AnimatePresence>
                 </motion.button>
               ))}
             </div>
@@ -265,7 +290,7 @@ const DoctorDashboard = () => {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="sticky top-0 bg-[#0F172A]/80 backdrop-blur-md border-b border-[#1E293B]/30 p-6 z-10"
             style={{
-              boxShadow: '0 2px 8px rgba(37, 99, 235, 0.2), 0 2px 8px rgba(20, 184, 166, 0.1)'
+              boxShadow: '0 2px 10px rgba(0, 0, 0, 0.15)'
             }}
           >
             <div className="flex items-center justify-between">
@@ -317,7 +342,7 @@ const DoctorDashboard = () => {
                   whileHover={{ scale: 1.02 }}
                   className="bg-[#1E293B] rounded-xl p-6 border border-[#1E293B]/50"
                   style={{
-                    boxShadow: '0 0 8px rgba(37, 99, 235, 0.25), 0 0 10px rgba(20, 184, 166, 0.15)'
+                    boxShadow: '0 2px 10px rgba(0, 0, 0, 0.15)'
                   }}
                 >
                   <div className="flex items-center justify-between">
@@ -342,7 +367,7 @@ const DoctorDashboard = () => {
                 transition={{ duration: 0.6, delay: 0.5 }}
                 className="lg:col-span-2 bg-[#1E293B] rounded-xl p-6 border border-[#1E293B]/50"
                 style={{
-                  boxShadow: '0 0 8px rgba(37, 99, 235, 0.25), 0 0 10px rgba(20, 184, 166, 0.15)'
+                  boxShadow: '0 2px 10px rgba(0, 0, 0, 0.15)'
                 }}
               >
                 <h3 className="text-xl font-bold text-[#F8FAFC] mb-6">Patients Summary</h3>
@@ -403,7 +428,7 @@ const DoctorDashboard = () => {
                   transition={{ duration: 0.6, delay: 0.6 }}
                   className="bg-[#1E293B] rounded-xl p-6 border border-[#1E293B]/50"
                   style={{
-                    boxShadow: '0 0 8px rgba(37, 99, 235, 0.25), 0 0 10px rgba(20, 184, 166, 0.15)'
+                    boxShadow: '0 2px 10px rgba(0, 0, 0, 0.15)'
                   }}
                 >
                   <h3 className="text-lg font-bold text-[#F8FAFC] mb-4">Today's Appointments</h3>
@@ -448,7 +473,7 @@ const DoctorDashboard = () => {
                   transition={{ duration: 0.6, delay: 0.7 }}
                   className="bg-[#1E293B] rounded-xl p-6 border border-[#1E293B]/50"
                   style={{
-                    boxShadow: '0 0 8px rgba(37, 99, 235, 0.25), 0 0 10px rgba(20, 184, 166, 0.15)'
+                    boxShadow: '0 2px 10px rgba(0, 0, 0, 0.15)'
                   }}
                 >
                   <h3 className="text-lg font-bold text-[#F8FAFC] mb-4">Next Patient Details</h3>
@@ -515,7 +540,7 @@ const DoctorDashboard = () => {
                 transition={{ duration: 0.6, delay: 0.8 }}
                 className="bg-[#1E293B] rounded-xl p-6 border border-[#1E293B]/50"
                 style={{
-                  boxShadow: '0 0 8px rgba(37, 99, 235, 0.25), 0 0 10px rgba(20, 184, 166, 0.15)'
+                  boxShadow: '0 2px 10px rgba(0, 0, 0, 0.15)'
                 }}
               >
                 <h3 className="text-lg font-bold text-[#F8FAFC] mb-4">Appointment Requests</h3>
@@ -554,7 +579,7 @@ const DoctorDashboard = () => {
                 transition={{ duration: 0.6, delay: 0.9 }}
                 className="bg-[#1E293B] rounded-xl p-6 border border-[#1E293B]/50"
                 style={{
-                  boxShadow: '0 0 8px rgba(37, 99, 235, 0.25), 0 0 10px rgba(20, 184, 166, 0.15)'
+                  boxShadow: '0 2px 10px rgba(0, 0, 0, 0.15)'
                 }}
               >
                 <h3 className="text-lg font-bold text-[#F8FAFC] mb-4">Calendar</h3>
