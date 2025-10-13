@@ -945,7 +945,7 @@ const DoctorDashboard = () => {
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'appointments', label: 'Appointments', icon: CalendarDays },
-    { id: 'appointment-page', label: 'Appointment Page', icon: ClipboardList, isExternal: true },
+    { id: 'appointment-page', label: 'Live Appointment', icon: ClipboardList, isExternal: true },
     { id: 'payments', label: 'Payments', icon: CreditCard },
     { id: 'profile', label: 'Profile', icon: UserCircle },
     { id: 'settings', label: 'Settings', icon: Settings },
