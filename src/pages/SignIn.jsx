@@ -19,10 +19,45 @@ const SignIn = () => {
     })
   }
 
+  const navigate = useNavigate()
+
   const handleSubmit = (e) => {
     e.preventDefault()
     console.log('Sign in:', { userType, ...formData })
-    // Handle sign in logic here
+    
+    // Simulate authentication (in real app, this would be an API call)
+    if (formData.email && formData.password) {
+      // Set authentication data
+      const authToken = 'demo-auth-token-' + Date.now()
+      const userData = {
+        email: formData.email,
+        userType: userType,
+        name: userType === 'doctor' ? 'Dr. Ayesha Malik' : 'Patient User',
+        loginTime: new Date().toISOString()
+      }
+      
+      // Store in localStorage
+      localStorage.setItem('authToken', authToken)
+      localStorage.setItem('userData', JSON.stringify(userData))
+      
+      // Store in sessionStorage
+      sessionStorage.setItem('sessionData', JSON.stringify({
+        isAuthenticated: true,
+        loginTime: new Date().toISOString()
+      }))
+      
+      // Set a cookie (optional)
+      document.cookie = `authToken=${authToken}; path=/; max-age=86400` // 24 hours
+      
+      // Redirect based on user type
+      if (userType === 'doctor') {
+        navigate('/doctor-dashboard')
+      } else {
+        navigate('/') // Redirect to home for patients
+      }
+    } else {
+      alert('Please fill in all fields')
+    }
   }
 
   return (

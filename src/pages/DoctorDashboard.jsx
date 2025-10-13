@@ -811,6 +811,8 @@ const DoctorDashboard = () => {
   const [showChatModal, setShowChatModal] = useState(false)
   const [currentView, setCurrentView] = useState('appointments') // 'appointments' or 'liveAppointment'
   const [selectedAppointmentForLive, setSelectedAppointmentForLive] = useState(null)
+  const [showLogoutDialog, setShowLogoutDialog] = useState(false)
+  const [showLogoutToast, setShowLogoutToast] = useState(false)
   const [notificationAlerts, setNotificationAlerts] = useState([
     { id: 1, text: "New appointment booked by Ali Raza at 3:00 PM", time: "5m ago", type: "calendar", read: false },
     { id: 2, text: "Prescription updated for Sara Khan", time: "30m ago", type: "file", read: false },
@@ -1025,6 +1027,42 @@ const DoctorDashboard = () => {
     setSelectedAppointmentForLive(null)
     // Show success toast
     console.log('Appointment Ended Successfully')
+  }
+
+  // Logout functionality
+  const handleLogoutClick = () => {
+    setShowLogoutDialog(true)
+  }
+
+  const handleLogoutConfirm = () => {
+    // Clear all authentication/session data
+    localStorage.removeItem('authToken')
+    localStorage.removeItem('userData')
+    localStorage.removeItem('sessionData')
+    sessionStorage.clear()
+    
+    // Clear any cookies (if using document.cookie)
+    document.cookie.split(";").forEach((c) => {
+      document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/")
+    })
+    
+    // Show logout toast
+    setShowLogoutToast(true)
+    setShowLogoutDialog(false)
+    
+    // Auto-hide toast after 3 seconds
+    setTimeout(() => {
+      setShowLogoutToast(false)
+    }, 3000)
+    
+    // Redirect to login after a short delay
+    setTimeout(() => {
+      navigate('/signin')
+    }, 1500)
+  }
+
+  const handleLogoutCancel = () => {
+    setShowLogoutDialog(false)
   }
 
   const getNotificationIcon = (type) => {
@@ -1414,7 +1452,9 @@ const DoctorDashboard = () => {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.5 + index * 0.1 }}
                   onClick={() => {
-                    if (item.isExternal) {
+                    if (item.id === 'logout') {
+                      handleLogoutClick()
+                    } else if (item.isExternal) {
                       // Switch to live appointment view with demo data
                       setSelectedAppointmentForLive({
                         id: 'APT-DEMO-001',
@@ -2161,6 +2201,90 @@ const DoctorDashboard = () => {
             patient={activeChat}
             onClose={closeChatModal}
           />
+        )}
+      </AnimatePresence>
+
+      {/* Logout Confirmation Dialog */}
+      <AnimatePresence>
+        {showLogoutDialog && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={handleLogoutCancel}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-[#1E293B] rounded-2xl shadow-2xl w-full max-w-md border border-[#1E293B]/50"
+              style={{
+                boxShadow: '0 2px 10px rgba(0, 0, 0, 0.15)'
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="p-6">
+                <div className="text-center mb-6">
+                  <div className="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <LogOut size={32} className="text-red-500" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-[#F8FAFC] mb-2">Logout Confirmation</h3>
+                  <p className="text-[#94A3B8] text-lg">
+                    Are you sure you want to log out?
+                  </p>
+                </div>
+                
+                <div className="flex space-x-4">
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={handleLogoutCancel}
+                    className="flex-1 px-6 py-3 bg-[#374151] text-[#F8FAFC] rounded-xl hover:bg-[#4B5563] transition-all duration-300 font-medium"
+                  >
+                    Cancel
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={handleLogoutConfirm}
+                    className="flex-1 px-6 py-3 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-xl hover:from-red-700 hover:to-red-800 transition-all duration-300 font-medium shadow-lg"
+                  >
+                    Yes, Logout
+                  </motion.button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Logout Success Toast */}
+      <AnimatePresence>
+        {showLogoutToast && (
+          <motion.div
+            initial={{ opacity: 0, y: 50, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 50, scale: 0.9 }}
+            transition={{ duration: 0.4 }}
+            className="fixed bottom-6 right-6 z-50"
+          >
+            <div className="bg-[#1E293B] border border-green-500/30 rounded-xl p-4 shadow-2xl backdrop-blur-sm"
+                 style={{
+                   boxShadow: '0 0 20px rgba(34, 197, 94, 0.3), 0 0 20px rgba(0, 0, 0, 0.5)'
+                 }}>
+              <div className="flex items-center space-x-3">
+                <div className="w-8 h-8 bg-green-500/20 rounded-full flex items-center justify-center">
+                  <Check size={20} className="text-green-500" />
+                </div>
+                <div>
+                  <p className="text-[#F8FAFC] font-medium">Success!</p>
+                  <p className="text-[#94A3B8] text-sm">You've been logged out successfully.</p>
+                </div>
+              </div>
+            </div>
+          </motion.div>
         )}
       </AnimatePresence>
 

@@ -18,6 +18,7 @@ import OurServices from './pages/OurServices'
 import OurDoctors from './pages/OurDoctors'
 import DoctorDashboard from './pages/DoctorDashboard'
 import ScrollToTop from './components/ScrollToTop'
+import ProtectedRoute from './components/ProtectedRoute'
 import { Phone, Mail, MapPin } from 'lucide-react'
 import Navbar from './components/Navbar'
 
@@ -664,8 +665,12 @@ const App = () => {
         {/* Service and information routes */}
         <Route path="/services" element={<OurServices />} />
         <Route path="/our-doctors" element={<OurDoctors />} />
-        {/* Doctor dashboard route */}
-        <Route path="/doctor-dashboard" element={<DoctorDashboard />} />
+        {/* Doctor dashboard route - Protected */}
+        <Route path="/doctor-dashboard" element={
+          <ProtectedRoute>
+            <DoctorDashboard />
+          </ProtectedRoute>
+        } />
       </Routes>
     </Router>
   )
