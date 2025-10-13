@@ -21,6 +21,7 @@ import PatientHistory from './PatientHistory'
 import PatientAppointments from './PatientAppointments'
 import PatientProfile from './PatientProfile'
 import PatientLogout from './PatientLogout'
+import PatientLiveAppointment from './PatientLiveAppointment'
 
 const PatientPage = () => {
   const navigate = useNavigate()
@@ -59,6 +60,7 @@ const PatientPage = () => {
   const menuItems = [
     { id: 'home', label: 'Home', icon: Home },
     { id: 'appointments', label: 'My Appointments', icon: Calendar },
+    { id: 'live-appointment', label: 'Live Appointment', icon: Video },
     { id: 'history', label: 'History', icon: History },
     { id: 'profile', label: 'Profile', icon: User },
     { id: 'logout', label: 'Logout', icon: LogOut }
@@ -494,6 +496,9 @@ const PatientPage = () => {
 
           {/* My Appointments Page */}
           {activeMenu === 'appointments' && <PatientAppointments />}
+
+          {/* Live Appointment Page */}
+          {activeMenu === 'live-appointment' && <PatientLiveAppointment />}
 
           {/* History Page */}
           {activeMenu === 'history' && <PatientHistory />}
