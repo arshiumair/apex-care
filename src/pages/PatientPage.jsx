@@ -22,6 +22,7 @@ import PatientAppointments from './PatientAppointments'
 import PatientProfile from './PatientProfile'
 import PatientLogout from './PatientLogout'
 import PatientLiveAppointment from './PatientLiveAppointment'
+import Navbar from '../components/Navbar'
 
 const PatientPage = () => {
   const navigate = useNavigate()
@@ -34,7 +35,7 @@ const PatientPage = () => {
   // Mock data
   const patientData = {
     name: "Sarah Ahmed",
-    avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face",
+    avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQzt3XBMupEnVPQ66F4TI5ejPbN6RYBl9xeIg&s",
     email: "sarah.ahmed@email.com",
     phone: "+92 300 1234567"
   }
@@ -119,7 +120,10 @@ const PatientPage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#0F172A] to-[#1E293B] font-inter">
-      <div className="flex">
+      {/* Main Navigation Bar */}
+      <Navbar />
+      
+      <div className="flex pt-20">
         {/* Sidebar */}
         <motion.div
           initial={{ x: -280 }}
