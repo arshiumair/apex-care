@@ -17,6 +17,10 @@ import {
   Mail,
   Plus
 } from 'lucide-react'
+import PatientHistory from './PatientHistory'
+import PatientAppointments from './PatientAppointments'
+import PatientProfile from './PatientProfile'
+import PatientLogout from './PatientLogout'
 
 const PatientPage = () => {
   const navigate = useNavigate()
@@ -59,18 +63,6 @@ const PatientPage = () => {
     { id: 'logout', label: 'Logout', icon: LogOut }
   ]
 
-  const handleLogout = () => {
-    // Clear all authentication data
-    localStorage.removeItem('authToken')
-    localStorage.removeItem('userData')
-    sessionStorage.removeItem('sessionData')
-    
-    // Clear auth cookie
-    document.cookie = 'authToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'
-    
-    // Redirect to home page
-    navigate('/')
-  }
 
   const handleBookAppointment = () => {
     setShowBookModal(true)
@@ -159,7 +151,7 @@ const PatientPage = () => {
                   transition={{ delay: 0.5 + index * 0.1 }}
                   onClick={() => {
                     if (item.id === 'logout') {
-                      handleLogout()
+                      setActiveMenu('logout')
                     } else {
                       setActiveMenu(item.id)
                     }
@@ -203,50 +195,53 @@ const PatientPage = () => {
 
         {/* Main Content */}
         <div className="flex-1 p-6">
-          {/* Header */}
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="flex justify-between items-center mb-8"
-          >
-            <div>
-              <h1 className="text-3xl font-bold text-[#F8FAFC] mb-2">
-                Welcome back, {patientData.name.split(' ')[0]}!
-              </h1>
-              <p className="text-[#94A3B8]">
-                Here's your health dashboard overview
-              </p>
-            </div>
-            
-            {/* Notifications and Profile */}
-            <div className="flex items-center space-x-4">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="relative p-3 bg-[#1E293B]/50 rounded-full hover:bg-[#1E293B] transition-all duration-300"
+          {/* Render different pages based on active menu */}
+          {activeMenu === 'home' && (
+            <>
+              {/* Header */}
+              <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                className="flex justify-between items-center mb-8"
               >
-                <Bell className="w-6 h-6 text-[#94A3B8] hover:text-[#F8FAFC] transition-colors duration-300" />
-                {notifications > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                    {notifications}
-                  </span>
-                )}
-              </motion.button>
-              
-              <div className="flex items-center space-x-3">
-                <img
-                  src={patientData.avatar}
-                  alt={patientData.name}
-                  className="w-10 h-10 rounded-full object-cover"
-                />
-                <div className="text-right">
-                  <p className="text-sm font-medium text-[#F8FAFC]">{patientData.name}</p>
-                  <p className="text-xs text-[#94A3B8]">Patient</p>
+                <div>
+                  <h1 className="text-3xl font-bold text-[#F8FAFC] mb-2">
+                    Welcome back, {patientData.name.split(' ')[0]}!
+                  </h1>
+                  <p className="text-[#94A3B8]">
+                    Here's your health dashboard overview
+                  </p>
                 </div>
-              </div>
-            </div>
-          </motion.div>
+                
+                {/* Notifications and Profile */}
+                <div className="flex items-center space-x-4">
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="relative p-3 bg-[#1E293B]/50 rounded-full hover:bg-[#1E293B] transition-all duration-300"
+                  >
+                    <Bell className="w-6 h-6 text-[#94A3B8] hover:text-[#F8FAFC] transition-colors duration-300" />
+                    {notifications > 0 && (
+                      <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                        {notifications}
+                      </span>
+                    )}
+                  </motion.button>
+                  
+                  <div className="flex items-center space-x-3">
+                    <img
+                      src={patientData.avatar}
+                      alt={patientData.name}
+                      className="w-10 h-10 rounded-full object-cover"
+                    />
+                    <div className="text-right">
+                      <p className="text-sm font-medium text-[#F8FAFC]">{patientData.name}</p>
+                      <p className="text-xs text-[#94A3B8]">Patient</p>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
 
           {/* Summary Cards */}
           <motion.div
@@ -255,46 +250,6 @@ const PatientPage = () => {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8"
           >
-            {/* Doctors Card */}
-            <motion.div
-              whileHover={{ scale: 1.02, y: -5 }}
-              transition={{ duration: 0.3 }}
-              className="bg-[#1E293B]/30 backdrop-blur-sm rounded-xl p-6 border border-white/10"
-              style={{
-                boxShadow: '0 0 8px rgba(37, 99, 235, 0.3), 0 0 8px rgba(20, 184, 166, 0.3)'
-              }}
-            >
-              <div className="flex items-center justify-between mb-4">
-                <div className="p-3 bg-blue-500/20 rounded-lg">
-                  <User className="w-6 h-6 text-blue-400" />
-                </div>
-                <span className="text-2xl font-bold text-[#F8FAFC]">
-                  {summaryData.doctors.count}
-                </span>
-              </div>
-              <h3 className="text-lg font-semibold text-[#F8FAFC] mb-2">Doctors</h3>
-              <p className="text-[#94A3B8] text-sm">{summaryData.doctors.label}</p>
-            </motion.div>
-
-            {/* Services Card */}
-            <motion.div
-              whileHover={{ scale: 1.02, y: -5 }}
-              transition={{ duration: 0.3 }}
-              className="bg-[#1E293B]/30 backdrop-blur-sm rounded-xl p-6 border border-white/10"
-              style={{
-                boxShadow: '0 0 8px rgba(37, 99, 235, 0.3), 0 0 8px rgba(20, 184, 166, 0.3)'
-              }}
-            >
-              <div className="flex items-center justify-between mb-4">
-                <div className="p-3 bg-teal-500/20 rounded-lg">
-                  <Phone className="w-6 h-6 text-teal-400" />
-                </div>
-                <span className="text-xs text-[#94A3B8]">Available</span>
-              </div>
-              <h3 className="text-lg font-semibold text-[#F8FAFC] mb-2">Our Services</h3>
-              <p className="text-[#94A3B8] text-sm">{summaryData.services.description}</p>
-            </motion.div>
-
             {/* Appointments Card */}
             <motion.div
               whileHover={{ scale: 1.02, y: -5 }}
@@ -330,6 +285,46 @@ const PatientPage = () => {
                   </motion.button>
                 </div>
               )}
+            </motion.div>
+
+            {/* Services Card */}
+            <motion.div
+              whileHover={{ scale: 1.02, y: -5 }}
+              transition={{ duration: 0.3 }}
+              className="bg-[#1E293B]/30 backdrop-blur-sm rounded-xl p-6 border border-white/10"
+              style={{
+                boxShadow: '0 0 8px rgba(37, 99, 235, 0.3), 0 0 8px rgba(20, 184, 166, 0.3)'
+              }}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <div className="p-3 bg-teal-500/20 rounded-lg">
+                  <Phone className="w-6 h-6 text-teal-400" />
+                </div>
+                <span className="text-xs text-[#94A3B8]">Available</span>
+              </div>
+              <h3 className="text-lg font-semibold text-[#F8FAFC] mb-2">Our Services</h3>
+              <p className="text-[#94A3B8] text-sm">{summaryData.services.description}</p>
+            </motion.div>
+
+            {/* Doctors Card */}
+            <motion.div
+              whileHover={{ scale: 1.02, y: -5 }}
+              transition={{ duration: 0.3 }}
+              className="bg-[#1E293B]/30 backdrop-blur-sm rounded-xl p-6 border border-white/10"
+              style={{
+                boxShadow: '0 0 8px rgba(37, 99, 235, 0.3), 0 0 8px rgba(20, 184, 166, 0.3)'
+              }}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <div className="p-3 bg-blue-500/20 rounded-lg">
+                  <User className="w-6 h-6 text-blue-400" />
+                </div>
+                <span className="text-2xl font-bold text-[#F8FAFC]">
+                  {summaryData.doctors.count}
+                </span>
+              </div>
+              <h3 className="text-lg font-semibold text-[#F8FAFC] mb-2">Doctors</h3>
+              <p className="text-[#94A3B8] text-sm">{summaryData.doctors.label}</p>
             </motion.div>
           </motion.div>
 
@@ -418,6 +413,20 @@ const PatientPage = () => {
               </div>
             )}
           </motion.div>
+            </>
+          )}
+
+          {/* My Appointments Page */}
+          {activeMenu === 'appointments' && <PatientAppointments />}
+
+          {/* History Page */}
+          {activeMenu === 'history' && <PatientHistory />}
+
+          {/* Profile Page */}
+          {activeMenu === 'profile' && <PatientProfile />}
+
+          {/* Logout Page */}
+          {activeMenu === 'logout' && <PatientLogout />}
         </div>
       </div>
 
