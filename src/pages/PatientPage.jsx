@@ -123,16 +123,64 @@ const PatientPage = () => {
       {/* Main Navigation Bar */}
       <Navbar />
       
-      <div className="flex pt-20">
+      {/* Header Bar - Full Width */}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="bg-[#1E293B] border-b border-[#374151] px-6 py-6 pt-24"
+        style={{ boxShadow: '0 1px 4px rgba(0, 0, 0, 0.1)' }}
+      >
+        <div className="flex justify-between items-center">
+          <div className="ml-8">
+            <h1 className="text-3xl font-bold text-[#F8FAFC] mb-2">
+              Welcome back, {patientData.name.split(' ')[0]}! 👋
+            </h1>
+            <p className="text-[#94A3B8] text-lg">
+              Here's your health dashboard overview
+            </p>
+          </div>
+          
+          {/* Notifications and Profile */}
+          <div className="flex items-center space-x-4">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="relative p-3 bg-[#374151] rounded-full hover:bg-[#4B5563] transition-all duration-300"
+            >
+              <Bell className="w-6 h-6 text-[#94A3B8] hover:text-[#F8FAFC] transition-colors duration-300" />
+              {notifications > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                  {notifications}
+                </span>
+              )}
+            </motion.button>
+            
+            <div className="flex items-center space-x-3">
+              <img
+                src={patientData.avatar}
+                alt={patientData.name}
+                className="w-12 h-12 rounded-full object-cover"
+              />
+              <div className="text-right">
+                <p className="text-sm font-medium text-[#F8FAFC]">{patientData.name}</p>
+                <p className="text-xs text-[#94A3B8]">Patient ID: {patientData.id}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+
+      <div className="flex">
         {/* Sidebar */}
         <motion.div
           initial={{ x: -280 }}
           animate={{ x: 0 }}
           transition={{ duration: 0.5 }}
-          className={`${sidebarCollapsed ? 'w-18' : 'w-70'} bg-[#111827] rounded-r-xl transition-all duration-300 flex flex-col`}
+          className={`${sidebarCollapsed ? 'w-18' : 'w-70'} bg-[#111827] transition-all duration-300 flex flex-col`}
           style={{
             boxShadow: '0 2px 10px rgba(0, 0, 0, 0.15)',
-            minHeight: '100vh'
+            minHeight: 'calc(100vh - 120px)'
           }}
         >
           {/* Toggle Button */}
@@ -246,50 +294,6 @@ const PatientPage = () => {
           {/* Render different pages based on active menu */}
           {activeMenu === 'home' && (
             <>
-              {/* Header */}
-              <motion.div
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-                className="flex justify-between items-center mb-8"
-              >
-                <div>
-                  <h1 className="text-3xl font-bold text-[#F8FAFC] mb-2">
-                    Welcome back, {patientData.name.split(' ')[0]}!
-                  </h1>
-                  <p className="text-[#94A3B8]">
-                    Here's your health dashboard overview
-                  </p>
-                </div>
-                
-                {/* Notifications and Profile */}
-                <div className="flex items-center space-x-4">
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="relative p-3 bg-[#1E293B]/50 rounded-full hover:bg-[#1E293B] transition-all duration-300"
-                  >
-                    <Bell className="w-6 h-6 text-[#94A3B8] hover:text-[#F8FAFC] transition-colors duration-300" />
-                    {notifications > 0 && (
-                      <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                        {notifications}
-                      </span>
-                    )}
-                  </motion.button>
-                  
-                  <div className="flex items-center space-x-3">
-                    <img
-                      src={patientData.avatar}
-                      alt={patientData.name}
-                      className="w-10 h-10 rounded-full object-cover"
-                    />
-                    <div className="text-right">
-                      <p className="text-sm font-medium text-[#F8FAFC]">{patientData.name}</p>
-                      <p className="text-xs text-[#94A3B8]">Patient</p>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
 
           {/* Summary Cards */}
           <motion.div
