@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { 
   Calendar, 
@@ -14,13 +14,31 @@ import {
   Plus,
   Edit,
   Trash2,
-  Eye
+  Eye,
+  Filter,
+  ChevronDown
 } from 'lucide-react'
 
 const PatientAppointments = () => {
-  const [activeTab, setActiveTab] = useState('upcoming')
+  const [activeTab, setActiveTab] = useState('all')
   const [selectedAppointment, setSelectedAppointment] = useState(null)
   const [showBookModal, setShowBookModal] = useState(false)
+  const [showFilterDropdown, setShowFilterDropdown] = useState(false)
+  const dropdownRef = useRef(null)
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowFilterDropdown(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
 
   // Mock appointments data
   const appointments = {
@@ -100,6 +118,7 @@ const PatientAppointments = () => {
   }
 
   const tabs = [
+    { id: 'all', label: 'All', count: appointments.upcoming.length + appointments.completed.length + appointments.cancelled.length, icon: Calendar },
     { id: 'upcoming', label: 'Upcoming', count: appointments.upcoming.length, icon: Calendar },
     { id: 'completed', label: 'Completed', count: appointments.completed.length, icon: CheckCircle },
     { id: 'cancelled', label: 'Cancelled', count: appointments.cancelled.length, icon: XCircle }
@@ -154,54 +173,78 @@ const PatientAppointments = () => {
             <h1 className="text-2xl font-bold text-[#F8FAFC] mb-2">My Appointments</h1>
             <p className="text-[#94A3B8]">Manage your medical appointments and consultations</p>
           </div>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => setShowBookModal(true)}
-            className="px-6 py-3 bg-gradient-to-r from-blue-600 to-teal-600 text-white rounded-lg font-medium hover:shadow-lg transition-all duration-300"
-          >
-            <Plus className="w-5 h-5 inline mr-2" />
-            Book Appointment
-          </motion.button>
+          <div className="flex items-center space-x-4">
+            {/* Filter Dropdown */}
+            <div className="relative" ref={dropdownRef}>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setShowFilterDropdown(!showFilterDropdown)}
+                className="flex items-center space-x-2 px-4 py-2 bg-[#374151] rounded-lg text-[#F8FAFC] hover:bg-[#4B5563] transition-all duration-300"
+              >
+                <Filter className="w-4 h-4" />
+                <span className="text-sm font-medium">
+                  {tabs.find(tab => tab.id === activeTab)?.label}
+                </span>
+                <ChevronDown className="w-4 h-4" />
+              </motion.button>
+              
+              {/* Dropdown Menu */}
+              {showFilterDropdown && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="absolute right-0 mt-2 w-48 bg-[#374151] rounded-lg shadow-lg border border-[#4B5563] z-10"
+                >
+                  <div className="py-2">
+                    {tabs.map((tab) => (
+                      <button
+                        key={tab.id}
+                        onClick={() => {
+                          setActiveTab(tab.id)
+                          setShowFilterDropdown(false)
+                        }}
+                        className={`w-full flex items-center justify-between px-4 py-2 text-sm hover:bg-[#4B5563] transition-colors duration-200 ${
+                          activeTab === tab.id ? 'text-blue-400 bg-blue-500/10' : 'text-[#F8FAFC]'
+                        }`}
+                      >
+                        <div className="flex items-center space-x-2">
+                          <tab.icon className="w-4 h-4" />
+                          <span>{tab.label}</span>
+                        </div>
+                        <span className="px-2 py-1 bg-[#1E293B] rounded-full text-xs">
+                          {tab.count}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </div>
+            
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setShowBookModal(true)}
+              className="px-6 py-3 bg-gradient-to-r from-blue-600 to-teal-600 text-white rounded-full font-medium hover:shadow-lg transition-all duration-300"
+            >
+              <Plus className="w-5 h-5 inline mr-2" />
+              Book Appointment
+            </motion.button>
+          </div>
         </div>
       </motion.div>
 
-      {/* Tabs */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1 }}
-        className="bg-[#1E293B] rounded-xl p-6 border border-[#1E293B]/50"
-        style={{ boxShadow: '0 2px 10px rgba(0, 0, 0, 0.15)' }}
-      >
-        <div className="flex space-x-1 bg-[#374151] rounded-lg p-1">
-          {tabs.map((tab) => (
-            <motion.button
-              key={tab.id}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={() => setActiveTab(tab.id)}
-              className={`flex-1 flex items-center justify-center space-x-2 px-4 py-3 rounded-lg font-medium transition-all duration-300 ${
-                activeTab === tab.id
-                  ? 'bg-gradient-to-r from-blue-600 to-teal-600 text-white'
-                  : 'text-[#94A3B8] hover:text-[#F8FAFC] hover:bg-[#4B5563]'
-              }`}
-            >
-              <tab.icon className="w-4 h-4" />
-              <span>{tab.label}</span>
-              <span className={`px-2 py-1 rounded-full text-xs ${
-                activeTab === tab.id ? 'bg-white/20' : 'bg-[#374151]'
-              }`}>
-                {tab.count}
-              </span>
-            </motion.button>
-          ))}
-        </div>
-      </motion.div>
 
       {/* Appointments List */}
       <div className="space-y-4">
-        {appointments[activeTab].length === 0 ? (
+        {(() => {
+          const currentAppointments = activeTab === 'all' 
+            ? [...appointments.upcoming, ...appointments.completed, ...appointments.cancelled]
+            : appointments[activeTab]
+          
+          return currentAppointments.length === 0 ? (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -210,15 +253,17 @@ const PatientAppointments = () => {
           >
             <Calendar className="w-16 h-16 text-[#94A3B8] mx-auto mb-4" />
             <h3 className="text-xl font-semibold text-[#F8FAFC] mb-2">
-              No {activeTab} appointments
+              No {activeTab === 'all' ? '' : activeTab} appointments
             </h3>
             <p className="text-[#94A3B8] mb-6">
               {activeTab === 'upcoming' 
                 ? "You don't have any upcoming appointments. Book one now!"
+                : activeTab === 'all'
+                ? "You don't have any appointments yet. Book one now!"
                 : `You don't have any ${activeTab} appointments.`
               }
             </p>
-            {activeTab === 'upcoming' && (
+            {(activeTab === 'upcoming' || activeTab === 'all') && (
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -230,7 +275,7 @@ const PatientAppointments = () => {
             )}
           </motion.div>
         ) : (
-          appointments[activeTab].map((appointment, index) => {
+          currentAppointments.map((appointment, index) => {
             const StatusIcon = getStatusIcon(appointment.status)
             return (
               <motion.div
@@ -371,7 +416,8 @@ const PatientAppointments = () => {
               </motion.div>
             )
           })
-        )}
+        )
+        })()}
       </div>
 
       {/* Book Appointment Modal */}

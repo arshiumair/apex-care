@@ -118,6 +118,25 @@ const PatientPage = () => {
     navigate('/our-doctors')
   }
 
+  const handleAppointmentCardClick = () => {
+    setActiveMenu('appointments')
+  }
+
+  const handleReschedule = (e) => {
+    e.stopPropagation() // Prevent card click
+    console.log('Reschedule appointment')
+  }
+
+  const handleCancelAppointment = (e) => {
+    e.stopPropagation() // Prevent card click
+    console.log('Cancel appointment')
+  }
+
+  const handleGetAppointed = (e) => {
+    e.stopPropagation() // Prevent card click
+    setShowBookModal(true)
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#0F172A] to-[#1E293B] font-inter">
       {/* Main Navigation Bar */}
@@ -306,7 +325,8 @@ const PatientPage = () => {
             <motion.div
               whileHover={{ scale: 1.02, y: -5 }}
               transition={{ duration: 0.3 }}
-              className="bg-[#1E293B]/30 backdrop-blur-sm rounded-xl p-6 border border-white/10"
+              onClick={handleAppointmentCardClick}
+              className="bg-[#1E293B]/30 backdrop-blur-sm rounded-xl p-6 border border-white/10 cursor-pointer relative"
               style={{
                 boxShadow: '0 0 8px rgba(37, 99, 235, 0.3), 0 0 8px rgba(20, 184, 166, 0.3)'
               }}
@@ -323,25 +343,64 @@ const PatientPage = () => {
               </div>
               <h3 className="text-lg font-semibold text-[#F8FAFC] mb-2">Appointments</h3>
               {summaryData.appointments.hasUpcoming ? (
-                <div className="space-y-2">
-                  <p className="text-[#94A3B8] text-sm">Next: Dec 25, 2024</p>
-                  {timeUntilAppointment && (
-                    <div className="flex items-center space-x-2">
-                      <Clock className="w-4 h-4 text-green-400" />
-                      <span className="text-green-400 text-sm font-medium">{timeUntilAppointment}</span>
+                <div className="space-y-3">
+                  <div className="space-y-2">
+                    <p className="text-[#94A3B8] text-sm">Next: Dec 25, 2024</p>
+                    {timeUntilAppointment && (
+                      <div className="flex items-center space-x-2">
+                        <Clock className="w-4 h-4 text-green-400" />
+                        <span className="text-green-400 text-sm font-medium">{timeUntilAppointment}</span>
+                      </div>
+                    )}
+                    {/* Appointment Details */}
+                    <div className="mt-3 space-y-1">
+                      <div className="flex items-center space-x-2">
+                        <User className="w-3 h-3 text-[#94A3B8]" />
+                        <span className="text-[#F8FAFC] text-xs">Dr. Ayesha Malik</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Calendar className="w-3 h-3 text-[#94A3B8]" />
+                        <span className="text-[#F8FAFC] text-xs">Dec 25, 2024 at 2:30 PM</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Video className="w-3 h-3 text-[#94A3B8]" />
+                        <span className="text-[#F8FAFC] text-xs">Video Consultation</span>
+                      </div>
                     </div>
-                  )}
+                  </div>
                 </div>
               ) : (
-                <div className="flex items-center justify-between">
-                  <p className="text-[#94A3B8] text-sm">No upcoming</p>
+                <div className="space-y-3">
+                  <p className="text-[#94A3B8] text-sm">No upcoming appointments</p>
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    onClick={handleBookAppointment}
-                    className="px-3 py-1 bg-gradient-to-r from-blue-600 to-teal-600 text-white rounded-full text-xs font-medium hover:shadow-lg transition-all duration-300"
+                    onClick={handleGetAppointed}
+                    className="w-full px-4 py-2 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-full text-sm font-medium hover:shadow-lg transition-all duration-300"
                   >
-                    Book Now
+                    Get Appointed
+                  </motion.button>
+                </div>
+              )}
+              
+              {/* Action Buttons - Lower Right Corner */}
+              {summaryData.appointments.hasUpcoming && (
+                <div className="absolute bottom-4 right-4 flex flex-col space-y-2">
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={handleReschedule}
+                    className="px-3 py-1 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-full text-xs font-medium hover:shadow-lg transition-all duration-300"
+                  >
+                    Reschedule
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={handleCancelAppointment}
+                    className="px-3 py-1 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-full text-xs font-medium hover:shadow-lg transition-all duration-300"
+                  >
+                    Cancel
                   </motion.button>
                 </div>
               )}
@@ -351,7 +410,8 @@ const PatientPage = () => {
             <motion.div
               whileHover={{ scale: 1.02, y: -5 }}
               transition={{ duration: 0.3 }}
-              className="bg-[#1E293B]/30 backdrop-blur-sm rounded-xl p-6 border border-white/10"
+              onClick={handleViewServices}
+              className="bg-[#1E293B]/30 backdrop-blur-sm rounded-xl p-6 border border-white/10 cursor-pointer"
               style={{
                 boxShadow: '0 0 8px rgba(37, 99, 235, 0.3), 0 0 8px rgba(20, 184, 166, 0.3)'
               }}
@@ -363,25 +423,19 @@ const PatientPage = () => {
                 <span className="text-xs text-[#94A3B8]">Available</span>
               </div>
               <h3 className="text-lg font-semibold text-[#F8FAFC] mb-2">Our Services</h3>
-              <p className="text-[#94A3B8] text-sm mb-4">{summaryData.services.description}</p>
-              <div className="flex space-x-2">
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={handleViewServices}
-                  className="flex-1 px-3 py-2 bg-gradient-to-r from-teal-600 to-teal-700 text-white rounded-full text-xs font-medium hover:shadow-lg transition-all duration-300"
-                >
-                  View Services
-                </motion.button>
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={handleViewServices}
-                  className="flex-1 px-3 py-2 border border-teal-500/60 text-teal-400 rounded-full text-xs font-medium hover:bg-teal-500/10 transition-all duration-300"
-                >
-                  Services
-                </motion.button>
-              </div>
+              <p className="text-[#94A3B8] text-sm mb-">{summaryData.services.description}</p>
+              <p className="text-[#94A3B8] text-xs italic mb-6">Your health is our priority, and we're here to serve you with care and compassion.</p>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={(e) => {
+                  e.stopPropagation() // Prevent card click
+                  handleViewServices()
+                }}
+                className="w-full px-4 py-2 bg-gradient-to-r from-teal-600 to-teal-700 text-white rounded-full text-sm font-medium hover:shadow-lg transition-all duration-300"
+              >
+                View Services
+              </motion.button>
             </motion.div>
 
             {/* Doctors Card */}
@@ -402,7 +456,8 @@ const PatientPage = () => {
                 </span>
               </div>
               <h3 className="text-lg font-semibold text-[#F8FAFC] mb-2">Doctors</h3>
-              <p className="text-[#94A3B8] text-sm mb-4">{summaryData.doctors.label}</p>
+              <p className="text-[#94A3B8] text-sm mb-3">{summaryData.doctors.label}</p>
+              <p className="text-[#94A3B8] text-xs italic mb-6">Expert medical professionals dedicated to providing you with the best healthcare experience.</p>
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
