@@ -43,7 +43,7 @@ const Footer = () => {
     <footer className="bg-[#0F172A] border-t border-[#1E293B]/30 mt-20">
       <div className="max-w-7xl mx-auto px-6 py-8">
         <div className="text-center">
-          <p className="text-[#94A3B8] text-sm mb-4"> 
+          <p className="text-[#94A3B8] text-sm mb-4">
             © 2025 Apex Care. All rights reserved.
           </p>
           <div className="flex justify-center space-x-6">
@@ -1120,7 +1120,7 @@ const DoctorDashboard = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#0F172A] to-[#1E293B] font-inter">
       <Navbar />
-
+      
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
@@ -1161,7 +1161,7 @@ const DoctorDashboard = () => {
                          <motion.div
                            key={message.id}
                            initial={{ opacity: 0, x: -10 }}
-                           animate={{ opacity: 1, x: 0 }}
+        animate={{ opacity: 1, x: 0 }}
                            transition={{ delay: 0.1 }}
                            onClick={() => handleMessageClick(message)}
                            className="p-4 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors border-b border-gray-100 dark:border-gray-700 last:border-b-0"
@@ -1298,24 +1298,24 @@ const DoctorDashboard = () => {
         >
           {/* Toggle Button */}
           <div className="relative w-full">
-            <button
-              onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+          <button
+            onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
               className={`absolute p-3 text-[#94A3B8] hover:text-[#F8FAFC] transition-all duration-300 z-30 bg-[#111827] rounded-lg hover:bg-[#1E293B] border border-[#1E293B] shadow-lg ${
                 sidebarCollapsed ? 'top-2 right-2' : 'top-4 right-4'
               }`}
-              aria-label={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+            aria-label={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+          >
+            <motion.svg 
+              className="w-5 h-5" 
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
+              animate={{ rotate: sidebarCollapsed ? 180 : 0 }}
+              transition={{ duration: 0.3 }}
             >
-              <motion.svg 
-                className="w-5 h-5" 
-                fill="none" 
-                stroke="currentColor" 
-                viewBox="0 0 24 24"
-                animate={{ rotate: sidebarCollapsed ? 180 : 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </motion.svg>
-            </button>
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </motion.svg>
+          </button>
           </div>
 
           {/* Doctor Profile */}
@@ -1330,32 +1330,32 @@ const DoctorDashboard = () => {
                 }}
               />
               <AnimatePresence>
-                {!sidebarCollapsed && (
-                  <motion.div
+              {!sidebarCollapsed && (
+                <motion.div
                     initial={{ opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: 'auto' }}
                     exit={{ opacity: 0, height: 0 }}
                     transition={{ duration: 0.3 }}
-                  >
-                    <h3 className="text-lg font-bold text-[#F8FAFC] mb-1">{doctorProfile.name}</h3>
-                    <p className="text-[#14B8A6] font-semibold text-sm mb-1">{doctorProfile.specialty}</p>
-                    <p className="text-[#94A3B8] text-xs mb-1">{doctorProfile.role}</p>
-                    <p className="text-[#94A3B8] text-xs">{doctorProfile.experience}</p>
-                  </motion.div>
-                )}
+                >
+                  <h3 className="text-lg font-bold text-[#F8FAFC] mb-1">{doctorProfile.name}</h3>
+                  <p className="text-[#14B8A6] font-semibold text-sm mb-1">{doctorProfile.specialty}</p>
+                  <p className="text-[#94A3B8] text-xs mb-1">{doctorProfile.role}</p>
+                  <p className="text-[#94A3B8] text-xs">{doctorProfile.experience}</p>
+                </motion.div>
+              )}
               </AnimatePresence>
             </div>
 
             {/* Availability Toggle */}
             <AnimatePresence>
-              {!sidebarCollapsed && (
-                <motion.div
+            {!sidebarCollapsed && (
+              <motion.div
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: 'auto' }}
                   exit={{ opacity: 0, height: 0 }}
                   transition={{ duration: 0.3, delay: 0.1 }}
-                  className="mt-6"
-                >
+                className="mt-6"
+              >
                   <div className="flex h-10 w-full sm:w-96 border border-gray-700 rounded-full overflow-hidden bg-transparent gap-0">
                     <button
                       onClick={() => handleAvailabilityToggle('online')}
@@ -1398,9 +1398,9 @@ const DoctorDashboard = () => {
                     >
                       Offline
                     </button>
-                  </div>
-                </motion.div>
-              )}
+                </div>
+              </motion.div>
+            )}
             </AnimatePresence>
           </div>
 
@@ -1428,7 +1428,7 @@ const DoctorDashboard = () => {
                         lastVisit: '2024-12-15'
                       })
                       setCurrentView('liveAppointment')
-                      setActiveMenu('appointments') // Keep appointments menu active
+                      setActiveMenu('appointment-page') // Highlight appointment-page menu
                     } else {
                       setActiveMenu(item.id)
                       if (item.id === 'appointments') {
@@ -1455,7 +1455,7 @@ const DoctorDashboard = () => {
                     }`}
                   />
                   <AnimatePresence>
-                    {!sidebarCollapsed && (
+                  {!sidebarCollapsed && (
                       <motion.span
                         initial={{ opacity: 0, width: 0 }}
                         animate={{ opacity: 1, width: 'auto' }}
@@ -1478,7 +1478,7 @@ const DoctorDashboard = () => {
 
           {/* Dashboard Content */}
           {activeMenu === 'dashboard' && (
-            <div className="p-6 space-y-6">
+          <div className="p-6 space-y-6">
             {/* KPI Cards */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -1618,12 +1618,12 @@ const DoctorDashboard = () => {
                           <p className="text-[#F8FAFC] text-xs font-medium">{appointment.time}</p>
                           <div className="flex items-center justify-end gap-1 mt-1">
                             {getStatusIcon(appointment.status)}
-                            <span
-                              className="px-2 py-1 rounded-full text-xs text-white"
-                              style={{ backgroundColor: getStatusColor(appointment.status) }}
-                            >
-                              {getStatusText(appointment.status)}
-                            </span>
+                          <span
+                            className="px-2 py-1 rounded-full text-xs text-white"
+                            style={{ backgroundColor: getStatusColor(appointment.status) }}
+                          >
+                            {getStatusText(appointment.status)}
+                          </span>
                           </div>
                         </div>
                       </motion.div>
@@ -1950,7 +1950,7 @@ const DoctorDashboard = () => {
           )}
 
           {/* Live Appointment View */}
-          {activeMenu === 'appointments' && currentView === 'liveAppointment' && selectedAppointmentForLive && (
+          {activeMenu === 'appointment-page' && currentView === 'liveAppointment' && selectedAppointmentForLive && (
             <LiveAppointmentEmbedded 
               appointmentData={selectedAppointmentForLive}
               onEndSession={handleEndSession}
