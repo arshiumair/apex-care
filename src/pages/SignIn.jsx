@@ -53,7 +53,7 @@ const SignIn = () => {
       if (userType === 'doctor') {
         navigate('/doctor-dashboard')
       } else {
-        navigate('/') // Redirect to home for patients
+        navigate('/patient-dashboard') // Redirect to patient dashboard
       }
     } else {
       alert('Please fill in all fields')

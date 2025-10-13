@@ -227,6 +227,20 @@ const Navbar = () => {
                         </div>
                       </div>
                       <div className="space-y-2">
+                        <Link
+                          to="/patient-dashboard"
+                          onClick={() => setIsDropdownOpen(false)}
+                          className="block w-full px-4 py-2 text-left text-text-primary hover:bg-surface/50 rounded-lg transition-colors duration-200"
+                        >
+                          Patient Dashboard
+                        </Link>
+                        <Link
+                          to="/doctor-dashboard"
+                          onClick={() => setIsDropdownOpen(false)}
+                          className="block w-full px-4 py-2 text-left text-text-primary hover:bg-surface/50 rounded-lg transition-colors duration-200"
+                        >
+                          Doctor Dashboard
+                        </Link>
                         <button className="w-full px-4 py-2 text-left text-text-primary hover:bg-surface/50 rounded-lg transition-colors duration-200">
                           View Profile
                         </button>

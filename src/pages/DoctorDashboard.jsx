@@ -2,6 +2,7 @@ import React, { useState, useEffect, useLayoutEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Link, useNavigate } from 'react-router-dom'
 import Navbar from '../components/Navbar'
+import FeatureUnderUpdate from '../components/FeatureUnderUpdate'
 import { 
   LayoutDashboard, 
   CalendarDays, 
@@ -1994,6 +1995,33 @@ const DoctorDashboard = () => {
             <LiveAppointmentEmbedded 
               appointmentData={selectedAppointmentForLive}
               onEndSession={handleEndSession}
+            />
+          )}
+
+          {/* Settings View */}
+          {activeMenu === 'settings' && (
+            <FeatureUnderUpdate
+              featureName="Settings"
+              description="The Settings page is currently under development. Soon you'll be able to customize your dashboard preferences, notification settings, account security, and much more."
+              onBack={() => setActiveMenu('dashboard')}
+            />
+          )}
+
+          {/* Profile View */}
+          {activeMenu === 'profile' && (
+            <FeatureUnderUpdate
+              featureName="Profile"
+              description="The Profile page is currently under development. Soon you'll be able to manage your personal information, professional details, profile picture, and account settings."
+              onBack={() => setActiveMenu('dashboard')}
+            />
+          )}
+
+          {/* Payments View */}
+          {activeMenu === 'payments' && (
+            <FeatureUnderUpdate
+              featureName="Payments"
+              description="The Payments page is currently under development. Soon you'll be able to view payment history, manage billing information, track earnings, and handle financial transactions."
+              onBack={() => setActiveMenu('dashboard')}
             />
           )}
         </div>
