@@ -435,31 +435,47 @@ const OurDoctors = () => {
             Our team can help you find the perfect doctor for your specific needs.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              to="/"
-              onClick={(e) => {
-                e.preventDefault()
-                navigate('/')
-                setTimeout(() => {
-                  const contactSection = document.getElementById('contact')
-                  if (contactSection) {
-                    contactSection.scrollIntoView({ behavior: 'smooth' })
-                  }
-                }, 150)
-              }}
-              className="inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-primary to-accent text-white rounded-full font-semibold hover:shadow-lg transition-all duration-300"
-              style={{
-                boxShadow: '0 0 20px rgba(37, 99, 235, 0.4), 0 0 20px rgba(20, 184, 166, 0.4)'
-              }}
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
-              Contact Our Team
-            </Link>
-            <Link
-              to="/services"
-              className="inline-flex items-center justify-center px-8 py-4 border border-surface/50 text-text-primary rounded-full font-semibold hover:bg-surface/30 transition-all duration-300"
+              <Link
+                to="/"
+                onClick={(e) => {
+                  e.preventDefault()
+                  navigate('/')
+                  setTimeout(() => {
+                    const contactSection = document.getElementById('contact')
+                    if (contactSection) {
+                      contactSection.scrollIntoView({ behavior: 'smooth' })
+                    }
+                  }, 150)
+                }}
+                className="inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-primary to-accent text-white rounded-full font-semibold transition-all duration-300"
+                style={{
+                  boxShadow: '0 0 12px rgba(37, 99, 235, 0.3), 0 0 12px rgba(20, 184, 166, 0.3)'
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.boxShadow = '0 0 18px rgba(37, 99, 235, 0.5), 0 0 18px rgba(20, 184, 166, 0.5)'
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.boxShadow = '0 0 12px rgba(37, 99, 235, 0.3), 0 0 12px rgba(20, 184, 166, 0.3)'
+                }}
+              >
+                Contact Our Team
+              </Link>
+            </motion.div>
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
-              View Our Services
-            </Link>
+              <Link
+                to="/services"
+                className="inline-flex items-center justify-center px-8 py-4 border-2 border-accent/60 text-text-primary rounded-full font-semibold hover:bg-accent/10 hover:border-accent transition-all duration-300"
+              >
+                View Our Services
+              </Link>
+            </motion.div>
           </div>
         </div>
       </motion.section>
