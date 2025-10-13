@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useLayoutEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Link, useNavigate } from 'react-router-dom'
 import Navbar from '../components/Navbar'
@@ -243,6 +243,7 @@ const LiveAppointmentEmbedded = ({ appointmentData, onEndSession }) => {
   const chatEndRef = useRef(null)
   const notesTextareaRef = useRef(null)
 
+
   // Session timer
   useEffect(() => {
     const timer = setInterval(() => {
@@ -251,10 +252,6 @@ const LiveAppointmentEmbedded = ({ appointmentData, onEndSession }) => {
     return () => clearInterval(timer)
   }, [])
 
-  // Auto-scroll chat to bottom
-  useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [chatMessages])
 
   // Auto-save notes every 2 minutes
   useEffect(() => {
@@ -723,33 +720,6 @@ const LiveAppointmentEmbedded = ({ appointmentData, onEndSession }) => {
         </div>
       </div>
 
-      {/* Footer with Connection Status */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.5 }}
-        className="bg-[#1E293B]/90 backdrop-blur-md rounded-xl p-4 border border-[#1E293B]/50"
-        style={{ boxShadow: '0 2px 10px rgba(0, 0, 0, 0.15)' }}
-      >
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-yellow-500'}`}></div>
-            <span className="text-[#F8FAFC] text-sm">
-              {isConnected ? 'Connected' : 'Reconnecting...'}
-            </span>
-          </div>
-          {isPatientTyping && (
-            <div className="flex items-center space-x-2 text-[#94A3B8] text-sm">
-              <div className="flex space-x-1">
-                <div className="w-1 h-1 bg-[#94A3B8] rounded-full animate-bounce"></div>
-                <div className="w-1 h-1 bg-[#94A3B8] rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                <div className="w-1 h-1 bg-[#94A3B8] rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-              </div>
-              <span>Patient is typing...</span>
-            </div>
-          )}
-        </div>
-      </motion.div>
 
       {/* Patient Record Modal */}
       <AnimatePresence>
