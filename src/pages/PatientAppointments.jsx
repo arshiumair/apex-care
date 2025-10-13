@@ -377,7 +377,7 @@ const PatientAppointments = () => {
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
                           onClick={() => handleJoinAppointment(appointment)}
-                          className="px-4 py-2 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg text-sm font-medium hover:shadow-lg transition-all duration-300"
+                          className="px-4 py-2 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-full text-sm font-medium hover:shadow-lg transition-all duration-300"
                         >
                           Join Live
                         </motion.button>
@@ -385,7 +385,7 @@ const PatientAppointments = () => {
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
                           onClick={() => handleReschedule(appointment)}
-                          className="px-4 py-2 border border-[#94A3B8] text-[#94A3B8] rounded-lg text-sm font-medium hover:bg-[#1E293B] hover:text-[#F8FAFC] transition-all duration-300"
+                          className="px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-full text-sm font-medium hover:shadow-lg transition-all duration-300"
                         >
                           Reschedule
                         </motion.button>
@@ -393,7 +393,7 @@ const PatientAppointments = () => {
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
                           onClick={() => handleCancel(appointment)}
-                          className="px-4 py-2 border border-red-500 text-red-400 rounded-lg text-sm font-medium hover:bg-red-500/10 transition-all duration-300"
+                          className="px-4 py-2 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-full text-sm font-medium hover:shadow-lg transition-all duration-300"
                         >
                           Cancel
                         </motion.button>
@@ -405,7 +405,7 @@ const PatientAppointments = () => {
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         onClick={() => setSelectedAppointment(appointment)}
-                        className="px-4 py-2 bg-[#374151] text-[#94A3B8] rounded-lg text-sm font-medium hover:bg-[#4B5563] hover:text-[#F8FAFC] transition-all duration-300"
+                        className="px-4 py-2 bg-gradient-to-r from-teal-600 to-teal-700 text-white rounded-full text-sm font-medium hover:shadow-lg transition-all duration-300"
                       >
                         <Eye className="w-4 h-4 inline mr-2" />
                         View Details
