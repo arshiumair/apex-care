@@ -132,37 +132,46 @@ const Navbar = () => {
           <div className="flex-1"></div>
           
           {/* Navigation Links */}
-          <div className="flex items-center space-x-4 ml-0">
+          <div className="flex items-center space-x-3 ml-0">
             <button
               onClick={() => handleSectionNavigation('home')}
               aria-label="Navigate to Home section"
-              className={`transition-all duration-300 font-medium tracking-wide uppercase text-sm cursor-pointer focus:outline-none rounded px-2 py-1 ${
+              className={`transition-all duration-300 font-medium tracking-wide uppercase text-sm cursor-pointer focus:outline-none rounded-full px-4 py-2 ${
                 activeSection === 'home' 
-                  ? 'text-text-primary border-2 border-[#13ad9e]/60' 
-                  : 'text-text-secondary hover:text-text-primary'
+                  ? 'bg-gradient-to-r from-[#2563EB]/30 to-[#14B8A6]/30 border border-[#2563EB]/40 text-[#F8FAFC]' 
+                  : 'text-[#B8C5D1] hover:text-[#F8FAFC] hover:bg-[#1E293B]/60'
               }`}
+              style={activeSection === 'home' ? {
+                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)'
+              } : {}}
             >
               Home
             </button>
             <button
               onClick={() => handleSectionNavigation('about')}
               aria-label="Navigate to About section"
-              className={`transition-all duration-300 font-medium tracking-wide uppercase text-sm cursor-pointer focus:outline-none rounded px-2 py-1 ${
+              className={`transition-all duration-300 font-medium tracking-wide uppercase text-sm cursor-pointer focus:outline-none rounded-full px-4 py-2 ${
                 activeSection === 'about' 
-                  ? 'text-text-primary border-2 border-[#22BAA3]/60' 
-                  : 'text-text-secondary hover:text-text-primary'
+                  ? 'bg-gradient-to-r from-[#2563EB]/30 to-[#14B8A6]/30 border border-[#2563EB]/40 text-[#F8FAFC]' 
+                  : 'text-[#B8C5D1] hover:text-[#F8FAFC] hover:bg-[#1E293B]/60'
               }`}
+              style={activeSection === 'about' ? {
+                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)'
+              } : {}}
             >
               About
             </button>
             <button
               onClick={() => handleSectionNavigation('contact')}
               aria-label="Navigate to Contact section"
-              className={`transition-all duration-300 font-medium tracking-wide uppercase text-sm cursor-pointer focus:outline-none rounded px-2 py-1 ${
+              className={`transition-all duration-300 font-medium tracking-wide uppercase text-sm cursor-pointer focus:outline-none rounded-full px-4 py-2 ${
                 activeSection === 'contact' 
-                  ? 'text-text-primary border-2 border-[#22BAA3]/60' 
-                  : 'text-text-secondary hover:text-text-primary'
+                  ? 'bg-gradient-to-r from-[#2563EB]/30 to-[#14B8A6]/30 border border-[#2563EB]/40 text-[#F8FAFC]' 
+                  : 'text-[#B8C5D1] hover:text-[#F8FAFC] hover:bg-[#1E293B]/60'
               }`}
+              style={activeSection === 'contact' ? {
+                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)'
+              } : {}}
             >
               Contact Us
             </button>
