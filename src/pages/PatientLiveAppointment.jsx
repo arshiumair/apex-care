@@ -210,48 +210,6 @@ const PatientLiveAppointment = () => {
 
   return (
     <div className="p-6 space-y-6">
-      {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="bg-[#1E293B] rounded-xl p-6 border border-[#1E293B]/50"
-        style={{ boxShadow: '0 2px 10px rgba(0, 0, 0, 0.15)' }}
-      >
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <img
-              src={appointmentData.doctorImage}
-              alt={appointmentData.doctorName}
-              className="w-16 h-16 rounded-full object-cover"
-            />
-            <div>
-              <h1 className="text-2xl font-bold text-[#F8FAFC]">{appointmentData.doctorName}</h1>
-              <p className="text-[#94A3B8]">{appointmentData.doctorSpecialty}</p>
-              <div className="flex items-center space-x-4 mt-2">
-                <div className="flex items-center space-x-2">
-                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                  <span className="text-green-400 text-sm font-medium">Live</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Clock className="w-4 h-4 text-[#94A3B8]" />
-                  <span className="text-[#F8FAFC] text-sm">{formatTime(sessionTime)}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <div className="flex items-center space-x-3">
-            <div className="flex items-center space-x-2">
-              <Calendar className="w-4 h-4 text-[#94A3B8]" />
-              <span className="text-[#F8FAFC] text-sm">{new Date(appointmentData.date).toLocaleDateString()}</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Clock className="w-4 h-4 text-[#94A3B8]" />
-              <span className="text-[#F8FAFC] text-sm">{appointmentData.time}</span>
-            </div>
-          </div>
-        </div>
-      </motion.div>
 
       {/* Main Video Call Interface */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -261,11 +219,10 @@ const PatientLiveAppointment = () => {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2 }}
-            className={`bg-[#1E293B] rounded-xl border border-[#1E293B]/50 relative overflow-hidden ${
+            className={`bg-[#1E293B] rounded-xl border border-[#374151] relative overflow-hidden ${
               isFullscreen ? 'fixed inset-4 z-50' : ''
             }`}
             style={{ 
-              boxShadow: '0 2px 10px rgba(0, 0, 0, 0.15)',
               aspectRatio: '16/9'
             }}
           >
@@ -363,15 +320,34 @@ const PatientLiveAppointment = () => {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.3 }}
-            className="bg-[#1E293B] rounded-xl border border-[#1E293B]/50 h-full flex flex-col"
-            style={{ boxShadow: '0 2px 10px rgba(0, 0, 0, 0.15)' }}
+            className="bg-[#1E293B] rounded-xl border border-[#374151] h-full flex flex-col"
           >
             {/* Chat Header */}
             <div className="p-4 border-b border-[#374151]">
               <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <MessageCircle className="w-5 h-5 text-[#94A3B8]" />
-                  <h3 className="text-lg font-semibold text-[#F8FAFC]">Chat</h3>
+                <div className="flex items-center space-x-3">
+                  <img
+                    src={appointmentData.doctorImage}
+                    alt={appointmentData.doctorName}
+                    className="w-10 h-10 rounded-full object-cover"
+                  />
+                  <div>
+                    <div className="flex items-center space-x-2">
+                      <MessageCircle className="w-4 h-4 text-[#94A3B8]" />
+                      <h3 className="text-lg font-semibold text-[#F8FAFC]">Chat with {appointmentData.doctorName}</h3>
+                    </div>
+                    <div className="flex items-center space-x-3 mt-1">
+                      <span className="text-[#94A3B8] text-sm">{appointmentData.doctorSpecialty}</span>
+                      <div className="flex items-center space-x-1">
+                        <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                        <span className="text-green-400 text-xs">Live</span>
+                      </div>
+                      <div className="flex items-center space-x-1">
+                        <Clock className="w-3 h-3 text-[#94A3B8]" />
+                        <span className="text-[#94A3B8] text-xs">{formatTime(sessionTime)}</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 <motion.button
                   whileHover={{ scale: 1.1 }}
@@ -438,40 +414,6 @@ const PatientLiveAppointment = () => {
         </div>
       </div>
 
-      {/* Session Information */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.4 }}
-        className="bg-[#1E293B] rounded-xl p-6 border border-[#1E293B]/50"
-        style={{ boxShadow: '0 2px 10px rgba(0, 0, 0, 0.15)' }}
-      >
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="text-center">
-            <div className="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-3">
-              <Clock className="w-6 h-6 text-green-400" />
-            </div>
-            <h4 className="text-lg font-semibold text-[#F8FAFC] mb-1">Session Duration</h4>
-            <p className="text-[#94A3B8]">{formatTime(sessionTime)}</p>
-          </div>
-          
-          <div className="text-center">
-            <div className="w-12 h-12 bg-blue-500/20 rounded-full flex items-center justify-center mx-auto mb-3">
-              <Video className="w-6 h-6 text-blue-400" />
-            </div>
-            <h4 className="text-lg font-semibold text-[#F8FAFC] mb-1">Call Quality</h4>
-            <p className="text-[#94A3B8]">HD Video</p>
-          </div>
-          
-          <div className="text-center">
-            <div className="w-12 h-12 bg-teal-500/20 rounded-full flex items-center justify-center mx-auto mb-3">
-              <User className="w-6 h-6 text-teal-400" />
-            </div>
-            <h4 className="text-lg font-semibold text-[#F8FAFC] mb-1">Connection</h4>
-            <p className="text-[#94A3B8]">Stable</p>
-          </div>
-        </div>
-      </motion.div>
 
       {/* File Upload and Test Results Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -480,8 +422,7 @@ const PatientLiveAppointment = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
-          className="bg-[#1E293B] rounded-xl p-6 border border-[#1E293B]/50"
-          style={{ boxShadow: '0 2px 10px rgba(0, 0, 0, 0.15)' }}
+          className="bg-[#1E293B] rounded-xl p-6 border border-[#374151]"
         >
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center space-x-2">
@@ -492,7 +433,7 @@ const PatientLiveAppointment = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setShowFileUpload(!showFileUpload)}
-              className="px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg text-sm font-medium hover:shadow-lg transition-all duration-300"
+              className="px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg text-sm font-medium transition-all duration-300"
             >
               <Plus className="w-4 h-4 inline mr-2" />
               Upload Files
@@ -571,8 +512,7 @@ const PatientLiveAppointment = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
-          className="bg-[#1E293B] rounded-xl p-6 border border-[#1E293B]/50"
-          style={{ boxShadow: '0 2px 10px rgba(0, 0, 0, 0.15)' }}
+          className="bg-[#1E293B] rounded-xl p-6 border border-[#374151]"
         >
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center space-x-2">
@@ -583,7 +523,7 @@ const PatientLiveAppointment = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setShowTestResults(!showTestResults)}
-              className="px-4 py-2 bg-gradient-to-r from-teal-600 to-teal-700 text-white rounded-lg text-sm font-medium hover:shadow-lg transition-all duration-300"
+              className="px-4 py-2 bg-gradient-to-r from-teal-600 to-teal-700 text-white rounded-lg text-sm font-medium transition-all duration-300"
             >
               <Plus className="w-4 h-4 inline mr-2" />
               Add Results
@@ -722,7 +662,7 @@ const PatientLiveAppointment = () => {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={handleTestResultSubmit}
-                  className="flex-1 px-4 py-2 bg-gradient-to-r from-teal-600 to-teal-700 text-white rounded-lg font-medium hover:shadow-lg transition-all duration-300"
+                  className="flex-1 px-4 py-2 bg-gradient-to-r from-teal-600 to-teal-700 text-white rounded-lg font-medium transition-all duration-300"
                 >
                   Submit Results
                 </motion.button>
