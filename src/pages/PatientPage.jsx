@@ -28,6 +28,7 @@ const PatientPage = () => {
   const [activeMenu, setActiveMenu] = useState('home')
   const [showBookModal, setShowBookModal] = useState(false)
   const [notifications, setNotifications] = useState(3)
+  const [timeUntilAppointment, setTimeUntilAppointment] = useState(null)
 
   // Mock data
   const patientData = {
@@ -48,7 +49,7 @@ const PatientPage = () => {
     doctorName: "Dr. Ayesha Malik",
     doctorSpecialty: "Cardiologist",
     doctorImage: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=100&h=100&fit=crop&crop=face",
-    date: "December 20, 2024",
+    date: "2024-12-25",
     time: "2:30 PM",
     type: "Video Consultation",
     status: "Confirmed",
@@ -71,6 +72,47 @@ const PatientPage = () => {
   const handleJoinLive = () => {
     // Navigate to live appointment or open video call
     console.log('Joining live appointment...')
+  }
+
+  // Countdown timer for upcoming appointment
+  useEffect(() => {
+    if (summaryData.appointments.hasUpcoming && upcomingAppointment) {
+      const updateCountdown = () => {
+        const now = new Date()
+        const appointmentDate = new Date(upcomingAppointment.date + ' ' + upcomingAppointment.time)
+        const timeDiff = appointmentDate.getTime() - now.getTime()
+
+        if (timeDiff > 0) {
+          const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24))
+          const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
+          const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60))
+          const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000)
+
+          if (days > 0) {
+            setTimeUntilAppointment(`${days}d ${hours}h ${minutes}m`)
+          } else if (hours > 0) {
+            setTimeUntilAppointment(`${hours}h ${minutes}m ${seconds}s`)
+          } else {
+            setTimeUntilAppointment(`${minutes}m ${seconds}s`)
+          }
+        } else {
+          setTimeUntilAppointment('Starting soon')
+        }
+      }
+
+      updateCountdown()
+      const interval = setInterval(updateCountdown, 1000)
+
+      return () => clearInterval(interval)
+    }
+  }, [summaryData.appointments.hasUpcoming, upcomingAppointment])
+
+  const handleViewServices = () => {
+    navigate('/services')
+  }
+
+  const handleFindDoctors = () => {
+    navigate('/our-doctors')
   }
 
   return (
@@ -271,7 +313,15 @@ const PatientPage = () => {
               </div>
               <h3 className="text-lg font-semibold text-[#F8FAFC] mb-2">Appointments</h3>
               {summaryData.appointments.hasUpcoming ? (
-                <p className="text-[#94A3B8] text-sm">Next: Dec 20, 2024</p>
+                <div className="space-y-2">
+                  <p className="text-[#94A3B8] text-sm">Next: Dec 25, 2024</p>
+                  {timeUntilAppointment && (
+                    <div className="flex items-center space-x-2">
+                      <Clock className="w-4 h-4 text-green-400" />
+                      <span className="text-green-400 text-sm font-medium">{timeUntilAppointment}</span>
+                    </div>
+                  )}
+                </div>
               ) : (
                 <div className="flex items-center justify-between">
                   <p className="text-[#94A3B8] text-sm">No upcoming</p>
@@ -303,7 +353,25 @@ const PatientPage = () => {
                 <span className="text-xs text-[#94A3B8]">Available</span>
               </div>
               <h3 className="text-lg font-semibold text-[#F8FAFC] mb-2">Our Services</h3>
-              <p className="text-[#94A3B8] text-sm">{summaryData.services.description}</p>
+              <p className="text-[#94A3B8] text-sm mb-4">{summaryData.services.description}</p>
+              <div className="flex space-x-2">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={handleViewServices}
+                  className="flex-1 px-3 py-2 bg-gradient-to-r from-teal-600 to-teal-700 text-white rounded-lg text-xs font-medium hover:shadow-lg transition-all duration-300"
+                >
+                  View Services
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={handleViewServices}
+                  className="flex-1 px-3 py-2 border border-teal-500/60 text-teal-400 rounded-lg text-xs font-medium hover:bg-teal-500/10 transition-all duration-300"
+                >
+                  Services
+                </motion.button>
+              </div>
             </motion.div>
 
             {/* Doctors Card */}
@@ -324,7 +392,15 @@ const PatientPage = () => {
                 </span>
               </div>
               <h3 className="text-lg font-semibold text-[#F8FAFC] mb-2">Doctors</h3>
-              <p className="text-[#94A3B8] text-sm">{summaryData.doctors.label}</p>
+              <p className="text-[#94A3B8] text-sm mb-4">{summaryData.doctors.label}</p>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={handleFindDoctors}
+                className="w-full px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg text-sm font-medium hover:shadow-lg transition-all duration-300"
+              >
+                Find Doctor
+              </motion.button>
             </motion.div>
           </motion.div>
 
