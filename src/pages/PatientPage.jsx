@@ -139,7 +139,7 @@ const PatientPage = () => {
           <div className="relative w-full">
             <button
               onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-              className={`absolute p-3 text-[#94A3B8] hover:text-[#F8FAFC] transition-all duration-300 z-30 bg-[#111827] rounded-lg hover:bg-[#1E293B] border border-[#1E293B] shadow-lg ${
+              className={`absolute p-3 text-[#94A3B8] hover:text-[#F8FAFC] transition-all duration-300 z-30 bg-[#111827] rounded-full hover:bg-[#1E293B] border border-[#1E293B] shadow-lg ${
                 sidebarCollapsed ? 'top-2 right-2' : 'top-4 right-4'
               }`}
               aria-label={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
@@ -204,7 +204,7 @@ const PatientPage = () => {
                       setActiveMenu(item.id)
                     }
                   }}
-                  className={`w-full flex items-center ${sidebarCollapsed ? 'px-2 py-3 justify-center' : 'px-4 py-3'} rounded-lg transition-all duration-300 group ${
+                  className={`w-full flex items-center ${sidebarCollapsed ? 'px-2 py-3 justify-center' : 'px-4 py-3'} rounded-full transition-all duration-300 group ${
                     activeMenu === item.id
                       ? 'bg-gradient-to-r from-[#2563EB]/20 to-[#14B8A6]/20 border border-[#2563EB]/30 text-[#F8FAFC]'
                       : 'text-[#94A3B8] hover:text-[#F8FAFC] hover:bg-[#1E293B]/50'
@@ -335,7 +335,7 @@ const PatientPage = () => {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={handleBookAppointment}
-                    className="px-3 py-1 bg-gradient-to-r from-blue-600 to-teal-600 text-white rounded-lg text-xs font-medium hover:shadow-lg transition-all duration-300"
+                    className="px-3 py-1 bg-gradient-to-r from-blue-600 to-teal-600 text-white rounded-full text-xs font-medium hover:shadow-lg transition-all duration-300"
                   >
                     Book Now
                   </motion.button>
@@ -365,7 +365,7 @@ const PatientPage = () => {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={handleViewServices}
-                  className="flex-1 px-3 py-2 bg-gradient-to-r from-teal-600 to-teal-700 text-white rounded-lg text-xs font-medium hover:shadow-lg transition-all duration-300"
+                  className="flex-1 px-3 py-2 bg-gradient-to-r from-teal-600 to-teal-700 text-white rounded-full text-xs font-medium hover:shadow-lg transition-all duration-300"
                 >
                   View Services
                 </motion.button>
@@ -373,7 +373,7 @@ const PatientPage = () => {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={handleViewServices}
-                  className="flex-1 px-3 py-2 border border-teal-500/60 text-teal-400 rounded-lg text-xs font-medium hover:bg-teal-500/10 transition-all duration-300"
+                  className="flex-1 px-3 py-2 border border-teal-500/60 text-teal-400 rounded-full text-xs font-medium hover:bg-teal-500/10 transition-all duration-300"
                 >
                   Services
                 </motion.button>
@@ -403,7 +403,7 @@ const PatientPage = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={handleFindDoctors}
-                className="w-full px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg text-sm font-medium hover:shadow-lg transition-all duration-300"
+                className="w-full px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-full text-sm font-medium hover:shadow-lg transition-all duration-300"
               >
                 Find Doctor
               </motion.button>
@@ -461,14 +461,14 @@ const PatientPage = () => {
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       onClick={handleJoinLive}
-                      className="px-6 py-2 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg font-medium hover:shadow-lg transition-all duration-300"
+                      className="px-6 py-2 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-full font-medium hover:shadow-lg transition-all duration-300"
                     >
                       Join Live
                     </motion.button>
                     <motion.button
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      className="px-6 py-2 border border-[#94A3B8] text-[#94A3B8] rounded-lg font-medium hover:bg-[#1E293B] hover:text-[#F8FAFC] transition-all duration-300"
+                      className="px-6 py-2 border border-[#94A3B8] text-[#94A3B8] rounded-full font-medium hover:bg-[#1E293B] hover:text-[#F8FAFC] transition-all duration-300"
                     >
                       Reschedule
                     </motion.button>
@@ -488,7 +488,7 @@ const PatientPage = () => {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={handleBookAppointment}
-                  className="px-8 py-3 bg-gradient-to-r from-blue-600 to-teal-600 text-white rounded-lg font-medium hover:shadow-lg transition-all duration-300"
+                  className="px-8 py-3 bg-gradient-to-r from-blue-600 to-teal-600 text-white rounded-full font-medium hover:shadow-lg transition-all duration-300"
                 >
                   Book Appointment
                 </motion.button>
@@ -541,7 +541,7 @@ const PatientPage = () => {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setShowBookModal(false)}
-                  className="flex-1 px-4 py-2 bg-gradient-to-r from-blue-600 to-teal-600 text-white rounded-lg font-medium hover:shadow-lg transition-all duration-300"
+                  className="flex-1 px-4 py-2 bg-gradient-to-r from-blue-600 to-teal-600 text-white rounded-full font-medium hover:shadow-lg transition-all duration-300"
                 >
                   Got it
                 </motion.button>
