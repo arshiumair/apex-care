@@ -341,47 +341,6 @@ const LiveAppointmentEmbedded = ({ appointmentData, onEndSession }) => {
 
   return (
     <div className="p-6 space-y-6">
-      {/* Header Section */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="bg-[#1E293B] rounded-xl p-6 border border-[#1E293B]/50"
-        style={{ boxShadow: '0 2px 10px rgba(0, 0, 0, 0.15)' }}
-      >
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-6">
-            <div className="flex items-center space-x-3">
-              <User className="w-6 h-6 text-[#14B8A6]" />
-              <div>
-                <h1 className="text-2xl font-bold text-[#F8FAFC]">{appointmentData.patientName}</h1>
-                <p className="text-[#94A3B8] text-sm">Appointment ID: {appointmentData.id}</p>
-              </div>
-            </div>
-            <div className="flex items-center space-x-2">
-              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-              <span className="text-green-400 font-medium">Live</span>
-            </div>
-          </div>
-          
-          <div className="flex items-center space-x-6">
-            <div className="flex items-center space-x-2">
-              <Clock className="w-5 h-5 text-[#94A3B8]" />
-              <span className="text-[#F8FAFC] font-mono text-lg">{formatTime(sessionTime)}</span>
-            </div>
-            <div className="text-[#94A3B8] text-sm">
-              {appointmentData.consultationType}
-            </div>
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={onEndSession}
-              className="px-6 py-3 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-xl hover:from-red-700 hover:to-red-800 transition-all duration-300 font-medium shadow-lg"
-            >
-              End Appointment
-            </motion.button>
-          </div>
-        </div>
-      </motion.div>
 
       {/* Main Content */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -523,12 +482,34 @@ const LiveAppointmentEmbedded = ({ appointmentData, onEndSession }) => {
             className="bg-[#1E293B] rounded-xl p-6 border border-[#1E293B]/50"
             style={{ boxShadow: '0 2px 10px rgba(0, 0, 0, 0.15)' }}
           >
-            <h3 className="text-lg font-semibold text-[#F8FAFC] mb-4">Patient Information</h3>
-            <div className="space-y-3">
-              <div className="flex justify-between">
-                <span className="text-[#94A3B8]">Name:</span>
-                <span className="text-[#F8FAFC]">{appointmentData.patientName}</span>
+            {/* Session Header */}
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center space-x-3">
+                <User className="w-6 h-6 text-[#14B8A6]" />
+                <div>
+                  <h3 className="text-lg font-semibold text-[#F8FAFC]">{appointmentData.patientName}</h3>
+                  <p className="text-[#94A3B8] text-sm">Appointment ID: {appointmentData.id}</p>
+                </div>
               </div>
+              <div className="flex items-center space-x-2">
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                <span className="text-green-400 font-medium text-sm">Live</span>
+              </div>
+            </div>
+
+            {/* Session Info */}
+            <div className="bg-[#374151] rounded-lg p-3 mb-4">
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center space-x-2">
+                  <Clock className="w-4 h-4 text-[#94A3B8]" />
+                  <span className="text-[#F8FAFC] font-mono text-sm">Session: {formatTime(sessionTime)}</span>
+                </div>
+                <span className="text-[#94A3B8] text-sm">{appointmentData.consultationType}</span>
+              </div>
+            </div>
+
+            {/* Patient Details */}
+            <div className="space-y-3">
               <div className="flex justify-between">
                 <span className="text-[#94A3B8]">Age:</span>
                 <span className="text-[#F8FAFC]">{appointmentData.patientAge} years</span>
@@ -550,15 +531,28 @@ const LiveAppointmentEmbedded = ({ appointmentData, onEndSession }) => {
               <p className="text-[#94A3B8] text-sm mb-2">Medical History:</p>
               <p className="text-[#F8FAFC] text-sm">{appointmentData.medicalHistory}</p>
             </div>
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={() => setShowPatientRecord(true)}
-              className="w-full mt-4 px-4 py-2 bg-[#374151] text-[#F8FAFC] rounded-xl hover:bg-[#4B5563] transition-all duration-300 flex items-center justify-center space-x-2"
-            >
-              <Eye size={16} />
-              <span>View Full Record</span>
-            </motion.button>
+            
+            {/* Action Buttons */}
+            <div className="mt-4 space-y-2">
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => setShowPatientRecord(true)}
+                className="w-full px-4 py-2 bg-[#374151] text-[#F8FAFC] rounded-xl hover:bg-[#4B5563] transition-all duration-300 flex items-center justify-center space-x-2"
+              >
+                <Eye size={16} />
+                <span>View Full Record</span>
+              </motion.button>
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={onEndSession}
+                className="w-full px-4 py-2 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-xl hover:from-red-700 hover:to-red-800 transition-all duration-300 flex items-center justify-center space-x-2"
+              >
+                <Phone size={16} />
+                <span>End Appointment</span>
+              </motion.button>
+            </div>
           </motion.div>
 
           {/* Notes Section */}
