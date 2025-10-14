@@ -54,8 +54,8 @@ const OurServices = () => {
       title: "Online Consultation",
       description: "Connect instantly with verified doctors for video or chat consultations — anytime, anywhere. Get digital prescriptions and follow-up reminders with complete privacy.",
       icon: Stethoscope,
-      available: false,
-      comingSoon: true
+      available: true,
+      comingSoon: false
     },
     {
       id: 3,
