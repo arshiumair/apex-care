@@ -8,6 +8,7 @@ import {
   User, 
   LogOut,
   Bell,
+  MessageCircle,
   ChevronLeft,
   ChevronRight,
   Video,
@@ -15,7 +16,8 @@ import {
   MapPin,
   Phone,
   Mail,
-  Plus
+  Plus,
+  X
 } from 'lucide-react'
 import PatientHistory from './PatientHistory'
 import PatientAppointments from './PatientAppointments'
@@ -31,6 +33,9 @@ const PatientPage = () => {
   const [showBookModal, setShowBookModal] = useState(false)
   const [notifications, setNotifications] = useState(3)
   const [timeUntilAppointment, setTimeUntilAppointment] = useState(null)
+  const [showNotifications, setShowNotifications] = useState(false)
+  const [showMessages, setShowMessages] = useState(false)
+  const [unreadMessages, setUnreadMessages] = useState(2)
 
   // Mock data
   const patientData = {
@@ -57,6 +62,62 @@ const PatientPage = () => {
     status: "Confirmed",
     meetingLink: "#"
   }
+
+  // Mock notifications data
+  const notificationsData = [
+    {
+      id: 1,
+      title: "Appointment Reminder",
+      message: "Your appointment with Dr. Ayesha Malik is scheduled for tomorrow at 2:30 PM",
+      time: "2 hours ago",
+      type: "appointment",
+      read: false
+    },
+    {
+      id: 2,
+      title: "Test Results Available",
+      message: "Your blood test results from last week are now available in your medical history",
+      time: "1 day ago",
+      type: "results",
+      read: false
+    },
+    {
+      id: 3,
+      title: "Prescription Ready",
+      message: "Your prescription for Lisinopril is ready for pickup at the pharmacy",
+      time: "2 days ago",
+      type: "prescription",
+      read: true
+    }
+  ]
+
+  // Mock messages data
+  const messagesData = [
+    {
+      id: 1,
+      sender: "Dr. Ayesha Malik",
+      senderImage: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=100&h=100&fit=crop&crop=face",
+      message: "Hello Sarah, I've reviewed your test results. Everything looks good!",
+      time: "10:30 AM",
+      read: false
+    },
+    {
+      id: 2,
+      sender: "Dr. Hassan Khan",
+      senderImage: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=100&h=100&fit=crop&crop=face",
+      message: "Your skin treatment plan is ready. Please schedule a follow-up appointment.",
+      time: "Yesterday",
+      read: false
+    },
+    {
+      id: 3,
+      sender: "Dr. Sara Ahmed",
+      senderImage: "https://images.unsplash.com/photo-1659353888906-adb3e0041693?w=100&h=100&fit=crop&crop=face",
+      message: "Thank you for your visit today. Don't forget to take your vitamins!",
+      time: "2 days ago",
+      read: true
+    }
+  ]
 
   const menuItems = [
     { id: 'home', label: 'Home', icon: Home },
@@ -160,11 +221,28 @@ const PatientPage = () => {
             </p>
           </div>
           
-          {/* Notifications and Profile */}
+          {/* Notifications and Messages */}
           <div className="flex items-center space-x-4">
+            {/* Messages Icon */}
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
+              onClick={() => setShowMessages(!showMessages)}
+              className="relative p-3 bg-[#374151] rounded-full hover:bg-[#4B5563] transition-all duration-300"
+            >
+              <MessageCircle className="w-6 h-6 text-[#94A3B8] hover:text-[#F8FAFC] transition-colors duration-300" />
+              {unreadMessages > 0 && (
+                <span className="absolute -top-1 -right-1 bg-blue-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                  {unreadMessages}
+                </span>
+              )}
+            </motion.button>
+
+            {/* Notifications Icon */}
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setShowNotifications(!showNotifications)}
               className="relative p-3 bg-[#374151] rounded-full hover:bg-[#4B5563] transition-all duration-300"
             >
               <Bell className="w-6 h-6 text-[#94A3B8] hover:text-[#F8FAFC] transition-colors duration-300" />
@@ -174,21 +252,122 @@ const PatientPage = () => {
                 </span>
               )}
             </motion.button>
-            
-            <div className="flex items-center space-x-3">
-              <img
-                src={patientData.avatar}
-                alt={patientData.name}
-                className="w-12 h-12 rounded-full object-cover"
-              />
-              <div className="text-right">
-                <p className="text-sm font-medium text-[#F8FAFC]">{patientData.name}</p>
-                <p className="text-xs text-[#94A3B8]">Patient ID: {patientData.id}</p>
-              </div>
-            </div>
           </div>
         </div>
       </motion.div>
+
+      {/* Notifications Dropdown */}
+      <AnimatePresence>
+        {showNotifications && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="absolute right-6 top-32 w-80 bg-[#1E293B] rounded-xl shadow-lg border border-[#374151] z-50"
+          >
+            <div className="p-4 border-b border-[#374151]">
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-semibold text-[#F8FAFC]">Notifications</h3>
+                <button
+                  onClick={() => setShowNotifications(false)}
+                  className="p-1 hover:bg-[#374151] rounded-lg transition-colors duration-300"
+                >
+                  <X className="w-4 h-4 text-[#94A3B8]" />
+                </button>
+              </div>
+            </div>
+            <div className="max-h-96 overflow-y-auto">
+              {notificationsData.map((notification) => (
+                <div
+                  key={notification.id}
+                  className={`p-4 border-b border-[#374151] hover:bg-[#374151] transition-colors duration-300 ${
+                    !notification.read ? 'bg-blue-500/5' : ''
+                  }`}
+                >
+                  <div className="flex items-start space-x-3">
+                    <div className={`w-2 h-2 rounded-full mt-2 ${
+                      !notification.read ? 'bg-blue-500' : 'bg-transparent'
+                    }`}></div>
+                    <div className="flex-1">
+                      <h4 className="text-sm font-semibold text-[#F8FAFC] mb-1">
+                        {notification.title}
+                      </h4>
+                      <p className="text-[#94A3B8] text-sm mb-2">{notification.message}</p>
+                      <p className="text-[#94A3B8] text-xs">{notification.time}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="p-4 border-t border-[#374151]">
+              <button className="w-full text-center text-blue-400 hover:text-blue-300 text-sm font-medium transition-colors duration-300">
+                View All Notifications
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Messages Dropdown */}
+      <AnimatePresence>
+        {showMessages && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="absolute right-20 top-32 w-80 bg-[#1E293B] rounded-xl shadow-lg border border-[#374151] z-50"
+          >
+            <div className="p-4 border-b border-[#374151]">
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-semibold text-[#F8FAFC]">Messages</h3>
+                <button
+                  onClick={() => setShowMessages(false)}
+                  className="p-1 hover:bg-[#374151] rounded-lg transition-colors duration-300"
+                >
+                  <X className="w-4 h-4 text-[#94A3B8]" />
+                </button>
+              </div>
+            </div>
+            <div className="max-h-96 overflow-y-auto">
+              {messagesData.map((message) => (
+                <div
+                  key={message.id}
+                  className={`p-4 border-b border-[#374151] hover:bg-[#374151] transition-colors duration-300 ${
+                    !message.read ? 'bg-blue-500/5' : ''
+                  }`}
+                >
+                  <div className="flex items-start space-x-3">
+                    <img
+                      src={message.senderImage}
+                      alt={message.sender}
+                      className="w-10 h-10 rounded-full object-cover"
+                    />
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between mb-1">
+                        <h4 className="text-sm font-semibold text-[#F8FAFC]">
+                          {message.sender}
+                        </h4>
+                        <div className="flex items-center space-x-2">
+                          {!message.read && (
+                            <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                          )}
+                          <span className="text-[#94A3B8] text-xs">{message.time}</span>
+                        </div>
+                      </div>
+                      <p className="text-[#94A3B8] text-sm">{message.message}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="p-4 border-t border-[#374151]">
+              <button className="w-full text-center text-blue-400 hover:text-blue-300 text-sm font-medium transition-colors duration-300">
+                View All Messages
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <div className="flex">
         {/* Sidebar */}

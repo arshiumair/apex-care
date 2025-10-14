@@ -283,7 +283,7 @@ const PatientAppointments = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 + index * 0.1 }}
-                className="bg-[#1E293B] rounded-xl p-6 border border-[#1E293B]/50 hover:border-blue-500/30 transition-all duration-300"
+                className="bg-[#1E293B] rounded-xl p-6 border border-[#1E293B]/50 hover:border-blue-500/30 transition-all duration-300 relative"
                 style={{ boxShadow: '0 2px 10px rgba(0, 0, 0, 0.15)' }}
               >
                 <div className="flex items-start space-x-4">
@@ -297,9 +297,21 @@ const PatientAppointments = () => {
                   {/* Appointment Details */}
                   <div className="flex-1">
                     <div className="flex items-start justify-between mb-3">
-                      <div>
-                        <h3 className="text-lg font-semibold text-[#F8FAFC]">{appointment.doctor}</h3>
-                        <p className="text-[#94A3B8] text-sm">{appointment.specialty}</p>
+                      <div className="flex items-center space-x-3">
+                        <div>
+                          <h3 className="text-lg font-semibold text-[#F8FAFC]">{appointment.doctor}</h3>
+                          <p className="text-[#94A3B8] text-sm">{appointment.specialty}</p>
+                        </div>
+                        {appointment.status === 'Confirmed' && (
+                          <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={() => handleJoinAppointment(appointment)}
+                            className="px-3 py-1 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-full text-xs font-medium transition-all duration-300"
+                          >
+                            Join Live
+                          </motion.button>
+                        )}
                       </div>
                       <div className={`flex items-center space-x-2 px-3 py-1 rounded-full ${getStatusColor(appointment.status)}`}>
                         <StatusIcon className="w-4 h-4" />
@@ -369,38 +381,30 @@ const PatientAppointments = () => {
                     )}
                   </div>
 
-                  {/* Action Buttons */}
-                  <div className="flex flex-col space-y-2">
-                    {appointment.status === 'Confirmed' && (
-                      <>
-                        <motion.button
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                          onClick={() => handleJoinAppointment(appointment)}
-                          className="px-4 py-2 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-full text-sm font-medium hover:shadow-lg transition-all duration-300"
-                        >
-                          Join Live
-                        </motion.button>
-                        <motion.button
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                          onClick={() => handleReschedule(appointment)}
-                          className="px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-full text-sm font-medium hover:shadow-lg transition-all duration-300"
-                        >
-                          Reschedule
-                        </motion.button>
-                        <motion.button
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                          onClick={() => handleCancel(appointment)}
-                          className="px-4 py-2 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-full text-sm font-medium hover:shadow-lg transition-all duration-300"
-                        >
-                          Cancel
-                        </motion.button>
-                      </>
-                    )}
-                    
-                    {appointment.status === 'Completed' && (
+                  {/* Action Buttons - Lower Corner */}
+                  {appointment.status === 'Confirmed' && (
+                    <div className="absolute bottom-4 right-4 flex flex-col space-y-2">
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => handleReschedule(appointment)}
+                        className="px-3 py-1 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-full text-xs font-medium transition-all duration-300"
+                      >
+                        Reschedule
+                      </motion.button>
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => handleCancel(appointment)}
+                        className="px-3 py-1 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-full text-xs font-medium transition-all duration-300"
+                      >
+                        Cancel
+                      </motion.button>
+                    </div>
+                  )}
+                  
+                  {appointment.status === 'Completed' && (
+                    <div className="absolute bottom-4 right-4">
                       <motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
@@ -410,8 +414,8 @@ const PatientAppointments = () => {
                         <Eye className="w-4 h-4 inline mr-2" />
                         View Details
                       </motion.button>
-                    )}
-                  </div>
+                    </div>
+                  )}
                 </div>
               </motion.div>
             )

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { 
   Calendar, 
@@ -12,12 +12,31 @@ import {
   Thermometer,
   Stethoscope,
   Download,
-  Eye
+  Eye,
+  Filter,
+  ChevronDown,
+  X
 } from 'lucide-react'
 
 const PatientHistory = () => {
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [selectedRecord, setSelectedRecord] = useState(null)
+  const [showFilterDropdown, setShowFilterDropdown] = useState(false)
+  const dropdownRef = useRef(null)
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowFilterDropdown(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
 
   // Mock medical history data
   const medicalHistory = [
@@ -146,8 +165,7 @@ const PatientHistory = () => {
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-[#1E293B] rounded-xl p-6 border border-[#1E293B]/50"
-        style={{ boxShadow: '0 2px 10px rgba(0, 0, 0, 0.15)' }}
+        className="bg-[#1E293B] rounded-xl p-6 border border-[#374151]"
       >
         <div className="flex items-center justify-between">
           <div>
@@ -155,10 +173,54 @@ const PatientHistory = () => {
             <p className="text-[#94A3B8]">View your complete medical records and history</p>
           </div>
           <div className="flex items-center space-x-4">
+            {/* Filter Dropdown */}
+            <div className="relative" ref={dropdownRef}>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setShowFilterDropdown(!showFilterDropdown)}
+                className="flex items-center space-x-2 px-4 py-2 bg-[#374151] rounded-lg text-[#F8FAFC] hover:bg-[#4B5563] transition-all duration-300"
+              >
+                <Filter className="w-4 h-4" />
+                <span className="text-sm font-medium">
+                  {categories.find(cat => cat.id === selectedCategory)?.label}
+                </span>
+                <ChevronDown className="w-4 h-4" />
+              </motion.button>
+              
+              {/* Dropdown Menu */}
+              {showFilterDropdown && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="absolute right-0 mt-2 w-48 bg-[#374151] rounded-lg shadow-lg border border-[#4B5563] z-10"
+                >
+                  <div className="py-2">
+                    {categories.map((category) => (
+                      <button
+                        key={category.id}
+                        onClick={() => {
+                          setSelectedCategory(category.id)
+                          setShowFilterDropdown(false)
+                        }}
+                        className={`w-full flex items-center space-x-2 px-4 py-2 text-sm hover:bg-[#4B5563] transition-colors duration-200 ${
+                          selectedCategory === category.id ? 'text-blue-400 bg-blue-500/10' : 'text-[#F8FAFC]'
+                        }`}
+                      >
+                        <category.icon className="w-4 h-4" />
+                        <span>{category.label}</span>
+                      </button>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </div>
+            
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="px-4 py-2 bg-gradient-to-r from-blue-600 to-teal-600 text-white rounded-lg font-medium hover:shadow-lg transition-all duration-300"
+              className="px-4 py-2 bg-gradient-to-r from-blue-600 to-teal-600 text-white rounded-full font-medium transition-all duration-300"
             >
               <Download className="w-4 h-4 inline mr-2" />
               Export Records
@@ -167,34 +229,6 @@ const PatientHistory = () => {
         </div>
       </motion.div>
 
-      {/* Category Filter */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1 }}
-        className="bg-[#1E293B] rounded-xl p-6 border border-[#1E293B]/50"
-        style={{ boxShadow: '0 2px 10px rgba(0, 0, 0, 0.15)' }}
-      >
-        <h2 className="text-lg font-semibold text-[#F8FAFC] mb-4">Filter by Category</h2>
-        <div className="flex flex-wrap gap-3">
-          {categories.map((category) => (
-            <motion.button
-              key={category.id}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => setSelectedCategory(category.id)}
-              className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-medium transition-all duration-300 ${
-                selectedCategory === category.id
-                  ? 'bg-gradient-to-r from-blue-600 to-teal-600 text-white'
-                  : 'bg-[#374151] text-[#94A3B8] hover:bg-[#4B5563] hover:text-[#F8FAFC]'
-              }`}
-            >
-              <category.icon className="w-4 h-4" />
-              <span>{category.label}</span>
-            </motion.button>
-          ))}
-        </div>
-      </motion.div>
 
       {/* Medical Records List */}
       <div className="space-y-4">
@@ -206,8 +240,7 @@ const PatientHistory = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 + index * 0.1 }}
-              className="bg-[#1E293B] rounded-xl p-6 border border-[#1E293B]/50 hover:border-blue-500/30 transition-all duration-300"
-              style={{ boxShadow: '0 2px 10px rgba(0, 0, 0, 0.15)' }}
+              className="bg-[#1E293B] rounded-xl p-6 border border-[#374151] hover:border-blue-500/30 transition-all duration-300"
             >
               <div className="flex items-start justify-between">
                 <div className="flex-1">
