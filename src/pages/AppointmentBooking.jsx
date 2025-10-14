@@ -289,20 +289,13 @@ const AppointmentBooking = () => {
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="pt-24 px-6 pb-8"
+        className="pt-24 px-6 pb-6"
       >
         <div className="max-w-7xl mx-auto">
-          <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center justify-between mb-4">
             <div>
-              <Link 
-                to="/our-doctors" 
-                className="inline-flex items-center text-[#94A3B8] hover:text-[#F8FAFC] transition-colors duration-300 text-sm font-medium mb-4"
-              >
-                <ChevronLeft className="w-4 h-4 mr-2" />
-                Back to Doctors
-              </Link>
-              <h1 className="text-4xl font-bold text-[#F8FAFC] mb-2">Book an Appointment</h1>
-              <p className="text-[#94A3B8] text-lg">Schedule your consultation with our expert doctors</p>
+              <h1 className="text-3xl font-bold text-[#F8FAFC] mb-1">Book an Appointment</h1>
+              <p className="text-[#94A3B8]">Schedule your consultation with our expert doctors</p>
             </div>
             
             {/* Progress Steps */}
@@ -324,6 +317,17 @@ const AppointmentBooking = () => {
                 </div>
               ))}
             </div>
+          </div>
+          
+          {/* Back Button */}
+          <div className="mb-6 -ml-2">
+            <Link 
+              to="/our-doctors" 
+              className="inline-flex items-center text-[#94A3B8] hover:text-[#F8FAFC] transition-colors duration-300 text-sm font-medium"
+            >
+              <ChevronLeft className="w-4 h-4 mr-2" />
+              Back to Doctors
+            </Link>
           </div>
         </div>
       </motion.div>
@@ -372,7 +376,7 @@ const AppointmentBooking = () => {
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                             onClick={() => setShowFilterDropdown(!showFilterDropdown)}
-                            className="flex items-center space-x-2 px-3 py-2 bg-[#374151] border border-[#4B5563] rounded-lg text-[#F8FAFC] hover:bg-[#4B5563] transition-all duration-300"
+                            className="flex items-center space-x-2 px-3 py-2 bg-[#374151] border border-[#4B5563] rounded-full text-[#F8FAFC] hover:bg-[#4B5563] transition-all duration-300"
                           >
                             <Filter className="w-4 h-4" />
                             <span className="text-sm font-medium">
@@ -428,7 +432,7 @@ const AppointmentBooking = () => {
                               setSearchTerm('')
                               setSelectedSpecialty('all')
                             }}
-                            className="px-6 py-3 bg-gradient-to-r from-[#2563EB] to-[#14B8A6] text-white rounded-lg font-medium hover:shadow-lg transition-all duration-300"
+                            className="px-6 py-3 bg-gradient-to-r from-[#2563EB] to-[#14B8A6] text-white rounded-full font-medium hover:shadow-lg transition-all duration-300"
                           >
                             Clear Filters
                           </motion.button>
@@ -437,36 +441,80 @@ const AppointmentBooking = () => {
                         filteredDoctors.map((doctor) => (
                         <motion.div
                           key={doctor.id}
-                          whileHover={{ scale: 1.02 }}
+                          whileHover={{ scale: 1.02, y: -2 }}
                           whileTap={{ scale: 0.98 }}
                           onClick={() => setSelectedDoctor(doctor)}
                           className={`p-6 rounded-xl border-2 cursor-pointer transition-all duration-300 ${
                             selectedDoctor?.id === doctor.id
-                              ? 'border-[#14B8A6] bg-[#14B8A6]/10'
-                              : 'border-[#374151] hover:border-[#4B5563]'
+                              ? 'border-[#14B8A6] bg-[#14B8A6]/10 shadow-lg'
+                              : 'border-[#374151] hover:border-[#4B5563] hover:shadow-md'
                           }`}
                         >
-                          <div className="flex items-start space-x-4">
-                            <img
-                              src={doctor.image}
-                              alt={doctor.name}
-                              className="w-16 h-16 rounded-full object-cover"
-                            />
-                            <div className="flex-1">
-                              <h3 className="text-lg font-semibold text-[#F8FAFC] mb-1">{doctor.name}</h3>
-                              <p className="text-[#14B8A6] font-medium mb-2">{doctor.specialty}</p>
-                              <div className="flex items-center space-x-4 text-sm text-[#94A3B8] mb-3">
-                                <div className="flex items-center space-x-1">
-                                  <Star className="w-4 h-4 text-yellow-400" />
-                                  <span>{doctor.rating}</span>
-                                  <span>({doctor.reviews} reviews)</span>
+                          {/* Doctor Header */}
+                          <div className="flex items-center space-x-4 mb-4">
+                            <div className="relative">
+                              <img
+                                src={doctor.image}
+                                alt={doctor.name}
+                                className="w-20 h-20 rounded-full object-cover border-2 border-[#374151]"
+                              />
+                              {selectedDoctor?.id === doctor.id && (
+                                <div className="absolute -top-1 -right-1 w-6 h-6 bg-[#14B8A6] rounded-full flex items-center justify-center">
+                                  <Check className="w-4 h-4 text-white" />
                                 </div>
-                                <span>{doctor.experience} experience</span>
+                              )}
+                            </div>
+                            <div className="flex-1">
+                              <h3 className="text-xl font-bold text-[#F8FAFC] mb-1">{doctor.name}</h3>
+                              <p className="text-[#14B8A6] font-semibold text-lg mb-2">{doctor.specialty}</p>
+                              <p className="text-[#94A3B8] text-sm">{doctor.education}</p>
+                            </div>
+                          </div>
+
+                          {/* Doctor Stats */}
+                          <div className="grid grid-cols-2 gap-4 mb-4">
+                            <div className="bg-[#374151] rounded-lg p-3">
+                              <div className="flex items-center space-x-2 mb-1">
+                                <Star className="w-4 h-4 text-yellow-400" />
+                                <span className="text-[#F8FAFC] font-semibold">{doctor.rating}</span>
                               </div>
-                              <div className="flex items-center justify-between">
-                                <span className="text-[#F8FAFC] font-semibold">${doctor.consultationFee}</span>
-                                <span className="text-[#94A3B8] text-sm">per consultation</span>
+                              <p className="text-[#94A3B8] text-xs">{doctor.reviews} reviews</p>
+                            </div>
+                            <div className="bg-[#374151] rounded-lg p-3">
+                              <div className="flex items-center space-x-2 mb-1">
+                                <Award className="w-4 h-4 text-[#14B8A6]" />
+                                <span className="text-[#F8FAFC] font-semibold">{doctor.experience}</span>
                               </div>
+                              <p className="text-[#94A3B8] text-xs">experience</p>
+                            </div>
+                          </div>
+
+                          {/* Languages */}
+                          <div className="mb-4">
+                            <p className="text-[#94A3B8] text-sm mb-2">Languages:</p>
+                            <div className="flex flex-wrap gap-2">
+                              {doctor.languages.map((language, index) => (
+                                <span
+                                  key={index}
+                                  className="px-2 py-1 bg-[#374151] text-[#F8FAFC] text-xs rounded-full"
+                                >
+                                  {language}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+
+                          {/* Availability & Price */}
+                          <div className="flex items-center justify-between pt-4 border-t border-[#374151]">
+                            <div>
+                              <p className="text-[#94A3B8] text-sm">Available</p>
+                              <p className="text-[#F8FAFC] text-sm font-medium">
+                                {doctor.availability.days.join(', ')}
+                              </p>
+                            </div>
+                            <div className="text-right">
+                              <p className="text-[#F8FAFC] font-bold text-xl">${doctor.consultationFee}</p>
+                              <p className="text-[#94A3B8] text-xs">per consultation</p>
                             </div>
                           </div>
                         </motion.div>
@@ -495,7 +543,7 @@ const AppointmentBooking = () => {
                           whileHover={{ scale: 1.02 }}
                           whileTap={{ scale: 0.98 }}
                           onClick={() => setAppointmentType('online')}
-                          className={`p-4 rounded-xl border-2 transition-all duration-300 ${
+                          className={`p-4 rounded-full border-2 transition-all duration-300 ${
                             appointmentType === 'online'
                               ? 'border-[#14B8A6] bg-[#14B8A6]/10'
                               : 'border-[#374151] hover:border-[#4B5563]'
@@ -513,7 +561,7 @@ const AppointmentBooking = () => {
                           whileHover={{ scale: 1.02 }}
                           whileTap={{ scale: 0.98 }}
                           onClick={() => setAppointmentType('in-person')}
-                          className={`p-4 rounded-xl border-2 transition-all duration-300 ${
+                          className={`p-4 rounded-full border-2 transition-all duration-300 ${
                             appointmentType === 'in-person'
                               ? 'border-[#14B8A6] bg-[#14B8A6]/10'
                               : 'border-[#374151] hover:border-[#4B5563]'
@@ -540,7 +588,7 @@ const AppointmentBooking = () => {
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                             onClick={() => setSelectedDate(date.toISOString().split('T')[0])}
-                            className={`p-3 rounded-lg border transition-all duration-300 ${
+                            className={`p-3 rounded-full border transition-all duration-300 ${
                               selectedDate === date.toISOString().split('T')[0]
                                 ? 'border-[#14B8A6] bg-[#14B8A6]/10 text-[#F8FAFC]'
                                 : 'border-[#374151] hover:border-[#4B5563] text-[#94A3B8]'
@@ -572,7 +620,7 @@ const AppointmentBooking = () => {
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                             onClick={() => setSelectedTime(time)}
-                            className={`p-3 rounded-lg border transition-all duration-300 ${
+                            className={`p-3 rounded-full border transition-all duration-300 ${
                               selectedTime === time
                                 ? 'border-[#14B8A6] bg-[#14B8A6]/10 text-[#F8FAFC]'
                                 : 'border-[#374151] hover:border-[#4B5563] text-[#94A3B8]'
@@ -706,7 +754,7 @@ const AppointmentBooking = () => {
                   whileTap={{ scale: 0.95 }}
                   onClick={prevStep}
                   disabled={currentStep === 1}
-                  className={`px-6 py-3 rounded-lg font-medium transition-all duration-300 ${
+                  className={`px-6 py-3 rounded-full font-medium transition-all duration-300 ${
                     currentStep === 1
                       ? 'bg-[#374151] text-[#6B7280] cursor-not-allowed'
                       : 'bg-[#374151] text-[#F8FAFC] hover:bg-[#4B5563]'
@@ -725,7 +773,7 @@ const AppointmentBooking = () => {
                   whileTap={{ scale: 0.95 }}
                   onClick={currentStep === 3 ? handleSubmit : nextStep}
                   disabled={!canProceed()}
-                  className={`px-6 py-3 rounded-lg font-medium transition-all duration-300 ${
+                  className={`px-6 py-3 rounded-full font-medium transition-all duration-300 ${
                     canProceed()
                       ? 'bg-gradient-to-r from-[#2563EB] to-[#14B8A6] text-white hover:shadow-lg'
                       : 'bg-[#374151] text-[#6B7280] cursor-not-allowed'
@@ -882,7 +930,7 @@ const AppointmentBooking = () => {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setShowConfirmation(false)}
-                  className="flex-1 px-4 py-3 bg-[#374151] text-[#F8FAFC] rounded-lg hover:bg-[#4B5563] transition-all duration-300"
+                  className="flex-1 px-4 py-3 bg-[#374151] text-[#F8FAFC] rounded-full hover:bg-[#4B5563] transition-all duration-300"
                 >
                   Cancel
                 </motion.button>
@@ -890,7 +938,7 @@ const AppointmentBooking = () => {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={handleConfirmBooking}
-                  className="flex-1 px-4 py-3 bg-gradient-to-r from-[#2563EB] to-[#14B8A6] text-white rounded-lg hover:shadow-lg transition-all duration-300"
+                  className="flex-1 px-4 py-3 bg-gradient-to-r from-[#2563EB] to-[#14B8A6] text-white rounded-full hover:shadow-lg transition-all duration-300"
                 >
                   Confirm Booking
                 </motion.button>
@@ -899,6 +947,58 @@ const AppointmentBooking = () => {
           </motion.div>
         )}
       </AnimatePresence>
+      
+      {/* Footer */}
+      <footer className="bg-[#1E293B] border-t border-[#374151] mt-16">
+        <div className="max-w-7xl mx-auto px-6 py-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            {/* Company Info */}
+            <div className="col-span-1 md:col-span-2">
+              <h3 className="text-xl font-bold text-[#F8FAFC] mb-4">Apex Medical</h3>
+              <p className="text-[#94A3B8] mb-4 leading-relaxed">
+                Your trusted partner in healthcare. We provide comprehensive medical services 
+                with a focus on patient care and modern technology.
+              </p>
+              <div className="flex space-x-4">
+                <div className="w-10 h-10 bg-[#374151] rounded-full flex items-center justify-center hover:bg-[#14B8A6] transition-colors duration-300 cursor-pointer">
+                  <Phone className="w-5 h-5 text-[#F8FAFC]" />
+                </div>
+                <div className="w-10 h-10 bg-[#374151] rounded-full flex items-center justify-center hover:bg-[#14B8A6] transition-colors duration-300 cursor-pointer">
+                  <Mail className="w-5 h-5 text-[#F8FAFC]" />
+                </div>
+              </div>
+            </div>
+            
+            {/* Quick Links */}
+            <div>
+              <h4 className="text-lg font-semibold text-[#F8FAFC] mb-4">Quick Links</h4>
+              <ul className="space-y-2">
+                <li><Link to="/" className="text-[#94A3B8] hover:text-[#F8FAFC] transition-colors duration-300">Home</Link></li>
+                <li><Link to="/our-doctors" className="text-[#94A3B8] hover:text-[#F8FAFC] transition-colors duration-300">Our Doctors</Link></li>
+                <li><Link to="/services" className="text-[#94A3B8] hover:text-[#F8FAFC] transition-colors duration-300">Services</Link></li>
+                <li><Link to="/about" className="text-[#94A3B8] hover:text-[#F8FAFC] transition-colors duration-300">About</Link></li>
+              </ul>
+            </div>
+            
+            {/* Contact Info */}
+            <div>
+              <h4 className="text-lg font-semibold text-[#F8FAFC] mb-4">Contact</h4>
+              <ul className="space-y-2 text-[#94A3B8]">
+                <li>123 Medical Center Dr</li>
+                <li>Health City, HC 12345</li>
+                <li>Phone: (555) 123-4567</li>
+                <li>Email: info@apexmedical.com</li>
+              </ul>
+            </div>
+          </div>
+          
+          <div className="border-t border-[#374151] mt-8 pt-6 text-center">
+            <p className="text-[#94A3B8]">
+              © 2024 Apex Medical. All rights reserved. | Privacy Policy | Terms of Service
+            </p>
+          </div>
+        </div>
+      </footer>
     </div>
   )
 }

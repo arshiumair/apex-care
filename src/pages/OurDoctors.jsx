@@ -48,20 +48,36 @@ const OurDoctors = () => {
   const checkDoctorAvailability = (availability, doctorId) => {
     const now = new Date()
     const currentDay = now.toLocaleDateString('en-US', { weekday: 'short' })
-    const currentTime = now.toLocaleTimeString('en-US', { 
-      hour12: false, 
-      hour: '2-digit', 
-      minute: '2-digit' 
-    })
+    const currentHour = now.getHours()
+    const currentMinute = now.getMinutes()
+    const currentTimeInMinutes = currentHour * 60 + currentMinute
+    
+    // Convert time strings to minutes for comparison
+    const timeToMinutes = (timeStr) => {
+      const [hours, minutes] = timeStr.split(':').map(Number)
+      return hours * 60 + minutes
+    }
+    
+    const startTimeInMinutes = timeToMinutes(availability.start)
+    const endTimeInMinutes = timeToMinutes(availability.end)
     
     const isDayAvailable = availability.days.includes(currentDay)
-    const isTimeAvailable = currentTime >= availability.start && currentTime <= availability.end
+    
+    // Handle cross-midnight availability (e.g., 18:00 to 02:00)
+    let isTimeAvailable
+    if (endTimeInMinutes < startTimeInMinutes) {
+      // Cross-midnight case
+      isTimeAvailable = currentTimeInMinutes >= startTimeInMinutes || currentTimeInMinutes <= endTimeInMinutes
+    } else {
+      // Normal case
+      isTimeAvailable = currentTimeInMinutes >= startTimeInMinutes && currentTimeInMinutes <= endTimeInMinutes
+    }
     
     if (!isDayAvailable || !isTimeAvailable) {
       return 'unavailable'
     }
     
-    // Simulate consistent busy status based on doctor ID and current time
+    // Simulate consistent busy status based on doctor ID
     // This creates a more realistic pattern where some doctors are consistently busy
     const busyDoctors = [2, 4, 7] // Dr. Hassan Khan, Dr. Fahad Ali, Dr. Omar Sheikh
     const isBusy = busyDoctors.includes(doctorId)
@@ -105,7 +121,7 @@ const OurDoctors = () => {
       experience: "10 years",
       description: "Specialized in joint replacement and sports medicine",
       image: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=300&h=300&fit=crop&crop=face",
-      availability: { days: ["Mon", "Wed", "Fri"], start: "09:00", end: "15:00" }
+      availability: { days: ["Mon", "Wed", "Fri"], start: "18:00", end: "02:00" }
     },
     {
       id: 5,
@@ -114,7 +130,7 @@ const OurDoctors = () => {
       experience: "8 years",
       description: "Expert in neurological disorders and brain health",
       image: "https://media.licdn.com/dms/image/v2/D5603AQE3eqqmkeWZYA/profile-displayphoto-scale_400_400/B56ZlN085MKAAk-/0/1757947351742?e=1762992000&v=beta&t=6rUQrGI0Jg4h9CLgQonV0xJW6LkIUXEyWuG6rxrvc64",
-      availability: { days: ["Tue", "Thu", "Sat"], start: "08:30", end: "17:30" }
+      availability: { days: ["Tue", "Thu", "Sat"], start: "16:30", end: "01:30" }
     },
     {
       id: 6,
@@ -123,7 +139,7 @@ const OurDoctors = () => {
       experience: "5 years",
       description: "Expert in nephrological disorders and kidney health",
       image: "https://plus.unsplash.com/premium_photo-1702598599506-9ff660bc50f5?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjA5fHxwYWtpc3RhbmklMjBkb2N0b3J8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&q=60&w=600",
-      availability: { days: ["Mon", "Tue", "Wed", "Thu", "Fri"], start: "09:30", end: "16:30" }
+      availability: { days: ["Mon", "Tue", "Wed", "Thu", "Fri"], start: "09:30", end: "22:30" }
     },
     {
       id: 7,
@@ -132,7 +148,7 @@ const OurDoctors = () => {
       experience: "11 years",
       description: "Specialized in mental health and behavioral therapy",
       image: "https://plus.unsplash.com/premium_photo-1661578549774-7906388bc733?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1170",
-      availability: { days: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"], start: "10:00", end: "19:00" }
+      availability: { days: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"], start: "10:00", end: "02:00" }
     }
   ]
 

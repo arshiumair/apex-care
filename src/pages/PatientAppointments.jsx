@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
+import { useNavigate } from 'react-router-dom'
 import { 
   Calendar, 
   Clock, 
@@ -20,6 +21,7 @@ import {
 } from 'lucide-react'
 
 const PatientAppointments = () => {
+  const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState('all')
   const [selectedAppointment, setSelectedAppointment] = useState(null)
   const [showBookModal, setShowBookModal] = useState(false)
@@ -440,16 +442,27 @@ const PatientAppointments = () => {
           >
             <h3 className="text-xl font-semibold text-[#F8FAFC] mb-4">Book Appointment</h3>
             <p className="text-[#94A3B8] mb-6">
-              This feature is coming soon! You'll be able to book appointments with our doctors.
+              Ready to book your appointment? You'll be redirected to our booking page where you can select a doctor, choose your preferred date and time.
             </p>
             <div className="flex space-x-3">
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setShowBookModal(false)}
+                className="flex-1 px-4 py-2 bg-[#374151] text-[#F8FAFC] rounded-lg font-medium hover:bg-[#4B5563] transition-all duration-300"
+              >
+                Cancel
+              </motion.button>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => {
+                  setShowBookModal(false)
+                  navigate('/book-appointment')
+                }}
                 className="flex-1 px-4 py-2 bg-gradient-to-r from-blue-600 to-teal-600 text-white rounded-lg font-medium hover:shadow-lg transition-all duration-300"
               >
-                Got it
+                Continue to Booking
               </motion.button>
             </div>
           </motion.div>
