@@ -16,6 +16,7 @@ import SignIn from './pages/SignIn'
 import SignUp from './pages/SignUp'
 import OurServices from './pages/OurServices'
 import OurDoctors from './pages/OurDoctors'
+import AppointmentBooking from './pages/AppointmentBooking'
 import DoctorDashboard from './pages/DoctorDashboard'
 import PatientPage from './pages/PatientPage'
 import ScrollToTop from './components/ScrollToTop'
@@ -666,6 +667,7 @@ const App = () => {
         {/* Service and information routes */}
         <Route path="/services" element={<OurServices />} />
         <Route path="/our-doctors" element={<OurDoctors />} />
+        <Route path="/book-appointment" element={<AppointmentBooking />} />
         {/* Doctor dashboard route - Protected */}
         <Route path="/doctor-dashboard" element={
           <ProtectedRoute>

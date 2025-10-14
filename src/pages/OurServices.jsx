@@ -166,21 +166,29 @@ const OurServices = () => {
                   </p>
 
                   {/* Action Button */}
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    disabled={!service.available}
-                    className={`w-full py-3 px-6 rounded-full font-semibold transition-all duration-300 ${
-                      service.available
-                        ? 'bg-gradient-to-r from-primary to-accent text-white hover:shadow-lg'
-                        : 'bg-surface/50 text-text-secondary cursor-not-allowed'
-                    }`}
-                    style={service.available ? {
-                      boxShadow: '0 0 20px rgba(37, 99, 235, 0.4), 0 0 20px rgba(20, 184, 166, 0.4)'
-                    } : {}}
-                  >
-                    {service.available ? 'Get Started' : 'Coming Soon'}
-                  </motion.button>
+                  {service.available ? (
+                    <Link to="/book-appointment">
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="w-full py-3 px-6 rounded-full font-semibold transition-all duration-300 bg-gradient-to-r from-primary to-accent text-white hover:shadow-lg"
+                        style={{
+                          boxShadow: '0 0 20px rgba(37, 99, 235, 0.4), 0 0 20px rgba(20, 184, 166, 0.4)'
+                        }}
+                      >
+                        Get Started
+                      </motion.button>
+                    </Link>
+                  ) : (
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      disabled={true}
+                      className="w-full py-3 px-6 rounded-full font-semibold transition-all duration-300 bg-surface/50 text-text-secondary cursor-not-allowed"
+                    >
+                      Coming Soon
+                    </motion.button>
+                  )}
                 </div>
 
                 {/* Enhanced Glow on Hover */}

@@ -359,38 +359,42 @@ const OurDoctors = () => {
 
                      {/* Action Button */}
                      <div className="flex-shrink-0 w-full lg:w-auto">
-                       <motion.button
-                         whileHover={{ scale: 1.05 }}
-                         whileTap={{ scale: 0.95 }}
-                         disabled={checkDoctorAvailability(doctor.availability, doctor.id) !== 'available'}
-                         className={`w-full lg:w-auto px-8 py-4 rounded-full font-semibold transition-all duration-300 ${
-                           checkDoctorAvailability(doctor.availability, doctor.id) === 'available'
-                             ? 'bg-gradient-to-r from-primary to-accent text-white hover:shadow-lg'
-                             : checkDoctorAvailability(doctor.availability, doctor.id) === 'busy'
-                             ? 'bg-surface/50 text-text-secondary cursor-not-allowed border-2 border-blue-500/60'
-                             : 'bg-surface/50 text-text-secondary cursor-not-allowed border-2 border-red-500/60'
-                         }`}
-                         style={checkDoctorAvailability(doctor.availability, doctor.id) === 'available' ? {
-                           boxShadow: '0 0 20px rgba(37, 99, 235, 0.4), 0 0 20px rgba(20, 184, 166, 0.4)'
-                         } : {}}
-                         onMouseEnter={(e) => {
-                           if (checkDoctorAvailability(doctor.availability, doctor.id) === 'available') {
-                             e.target.style.boxShadow = '0 0 30px rgba(37, 99, 235, 0.6), 0 0 30px rgba(20, 184, 166, 0.6)'
+                       {checkDoctorAvailability(doctor.availability, doctor.id) === 'available' ? (
+                         <Link to="/book-appointment">
+                           <motion.button
+                             whileHover={{ scale: 1.05 }}
+                             whileTap={{ scale: 0.95 }}
+                             className="w-full lg:w-auto px-8 py-4 rounded-full font-semibold transition-all duration-300 bg-gradient-to-r from-primary to-accent text-white hover:shadow-lg"
+                             style={{
+                               boxShadow: '0 0 20px rgba(37, 99, 235, 0.4), 0 0 20px rgba(20, 184, 166, 0.4)'
+                             }}
+                             onMouseEnter={(e) => {
+                               e.target.style.boxShadow = '0 0 30px rgba(37, 99, 235, 0.6), 0 0 30px rgba(20, 184, 166, 0.6)'
+                             }}
+                             onMouseLeave={(e) => {
+                               e.target.style.boxShadow = '0 0 20px rgba(37, 99, 235, 0.4), 0 0 20px rgba(20, 184, 166, 0.4)'
+                             }}
+                           >
+                             Book Appointment
+                           </motion.button>
+                         </Link>
+                       ) : (
+                         <motion.button
+                           whileHover={{ scale: 1.05 }}
+                           whileTap={{ scale: 0.95 }}
+                           disabled={true}
+                           className={`w-full lg:w-auto px-8 py-4 rounded-full font-semibold transition-all duration-300 ${
+                             checkDoctorAvailability(doctor.availability, doctor.id) === 'busy'
+                               ? 'bg-surface/50 text-text-secondary cursor-not-allowed border-2 border-blue-500/60'
+                               : 'bg-surface/50 text-text-secondary cursor-not-allowed border-2 border-red-500/60'
+                           }`}
+                         >
+                           {checkDoctorAvailability(doctor.availability, doctor.id) === 'busy'
+                             ? 'Temporarily Busy'
+                             : 'Currently Unavailable'
                            }
-                         }}
-                         onMouseLeave={(e) => {
-                           if (checkDoctorAvailability(doctor.availability, doctor.id) === 'available') {
-                             e.target.style.boxShadow = '0 0 20px rgba(37, 99, 235, 0.4), 0 0 20px rgba(20, 184, 166, 0.4)'
-                           }
-                         }}
-                       >
-                         {checkDoctorAvailability(doctor.availability, doctor.id) === 'available' 
-                           ? 'Book Appointment' 
-                           : checkDoctorAvailability(doctor.availability, doctor.id) === 'busy'
-                           ? 'Temporarily Busy'
-                           : 'Currently Unavailable'
-                         }
-                       </motion.button>
+                         </motion.button>
+                       )}
                      </div>
                    </div>
                  </div>
