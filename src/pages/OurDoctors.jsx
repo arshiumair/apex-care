@@ -45,7 +45,7 @@ const OurDoctors = () => {
   const navigate = useNavigate()
 
   // Helper function to check doctor availability
-  const checkDoctorAvailability = (availability) => {
+  const checkDoctorAvailability = (availability, doctorId) => {
     const now = new Date()
     const currentDay = now.toLocaleDateString('en-US', { weekday: 'short' })
     const currentTime = now.toLocaleTimeString('en-US', { 
@@ -61,8 +61,10 @@ const OurDoctors = () => {
       return 'unavailable'
     }
     
-    // Check if doctor is temporarily busy (random simulation for demo)
-    const isBusy = Math.random() < 0.3 // 30% chance of being busy
+    // Simulate consistent busy status based on doctor ID and current time
+    // This creates a more realistic pattern where some doctors are consistently busy
+    const busyDoctors = [2, 4, 7] // Dr. Hassan Khan, Dr. Fahad Ali, Dr. Omar Sheikh
+    const isBusy = busyDoctors.includes(doctorId)
     
     return isBusy ? 'busy' : 'available'
   }
@@ -311,15 +313,15 @@ const OurDoctors = () => {
                          {/* Availability Status Badge */}
                          <div className="absolute -bottom-2 -right-2">
                            <div className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                             checkDoctorAvailability(doctor.availability) === 'available'
+                             checkDoctorAvailability(doctor.availability, doctor.id) === 'available'
                                ? 'bg-green-500/90 text-white'
-                               : checkDoctorAvailability(doctor.availability) === 'busy'
+                               : checkDoctorAvailability(doctor.availability, doctor.id) === 'busy'
                                ? 'bg-blue-500/90 text-white'
                                : 'bg-red-500/90 text-white'
                            }`}>
-                             {checkDoctorAvailability(doctor.availability) === 'available' 
+                             {checkDoctorAvailability(doctor.availability, doctor.id) === 'available' 
                                ? '🟢 Available' 
-                               : checkDoctorAvailability(doctor.availability) === 'busy'
+                               : checkDoctorAvailability(doctor.availability, doctor.id) === 'busy'
                                ? '🔵 Busy'
                                : '🔴 Unavailable'
                              }
@@ -360,31 +362,31 @@ const OurDoctors = () => {
                        <motion.button
                          whileHover={{ scale: 1.05 }}
                          whileTap={{ scale: 0.95 }}
-                         disabled={checkDoctorAvailability(doctor.availability) !== 'available'}
+                         disabled={checkDoctorAvailability(doctor.availability, doctor.id) !== 'available'}
                          className={`w-full lg:w-auto px-8 py-4 rounded-full font-semibold transition-all duration-300 ${
-                           checkDoctorAvailability(doctor.availability) === 'available'
+                           checkDoctorAvailability(doctor.availability, doctor.id) === 'available'
                              ? 'bg-gradient-to-r from-primary to-accent text-white hover:shadow-lg'
-                             : checkDoctorAvailability(doctor.availability) === 'busy'
+                             : checkDoctorAvailability(doctor.availability, doctor.id) === 'busy'
                              ? 'bg-surface/50 text-text-secondary cursor-not-allowed border-2 border-blue-500/60'
-                             : 'bg-surface/50 text-text-secondary cursor-not-allowed border-2 border-[#13ad9e]/60'
+                             : 'bg-surface/50 text-text-secondary cursor-not-allowed border-2 border-red-500/60'
                          }`}
-                         style={checkDoctorAvailability(doctor.availability) === 'available' ? {
+                         style={checkDoctorAvailability(doctor.availability, doctor.id) === 'available' ? {
                            boxShadow: '0 0 20px rgba(37, 99, 235, 0.4), 0 0 20px rgba(20, 184, 166, 0.4)'
                          } : {}}
                          onMouseEnter={(e) => {
-                           if (checkDoctorAvailability(doctor.availability) === 'available') {
+                           if (checkDoctorAvailability(doctor.availability, doctor.id) === 'available') {
                              e.target.style.boxShadow = '0 0 30px rgba(37, 99, 235, 0.6), 0 0 30px rgba(20, 184, 166, 0.6)'
                            }
                          }}
                          onMouseLeave={(e) => {
-                           if (checkDoctorAvailability(doctor.availability) === 'available') {
+                           if (checkDoctorAvailability(doctor.availability, doctor.id) === 'available') {
                              e.target.style.boxShadow = '0 0 20px rgba(37, 99, 235, 0.4), 0 0 20px rgba(20, 184, 166, 0.4)'
                            }
                          }}
                        >
-                         {checkDoctorAvailability(doctor.availability) === 'available' 
+                         {checkDoctorAvailability(doctor.availability, doctor.id) === 'available' 
                            ? 'Book Appointment' 
-                           : checkDoctorAvailability(doctor.availability) === 'busy'
+                           : checkDoctorAvailability(doctor.availability, doctor.id) === 'busy'
                            ? 'Temporarily Busy'
                            : 'Currently Unavailable'
                          }
