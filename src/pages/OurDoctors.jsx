@@ -112,7 +112,7 @@ const OurDoctors = () => {
       experience: "7 years",
       description: "Dedicated to children's health and developmental care",
       image: "https://images.unsplash.com/photo-1659353888906-adb3e0041693?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1170",
-      availability: { days: ["Mon", "Tue", "Wed", "Thu", "Fri"], start: "10:00", end: "16:00" }
+      availability: { days: ["Mon", "Tue", "Wed", "Thu", "Fri"], start: "10:00", end: "01:00" }
     },
     {
       id: 4,
@@ -376,7 +376,7 @@ const OurDoctors = () => {
                      {/* Action Button */}
                      <div className="flex-shrink-0 w-full lg:w-auto">
                        {checkDoctorAvailability(doctor.availability, doctor.id) === 'available' ? (
-                         <Link to="/book-appointment">
+                         <Link to={`/book-appointment?doctorId=${doctor.id}`}>
                            <motion.button
                              whileHover={{ scale: 1.05 }}
                              whileTap={{ scale: 0.95 }}

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import Navbar from '../components/Navbar'
 import { 
   Calendar, 
@@ -27,7 +27,7 @@ import {
 const doctors = [
   {
     id: 1,
-    name: "Dr. Sarah Johnson",
+    name: "Dr. Ayesha Malik",
     specialty: "Cardiologist",
     experience: "12 years",
     rating: 4.9,
@@ -44,7 +44,7 @@ const doctors = [
   },
   {
     id: 2,
-    name: "Dr. Michael Chen",
+    name: "Dr. Hassan Khan",
     specialty: "Dermatologist",
     experience: "8 years",
     rating: 4.8,
@@ -61,7 +61,7 @@ const doctors = [
   },
   {
     id: 3,
-    name: "Dr. Emily Rodriguez",
+    name: "Dr. Sara Ahmed",
     specialty: "Pediatrician",
     experience: "15 years",
     rating: 4.9,
@@ -78,7 +78,7 @@ const doctors = [
   },
   {
     id: 4,
-    name: "Dr. David Kim",
+    name: "Dr. Fahad Ali",
     specialty: "Orthopedist",
     experience: "10 years",
     rating: 4.7,
@@ -95,71 +95,54 @@ const doctors = [
   },
   {
     id: 5,
-    name: "Dr. Lisa Wang",
+    name: "Dr. Iqra Urooj",
     specialty: "Neurologist",
-    experience: "14 years",
-    rating: 4.9,
-    reviews: 267,
-    image: "https://images.unsplash.com/photo-1594824388852-8a0a6b0b8b8b?w=150&h=150&fit=crop&crop=face",
+    experience: "8 years",
+    rating: 4.8,
+    reviews: 189,
+    image: "https://media.licdn.com/dms/image/v2/D5603AQE3eqqmkeWZYA/profile-displayphoto-scale_400_400/B56ZlN085MKAAk-/0/1757947351742?e=1762992000&v=beta&t=6rUQrGI0Jg4h9CLgQonV0xJW6LkIUXEyWuG6rxrvc64",
     availability: {
-      days: ["Mon", "Wed", "Fri"],
-      start: "08:00",
-      end: "16:00"
+      days: ["Tue", "Thu", "Sat"],
+      start: "16:30",
+      end: "01:30"
     },
-    consultationFee: 200,
-    languages: ["English", "Mandarin"],
-    education: "MD, Johns Hopkins University"
+    consultationFee: 140,
+    languages: ["English", "Urdu"],
+    education: "MD, Aga Khan University"
   },
   {
     id: 6,
-    name: "Dr. James Wilson",
-    specialty: "Psychiatrist",
-    experience: "11 years",
-    rating: 4.8,
+    name: "Dr. Maryam Noor",
+    specialty: "Nephrologist",
+    experience: "5 years",
+    rating: 4.6,
     reviews: 198,
-    image: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=150&h=150&fit=crop&crop=face",
+    image: "https://plus.unsplash.com/premium_photo-1702598599506-9ff660bc50f5?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjA5fHxwYWtpc3RhbmklMjBkb2N0b3J8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&q=60&w=600",
     availability: {
-      days: ["Tue", "Wed", "Thu", "Sat"],
-      start: "10:00",
-      end: "18:00"
+      days: ["Mon", "Tue", "Wed", "Thu", "Fri"],
+      start: "09:30",
+      end: "22:30"
     },
     consultationFee: 160,
-    languages: ["English"],
-    education: "MD, Stanford University"
+    languages: ["English", "Urdu"],
+    education: "MD, Shifa College of Medicine"
   },
   {
     id: 7,
-    name: "Dr. Maria Garcia",
-    specialty: "Gynecologist",
-    experience: "9 years",
-    rating: 4.9,
+    name: "Dr. Omar Sheikh",
+    specialty: "Psychiatrist",
+    experience: "11 years",
+    rating: 4.8,
     reviews: 223,
-    image: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=150&h=150&fit=crop&crop=face",
+    image: "https://plus.unsplash.com/premium_photo-1661578549774-7906388bc733?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1170",
     availability: {
-      days: ["Mon", "Tue", "Wed", "Thu", "Fri"],
-      start: "09:00",
-      end: "17:00"
+      days: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+      start: "10:00",
+      end: "02:00"
     },
-    consultationFee: 140,
-    languages: ["English", "Spanish"],
-    education: "MD, Harvard Medical School"
-  },
-  {
-    id: 8,
-    name: "Dr. Robert Taylor",
-    specialty: "Ophthalmologist",
-    experience: "13 years",
-    rating: 4.7,
-    reviews: 145,
-    image: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=150&h=150&fit=crop&crop=face",
-    availability: {
-      days: ["Mon", "Wed", "Fri", "Sat"],
-      start: "08:30",
-      end: "16:30"
-    },
-    consultationFee: 170,
-    languages: ["English"],
-    education: "MD, UCLA Medical School"
+    consultationFee: 130,
+    languages: ["English", "Urdu"],
+    education: "MD, Rawalpindi Medical University"
   }
 ]
 
@@ -171,6 +154,7 @@ const timeSlots = [
 
 const AppointmentBooking = () => {
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
   
   // Form state
   const [currentStep, setCurrentStep] = useState(1)
@@ -222,6 +206,19 @@ const AppointmentBooking = () => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [])
+
+  // Handle pre-selection of doctor from URL parameter
+  useEffect(() => {
+    const doctorId = searchParams.get('doctorId')
+    if (doctorId) {
+      const doctor = doctors.find(d => d.id === parseInt(doctorId))
+      if (doctor) {
+        setSelectedDoctor(doctor)
+        // Skip to step 2 if doctor is pre-selected
+        setCurrentStep(2)
+      }
+    }
+  }, [searchParams])
 
   // Get unique specializations
   const specializations = ['all', ...new Set(doctors.map(doctor => doctor.specialty))]
@@ -534,6 +531,37 @@ const AppointmentBooking = () => {
                     transition={{ duration: 0.3 }}
                   >
                     <h2 className="text-2xl font-bold text-[#F8FAFC] mb-6">Select Date & Time</h2>
+                    
+                    {/* Selected Doctor Info */}
+                    {selectedDoctor && (
+                      <div className="mb-8 p-4 bg-[#374151] rounded-xl border border-[#4B5563]">
+                        <div className="flex items-center space-x-4">
+                          <img
+                            src={selectedDoctor.image}
+                            alt={selectedDoctor.name}
+                            className="w-16 h-16 rounded-full object-cover border-2 border-[#14B8A6]"
+                          />
+                          <div>
+                            <h3 className="text-lg font-semibold text-[#F8FAFC]">{selectedDoctor.name}</h3>
+                            <p className="text-[#14B8A6] font-medium">{selectedDoctor.specialty}</p>
+                            <p className="text-[#94A3B8] text-sm">{selectedDoctor.experience} experience</p>
+                          </div>
+                          <div className="ml-auto">
+                            <motion.button
+                              whileHover={{ scale: 1.05 }}
+                              whileTap={{ scale: 0.95 }}
+                              onClick={() => {
+                                setSelectedDoctor(null)
+                                setCurrentStep(1)
+                              }}
+                              className="px-4 py-2 bg-[#4B5563] text-[#F8FAFC] rounded-full text-sm hover:bg-[#6B7280] transition-colors duration-300"
+                            >
+                              Change Doctor
+                            </motion.button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                     
                     {/* Appointment Type */}
                     <div className="mb-8">
