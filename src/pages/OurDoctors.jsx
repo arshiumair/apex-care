@@ -1,10 +1,28 @@
+/**
+ * Apex Care - Our Doctors Page Component
+ * 
+ * This component displays the medical team with doctor profiles, specialties,
+ * availability status, and booking functionality. It includes search and filter
+ * capabilities to help patients find the right doctor for their needs.
+ * 
+ * @author Apex Care Development Team
+ * @version 1.0.0
+ * @description Doctors directory page with search, filter, and booking functionality
+ */
+
 import React, { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Link, useNavigate } from 'react-router-dom'
 import Navbar from '../components/Navbar'
 
-
-// Footer Component
+/**
+ * Footer Component
+ * 
+ * Reusable footer component with copyright and legal links
+ * Used across multiple pages for consistency
+ * 
+ * @returns {JSX.Element} Footer component
+ */
 const Footer = () => {
   return (
     <footer className="bg-background border-t border-surface/20 mt-20">
@@ -39,12 +57,37 @@ const Footer = () => {
   )
 }
 
+/**
+ * OurDoctors Component
+ * 
+ * Main doctors page component that displays:
+ * - Doctor profiles with photos, specialties, and experience
+ * - Real-time availability status checking
+ * - Search functionality by name or specialty
+ * - Filter by medical specialty
+ * - Direct booking links to appointment system
+ * 
+ * @returns {JSX.Element} Doctors directory page component
+ */
 const OurDoctors = () => {
-  const [searchTerm, setSearchTerm] = useState('')
-  const [selectedSpecialty, setSelectedSpecialty] = useState('')
+  // State management for search and filtering
+  const [searchTerm, setSearchTerm] = useState('') // Search input value
+  const [selectedSpecialty, setSelectedSpecialty] = useState('') // Selected specialty filter
   const navigate = useNavigate()
 
-  // Helper function to check doctor availability
+  /**
+   * Check doctor availability based on current time and schedule
+   * 
+   * Handles both normal and cross-midnight availability schedules.
+   * Returns 'available', 'busy', or 'unavailable' status.
+   * 
+   * @param {Object} availability - Doctor's availability schedule
+   * @param {string[]} availability.days - Available days (e.g., ['Mon', 'Tue'])
+   * @param {string} availability.start - Start time (e.g., '09:00')
+   * @param {string} availability.end - End time (e.g., '17:00')
+   * @param {number} doctorId - Doctor's unique identifier
+   * @returns {string} Availability status: 'available', 'busy', or 'unavailable'
+   */
   const checkDoctorAvailability = (availability, doctorId) => {
     const now = new Date()
     const currentDay = now.toLocaleDateString('en-US', { weekday: 'short' })

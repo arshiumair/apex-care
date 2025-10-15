@@ -1,12 +1,34 @@
+/**
+ * Apex Care - Sign Up Page Component
+ * 
+ * This component handles user registration for both patients and doctors.
+ * It provides a form for account creation with user type selection,
+ * form validation, and redirects to appropriate dashboard after registration.
+ * 
+ * @author Apex Care Development Team
+ * @version 1.0.0
+ * @description User registration page with patient/doctor role selection
+ */
+
 import React, { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Link, useNavigate } from 'react-router-dom'
 import aboutImage from '../../assets/about-section.jpg'
 import Navbar from '../components/Navbar'
 
-
+/**
+ * SignUp Component
+ * 
+ * Handles user registration with:
+ * - User type selection (Patient/Doctor)
+ * - Form validation
+ * - Account creation
+ * - Redirect to appropriate dashboard
+ * 
+ * @returns {JSX.Element} Sign up page component
+ */
 const SignUp = () => {
-  const [userType, setUserType] = useState('patient')
+  const [userType, setUserType] = useState('patient') // 'patient' or 'doctor'
   const [formData, setFormData] = useState({
     name: '',
     email: '',

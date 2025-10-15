@@ -1,3 +1,15 @@
+/**
+ * Apex Care - Patient Dashboard Page Component
+ * 
+ * This component provides the main dashboard interface for patients.
+ * It includes appointment management, health tracking, profile management,
+ * and navigation to various patient-specific features.
+ * 
+ * @author Apex Care Development Team
+ * @version 1.0.0
+ * @description Patient dashboard with appointment management and health tracking
+ */
+
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Link, useNavigate } from 'react-router-dom'

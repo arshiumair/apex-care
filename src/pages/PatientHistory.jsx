@@ -1,3 +1,15 @@
+/**
+ * Apex Care - Patient History Page Component
+ * 
+ * This component displays the patient's medical history including
+ * past appointments, prescriptions, test results, and medical records.
+ * It provides filtering and detailed view capabilities.
+ * 
+ * @author Apex Care Development Team
+ * @version 1.0.0
+ * @description Patient medical history with records and test results
+ */
+
 import React, { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { 

@@ -1,3 +1,15 @@
+/**
+ * Apex Care - Doctor Dashboard Component
+ * 
+ * This component provides the main dashboard interface for doctors.
+ * It includes appointment management, patient information, live consultations,
+ * and various dashboard sections with real-time updates.
+ * 
+ * @author Apex Care Development Team
+ * @version 1.0.0
+ * @description Doctor dashboard with appointment management and live consultation features
+ */
+
 import React, { useState, useEffect, useLayoutEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Link, useNavigate } from 'react-router-dom'

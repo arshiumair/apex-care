@@ -1,3 +1,16 @@
+/**
+ * Apex Care - Appointment Booking Page Component
+ * 
+ * This component provides a multi-step appointment booking system.
+ * It includes doctor selection, date/time selection, patient details form,
+ * and confirmation modal. Features search, filtering, and pre-selection
+ * from doctor pages.
+ * 
+ * @author Apex Care Development Team
+ * @version 1.0.0
+ * @description Multi-step appointment booking with doctor selection and scheduling
+ */
+
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
@@ -23,7 +36,10 @@ import {
   ChevronDown
 } from 'lucide-react'
 
-// Mock doctors data
+/**
+ * Mock doctors data - TODO: Replace with API call to /api/doctors
+ * This data should be fetched from the backend and synchronized with OurDoctors.jsx
+ */
 const doctors = [
   {
     id: 1,
@@ -146,21 +162,41 @@ const doctors = [
   }
 ]
 
-// Available time slots
+/**
+ * Available time slots for appointment booking
+ * TODO: Make this dynamic based on doctor availability and working hours
+ */
 const timeSlots = [
   "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
   "14:00", "14:30", "15:00", "15:30", "16:00", "16:30"
 ]
 
+/**
+ * AppointmentBooking Component
+ * 
+ * Multi-step appointment booking system with:
+ * - Step 1: Doctor selection with search and filter
+ * - Step 2: Date and time selection
+ * - Step 3: Patient details form
+ * - Step 4: Confirmation modal
+ * 
+ * Features:
+ * - URL parameter support for doctor pre-selection
+ * - Real-time search and filtering
+ * - Form validation
+ * - Responsive design
+ * 
+ * @returns {JSX.Element} Appointment booking page component
+ */
 const AppointmentBooking = () => {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   
-  // Form state
-  const [currentStep, setCurrentStep] = useState(1)
-  const [selectedDoctor, setSelectedDoctor] = useState(null)
-  const [appointmentType, setAppointmentType] = useState('online')
-  const [selectedDate, setSelectedDate] = useState('')
+  // Form state management
+  const [currentStep, setCurrentStep] = useState(1) // Current step in booking process
+  const [selectedDoctor, setSelectedDoctor] = useState(null) // Selected doctor object
+  const [appointmentType, setAppointmentType] = useState('online') // 'online' or 'in-person'
+  const [selectedDate, setSelectedDate] = useState('') // Selected appointment date
   const [selectedTime, setSelectedTime] = useState('')
   const [patientDetails, setPatientDetails] = useState({
     name: '',

@@ -1,3 +1,15 @@
+/**
+ * Apex Care - Patient Live Appointment Component
+ * 
+ * This component provides the patient-side interface for live video consultations.
+ * It includes video controls, chat functionality, file uploads, test results
+ * submission, and real-time communication with doctors.
+ * 
+ * @author Apex Care Development Team
+ * @version 1.0.0
+ * @description Patient live consultation interface with video, chat, and file sharing
+ */
+
 import React, { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { 

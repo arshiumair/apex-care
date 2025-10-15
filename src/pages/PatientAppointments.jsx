@@ -1,3 +1,15 @@
+/**
+ * Apex Care - Patient Appointments Page Component
+ * 
+ * This component displays the patient's appointment history and management.
+ * It includes appointment filtering, status tracking, and actions like
+ * rescheduling, canceling, and joining live appointments.
+ * 
+ * @author Apex Care Development Team
+ * @version 1.0.0
+ * @description Patient appointments management with filtering and actions
+ */
+
 import React, { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'

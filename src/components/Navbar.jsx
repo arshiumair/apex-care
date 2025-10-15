@@ -1,17 +1,49 @@
+/**
+ * Apex Care - Navigation Bar Component
+ * 
+ * This component provides the main navigation bar for the application.
+ * It includes responsive navigation links, scroll-based styling changes,
+ * section highlighting, and user authentication dropdown.
+ * 
+ * @author Apex Care Development Team
+ * @version 1.0.0
+ * @description Main navigation component with scroll effects and user menu
+ */
+
 import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Link, useNavigate } from 'react-router-dom'
 
+/**
+ * Navbar Component
+ * 
+ * Main navigation component with:
+ * - Scroll-based styling changes
+ * - Section highlighting (scroll spy)
+ * - User authentication dropdown
+ * - Responsive design
+ * 
+ * @returns {JSX.Element} Navigation bar component
+ */
 const Navbar = () => {
-  const [isScrolled, setIsScrolled] = useState(false)
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
-  const [activeSection, setActiveSection] = useState('home')
-  const navigate = useNavigate()
+  // State management for navbar functionality
+  const [isScrolled, setIsScrolled] = useState(false) // Track scroll position for styling
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false) // Control user dropdown visibility
+  const [activeSection, setActiveSection] = useState('home') // Track active section for highlighting
+  const navigate = useNavigate() // React Router navigation hook
   
-  // Simulate login state (temporarily set to false)
+  // TODO: Replace with actual authentication state from backend
+  // Currently simulating login state (set to false for development)
   const isLoggedIn = false
 
-  // Handle navigation to homepage sections
+  /**
+   * Handle navigation to homepage sections
+   * 
+   * Navigates to homepage and then scrolls to the specified section.
+   * Uses a timeout to ensure navigation completes before scrolling.
+   * 
+   * @param {string} sectionId - ID of the section to scroll to
+   */
   const handleSectionNavigation = (sectionId) => {
     // Navigate to homepage first
     navigate('/')
@@ -30,6 +62,12 @@ const Navbar = () => {
     // Don't set activeSection here - let scroll spy handle it
   }
 
+  /**
+   * Scroll event listener for navbar styling
+   * 
+   * Changes navbar appearance based on scroll position.
+   * Adds background blur and border when scrolled.
+   */
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50)
@@ -38,16 +76,28 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  // Scroll spy effect to track active section
+  /**
+   * Scroll spy effect to track active section
+   * 
+   * Uses Intersection Observer API to detect which section is currently visible
+   * and highlights the corresponding navigation link.
+   */
   useEffect(() => {
     const sections = ['home', 'about', 'contact']
     
+    // Intersection Observer configuration
     const observerOptions = {
-      root: null,
-      rootMargin: '-10% 0px -10% 0px',
-      threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+      root: null, // Use viewport as root
+      rootMargin: '-10% 0px -10% 0px', // Trigger when section is 10% visible
+      threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0] // Multiple thresholds for smooth transitions
     }
 
+    /**
+     * Observer callback function
+     * Determines which section is most visible and updates active section
+     * 
+     * @param {IntersectionObserverEntry[]} entries - Array of intersection entries
+     */
     const observerCallback = (entries) => {
       // Find the section with the highest intersection ratio
       let mostVisibleSection = null
@@ -66,6 +116,7 @@ const Navbar = () => {
       }
     }
 
+    // Create intersection observer
     const observer = new IntersectionObserver(observerCallback, observerOptions)
     
     // Observe all sections
@@ -76,6 +127,7 @@ const Navbar = () => {
       }
     })
 
+    // Cleanup function to unobserve elements
     return () => {
       sections.forEach((sectionId) => {
         const element = document.getElementById(sectionId)
@@ -86,18 +138,30 @@ const Navbar = () => {
     }
   }, [])
 
-  // Handle click outside to close dropdown
+  /**
+   * Handle click outside to close dropdown
+   * 
+   * Adds event listener to close user dropdown when clicking outside
+   * Uses mousedown event for better UX
+   */
   useEffect(() => {
+    /**
+     * Handle clicks outside the dropdown
+     * 
+     * @param {MouseEvent} event - Mouse event
+     */
     const handleClickOutside = (event) => {
       if (isDropdownOpen && !event.target.closest('.profile-dropdown-container')) {
         setIsDropdownOpen(false)
       }
     }
     
+    // Only add listener when dropdown is open
     if (isDropdownOpen) {
       document.addEventListener('mousedown', handleClickOutside)
     }
     
+    // Cleanup function to remove event listener
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
@@ -105,16 +169,17 @@ const Navbar = () => {
 
   return (
     <motion.nav 
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.8, ease: "easeOut" }}
+      initial={{ y: -100 }} // Start above viewport
+      animate={{ y: 0 }} // Animate to normal position
+      transition={{ duration: 0.8, ease: "easeOut" }} // Smooth entrance animation
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled 
-          ? 'bg-background/80 backdrop-blur-md' 
-          : 'bg-transparent'
+          ? 'bg-background/80 backdrop-blur-md' // Scrolled state with background
+          : 'bg-transparent' // Transparent when at top
       }`}
       style={{
         borderBottom: '2px solid transparent',
+        // Dynamic background with gradient border
         backgroundImage: isScrolled 
           ? 'linear-gradient(#0F172A, #0F172A) padding-box, linear-gradient(to right, #2563EB, #14B8A6) border-box'
           : 'linear-gradient(transparent, transparent) padding-box, linear-gradient(to right, #2563EB, #14B8A6) border-box',
@@ -123,7 +188,7 @@ const Navbar = () => {
     >
       <div className="max-w-7xl mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
-          {/* Brand */}
+          {/* Brand Logo - Links to homepage */}
           <Link to="/" className="text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
             Apex Care
           </Link>
@@ -131,8 +196,9 @@ const Navbar = () => {
           {/* Spacer to push navigation to the right */}
           <div className="flex-1"></div>
           
-          {/* Navigation Links */}
+          {/* Navigation Links Container */}
           <div className="flex items-center space-x-3 ml-0">
+            {/* Home Navigation Button - Scrolls to home section */}
             <button
               onClick={() => handleSectionNavigation('home')}
               aria-label="Navigate to Home section"
@@ -147,6 +213,8 @@ const Navbar = () => {
             >
               Home
             </button>
+            
+            {/* About Navigation Button - Scrolls to about section */}
             <button
               onClick={() => handleSectionNavigation('about')}
               aria-label="Navigate to About section"
@@ -161,12 +229,16 @@ const Navbar = () => {
             >
               About
             </button>
+            
+            {/* Doctors Navigation Link - Direct link to doctors page */}
             <Link
               to="/our-doctors"
               className="transition-all duration-300 font-medium tracking-wide uppercase text-sm cursor-pointer focus:outline-none rounded-full px-4 py-2 text-[#B8C5D1] hover:text-[#F8FAFC] hover:bg-[#1E293B]/60"
             >
               Doctors
             </Link>
+            
+            {/* Contact Navigation Button - Scrolls to contact section */}
             <button
               onClick={() => handleSectionNavigation('contact')}
               aria-label="Navigate to Contact section"
@@ -182,8 +254,9 @@ const Navbar = () => {
               Contact Us
             </button>
           
-            {/* Profile Icon with Dropdown */}
+            {/* User Profile Icon with Dropdown Menu */}
             <div className="relative profile-dropdown-container">
+              {/* Profile Icon Button - Toggles dropdown menu */}
               <button 
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                 className="p-2 rounded-full bg-surface/30 hover:bg-surface/50 hover:shadow-lg hover:shadow-primary/20 transition-all duration-300 group"
@@ -191,6 +264,7 @@ const Navbar = () => {
                   boxShadow: '0 0 6px rgba(37, 99, 235, 0.3), 0 0 6px rgba(20, 184, 166, 0.3)'
                 }}
               >
+                {/* User Profile Icon SVG */}
                 <svg 
                   className="w-6 h-6 text-text-secondary group-hover:text-text-primary transition-colors duration-300" 
                   fill="none" 
@@ -206,21 +280,22 @@ const Navbar = () => {
                 </svg>
               </button>
 
-              {/* Dropdown Menu */}
+              {/* User Dropdown Menu - Shows when isDropdownOpen is true */}
               {isDropdownOpen && (
                 <motion.div
-                  initial={{ opacity: 0, y: -10, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                  transition={{ duration: 0.2, ease: "easeOut" }}
+                  initial={{ opacity: 0, y: -10, scale: 0.95 }} // Start slightly above and smaller
+                  animate={{ opacity: 1, y: 0, scale: 1 }} // Animate to normal position and size
+                  exit={{ opacity: 0, y: -10, scale: 0.95 }} // Exit animation
+                  transition={{ duration: 0.2, ease: "easeOut" }} // Smooth transition
                   className="absolute right-0 top-full mt-2 w-64 bg-surface/90 backdrop-blur-md rounded-xl border border-white/10 shadow-lg z-50"
                   style={{
                     boxShadow: '0 0 20px rgba(37, 99, 235, 0.4), 0 0 20px rgba(20, 184, 166, 0.4)'
                   }}
                 >
                   {isLoggedIn ? (
-                    // Logged in state
+                    // Logged in user dropdown content
                     <div className="p-4">
+                      {/* User Profile Section */}
                       <div className="flex items-center space-x-3 mb-4">
                         <div className="w-12 h-12 rounded-full bg-gradient-to-r from-primary to-accent flex items-center justify-center">
                           <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -232,6 +307,8 @@ const Navbar = () => {
                           <p className="text-text-secondary text-sm">john.doe@example.com</p>
                         </div>
                       </div>
+                      
+                      {/* Navigation Links for Logged In Users */}
                       <div className="space-y-2">
                         <Link
                           to="/patient-dashboard"
@@ -256,8 +333,9 @@ const Navbar = () => {
                       </div>
                     </div>
                   ) : (
-                    // Not logged in state
+                    // Not logged in user dropdown content
                     <div className="p-4">
+                      {/* Guest User Section */}
                       <div className="text-center mb-4">
                         <div className="w-12 h-12 rounded-full bg-surface/50 flex items-center justify-center mx-auto mb-3">
                           <svg className="w-6 h-6 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -266,6 +344,8 @@ const Navbar = () => {
                         </div>
                         <p className="text-text-secondary text-sm">You're not signed in.</p>
                       </div>
+                      
+                      {/* Sign In Button */}
                       <Link
                         to="/signin"
                         onClick={() => setIsDropdownOpen(false)}

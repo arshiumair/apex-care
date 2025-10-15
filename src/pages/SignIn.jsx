@@ -1,17 +1,48 @@
+/**
+ * Apex Care - Sign In Page Component
+ * 
+ * This component handles user authentication for both patients and doctors.
+ * It provides a form for email/password login with user type selection.
+ * After successful authentication, it stores session data and redirects to appropriate dashboard.
+ * 
+ * @author Apex Care Development Team
+ * @version 1.0.0
+ * @description User authentication page with patient/doctor role selection
+ */
+
 import React, { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Link, useNavigate } from 'react-router-dom'
 import signInImage from '../../assets/signin-page3.jpg'
 import Navbar from '../components/Navbar'
 
-
+/**
+ * SignIn Component
+ * 
+ * Handles user authentication with:
+ * - User type selection (Patient/Doctor)
+ * - Email and password form
+ * - Mock authentication with session storage
+ * - Redirect to appropriate dashboard after login
+ * 
+ * @returns {JSX.Element} Sign in page component
+ */
 const SignIn = () => {
-  const [userType, setUserType] = useState('patient')
+  // State management for form and user type
+  const [userType, setUserType] = useState('patient') // 'patient' or 'doctor'
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   })
 
+  const navigate = useNavigate()
+
+  /**
+   * Handle form input changes
+   * Updates form data state when user types in input fields
+   * 
+   * @param {Event} e - Input change event
+   */
   const handleInputChange = (e) => {
     setFormData({
       ...formData,
@@ -19,15 +50,20 @@ const SignIn = () => {
     })
   }
 
-  const navigate = useNavigate()
-
+  /**
+   * Handle form submission
+   * Processes authentication and redirects to appropriate dashboard
+   * 
+   * @param {Event} e - Form submit event
+   */
   const handleSubmit = (e) => {
     e.preventDefault()
     console.log('Sign in:', { userType, ...formData })
     
+    // TODO: Replace with actual API authentication call
     // Simulate authentication (in real app, this would be an API call)
     if (formData.email && formData.password) {
-      // Set authentication data
+      // Generate mock authentication data
       const authToken = 'demo-auth-token-' + Date.now()
       const userData = {
         email: formData.email,
@@ -36,17 +72,17 @@ const SignIn = () => {
         loginTime: new Date().toISOString()
       }
       
-      // Store in localStorage
+      // Store authentication data in localStorage for persistence
       localStorage.setItem('authToken', authToken)
       localStorage.setItem('userData', JSON.stringify(userData))
       
-      // Store in sessionStorage
+      // Store session data in sessionStorage for current session
       sessionStorage.setItem('sessionData', JSON.stringify({
         isAuthenticated: true,
         loginTime: new Date().toISOString()
       }))
       
-      // Set a cookie (optional)
+      // Set authentication cookie (optional - for additional security)
       document.cookie = `authToken=${authToken}; path=/; max-age=86400` // 24 hours
       
       // Redirect based on user type

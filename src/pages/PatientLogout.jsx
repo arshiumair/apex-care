@@ -1,3 +1,15 @@
+/**
+ * Apex Care - Patient Logout Page Component
+ * 
+ * This component handles the patient logout process with confirmation,
+ * processing animation, and automatic redirect. It clears authentication
+ * data and provides visual feedback during the logout process.
+ * 
+ * @author Apex Care Development Team
+ * @version 1.0.0
+ * @description Patient logout process with confirmation and cleanup
+ */
+
 import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
@@ -10,6 +22,18 @@ import {
   Clock
 } from 'lucide-react'
 
+/**
+ * PatientLogout Component
+ * 
+ * Handles the logout process with:
+ * - Confirmation step
+ * - Processing animation
+ * - Success confirmation
+ * - Automatic redirect to home page
+ * - Cleanup of authentication data
+ * 
+ * @returns {JSX.Element} Patient logout page component
+ */
 const PatientLogout = () => {
   const navigate = useNavigate()
   const [logoutStep, setLogoutStep] = useState('confirm') // 'confirm', 'processing', 'success'

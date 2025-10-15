@@ -1,7 +1,26 @@
+/**
+ * Apex Care - Patient Profile Page Component
+ * 
+ * This component displays a placeholder for the patient profile management feature.
+ * It uses the FeatureUnderUpdate component to show that this feature is under development.
+ * 
+ * @author Apex Care Development Team
+ * @version 1.0.0
+ * @description Patient profile management placeholder page
+ */
+
 import React from 'react'
 import { motion } from 'framer-motion'
 import FeatureUnderUpdate from '../components/FeatureUnderUpdate'
 
+/**
+ * PatientProfile Component
+ * 
+ * Placeholder component for patient profile management.
+ * Currently shows FeatureUnderUpdate component with planned features.
+ * 
+ * @returns {JSX.Element} Patient profile placeholder page
+ */
 const PatientProfile = () => {
   return (
     <div className="p-6">

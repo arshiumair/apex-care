@@ -1,11 +1,29 @@
+/**
+ * Apex Care - Our Services Page Component
+ * 
+ * This component displays the healthcare services offered by Apex Care.
+ * It includes service cards with descriptions, availability status, and action buttons.
+ * Services include appointment booking, health monitoring, prescriptions, and more.
+ * 
+ * @author Apex Care Development Team
+ * @version 1.0.0
+ * @description Services showcase page with interactive service cards
+ */
+
 import React from 'react'
 import { motion } from 'framer-motion'
 import { Link, useNavigate } from 'react-router-dom'
 import Navbar from '../components/Navbar'
 import { Calendar, ClipboardList, Stethoscope, Shield, AlertTriangle } from 'lucide-react'
 
-
-// Footer Component
+/**
+ * Footer Component
+ * 
+ * Reusable footer component with copyright and legal links
+ * Used across multiple pages for consistency
+ * 
+ * @returns {JSX.Element} Footer component
+ */
 const Footer = () => {
   return (
     <footer className="bg-background border-t border-surface/20 mt-20">
@@ -40,7 +58,19 @@ const Footer = () => {
   )
 }
 
+/**
+ * OurServices Component
+ * 
+ * Main services page component that displays:
+ * - Service cards with descriptions and icons
+ * - Availability status for each service
+ * - Action buttons for available services
+ * - Navigation to booking and other pages
+ * 
+ * @returns {JSX.Element} Services page component
+ */
 const OurServices = () => {
+  // Services data array with all available healthcare services
   const services = [
     {
       id: 1,
