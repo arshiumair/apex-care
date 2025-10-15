@@ -39,7 +39,7 @@ const PatientPage = () => {
 
   // Mock data
   const patientData = {
-    name: "Sarah Ahmed",
+    name: "Sarah Ahmad",
     avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQzt3XBMupEnVPQ66F4TI5ejPbN6RYBl9xeIg&s",
     email: "sarah.ahmed@email.com",
     phone: "+92 300 1234567"

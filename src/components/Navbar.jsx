@@ -161,6 +161,12 @@ const Navbar = () => {
             >
               About
             </button>
+            <Link
+              to="/our-doctors"
+              className="transition-all duration-300 font-medium tracking-wide uppercase text-sm cursor-pointer focus:outline-none rounded-full px-4 py-2 text-[#B8C5D1] hover:text-[#F8FAFC] hover:bg-[#1E293B]/60"
+            >
+              Doctors
+            </Link>
             <button
               onClick={() => handleSectionNavigation('contact')}
               aria-label="Navigate to Contact section"
