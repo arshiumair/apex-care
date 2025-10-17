@@ -159,6 +159,40 @@ const doctors = [
     consultationFee: 130,
     languages: ["English", "Urdu"],
     education: "MD, Rawalpindi Medical University"
+  },
+  {
+    id: 8,
+    name: "Dr. Safia Saleem",
+    specialty: "Gynecologist",
+    experience: "6 years",
+    rating: 4.7,
+    reviews: 145,
+    image: "https://images.unsplash.com/photo-1594824388852-8a0b6b1b8b5c?w=300&h=300&fit=crop&crop=face",
+    availability: {
+      days: ["Mon", "Wed", "Fri", "Sat"],
+      start: "09:00",
+      end: "16:00"
+    },
+    consultationFee: 120,
+    languages: ["English", "Urdu"],
+    education: "MD, Aga Khan University"
+  },
+  {
+    id: 9,
+    name: "Dr. Muhammad Awais",
+    specialty: "General Surgeon",
+    experience: "13 years",
+    rating: 4.9,
+    reviews: 267,
+    image: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=300&h=300&fit=crop&crop=face",
+    availability: {
+      days: ["Mon", "Tue", "Wed", "Thu", "Fri"],
+      start: "08:00",
+      end: "18:00"
+    },
+    consultationFee: 200,
+    languages: ["English", "Urdu"],
+    education: "MD, King Edward Medical University"
   }
 ]
 

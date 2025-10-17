@@ -167,15 +167,6 @@ const OurDoctors = () => {
       availability: { days: ["Mon", "Wed", "Fri"], start: "18:00", end: "02:00" }
     },
     {
-      id: 5,
-      name: "Dr. Iqra Urooj",
-      specialty: "Neurologist",
-      experience: "8 years",
-      description: "Expert in neurological disorders and brain health",
-      image: "https://media.licdn.com/dms/image/v2/D5603AQE3eqqmkeWZYA/profile-displayphoto-scale_400_400/B56ZlN085MKAAk-/0/1757947351742?e=1762992000&v=beta&t=6rUQrGI0Jg4h9CLgQonV0xJW6LkIUXEyWuG6rxrvc64",
-      availability: { days: ["Tue", "Thu", "Sat"], start: "16:30", end: "01:30" }
-    },
-    {
       id: 6,
       name: "Dr. Maryam Noor",
       specialty: "Nephrologist",
@@ -192,6 +183,15 @@ const OurDoctors = () => {
       description: "Specialized in mental health and behavioral therapy",
       image: "https://plus.unsplash.com/premium_photo-1661578549774-7906388bc733?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1170",
       availability: { days: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"], start: "10:00", end: "02:00" }
+    },
+    {
+      id: 9,
+      name: "Dr. Muhammad Awais",
+      specialty: "Gynecologist",
+      experience: "13 years",
+      description: "Specialized in women's health, pregnancy care, and reproductive medicine",
+      image: "https://media.licdn.com/dms/image/v2/D4E03AQEVGcireqKjzw/profile-displayphoto-scale_400_400/B4EZmgtlqVIwAo-/0/1759337932273?e=1762387200&v=beta&t=PpfN6qxeENns1zxIsh499qFepXJomk0SmGvQZ-1cSGU",
+      availability: { days: ["Mon", "Tue", "Wed", "Thu", "Fri"], start: "08:00", end: "18:00" }
     }
   ]
 
