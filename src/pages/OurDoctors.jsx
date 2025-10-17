@@ -132,11 +132,11 @@ const OurDoctors = () => {
   const doctors = [
     {
       id: 1,
-      name: "Dr. Ayesha Malik",
+      name: "Dr. Muhammad Awais",
       specialty: "Cardiologist",
       experience: "12 years",
       description: "Specialized in advanced cardiac treatment and preventive care",
-      image: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=300&h=300&fit=crop&crop=face",
+      image: "https://media.licdn.com/dms/image/v2/D4E03AQEVGcireqKjzw/profile-displayphoto-scale_400_400/B4EZmgtlqVIwAo-/0/1759337932273?e=1762387200&v=beta&t=PpfN6qxeENns1zxIsh499qFepXJomk0SmGvQZ-1cSGU",
       availability: { days: ["Mon", "Tue", "Wed", "Thu", "Fri"], start: "09:00", end: "17:00" }
     },
     {
@@ -186,11 +186,11 @@ const OurDoctors = () => {
     },
     {
       id: 9,
-      name: "Dr. Muhammad Awais",
+      name: "Dr. Ayesha Malik",
       specialty: "Gynecologist",
       experience: "13 years",
       description: "Specialized in women's health, pregnancy care, and reproductive medicine",
-      image: "https://media.licdn.com/dms/image/v2/D4E03AQEVGcireqKjzw/profile-displayphoto-scale_400_400/B4EZmgtlqVIwAo-/0/1759337932273?e=1762387200&v=beta&t=PpfN6qxeENns1zxIsh499qFepXJomk0SmGvQZ-1cSGU",
+      image: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=300&h=300&fit=crop&crop=face",
       availability: { days: ["Mon", "Tue", "Wed", "Thu", "Fri"], start: "08:00", end: "18:00" }
     }
   ]
