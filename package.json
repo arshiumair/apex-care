@@ -2,6 +2,7 @@
   "name": "apex-care",
   "version": "1.0.0",
   "description": "Apex Care - IoT-enabled healthcare platform",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "dev": "vite",
