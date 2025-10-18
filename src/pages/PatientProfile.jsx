@@ -55,7 +55,15 @@ const PatientProfile = () => {
   const [activeTab, setActiveTab] = useState('personal') // 'personal', 'medical', 'contacts', 'preferences', 'privacy'
   const [isEditing, setIsEditing] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
-  const [profileImage, setProfileImage] = useState(null)
+  const [profileImage, setProfileImage] = useState(() => {
+    // Load profile image from localStorage or use default
+    const savedPatientData = localStorage.getItem('patientData')
+    if (savedPatientData) {
+      const data = JSON.parse(savedPatientData)
+      return data.avatar || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQzt3XBMupEnVPQ66F4TI5ejPbN6RYBl9xeIg&s"
+    }
+    return "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQzt3XBMupEnVPQ66F4TI5ejPbN6RYBl9xeIg&s"
+  })
   const [uploadProgress, setUploadProgress] = useState(0)
 
   // Personal information state
@@ -180,7 +188,21 @@ const PatientProfile = () => {
         setUploadProgress(prev => {
           if (prev >= 100) {
             clearInterval(interval)
-            setProfileImage(URL.createObjectURL(file))
+            const newImageUrl = URL.createObjectURL(file)
+            setProfileImage(newImageUrl)
+            
+            // Update the avatar in localStorage to sync with PatientPage
+            const updatedPatientData = {
+              name: "Sarah Ahmad",
+              avatar: newImageUrl,
+              email: "sarah.ahmed@email.com",
+              phone: "+92 300 1234567"
+            }
+            localStorage.setItem('patientData', JSON.stringify(updatedPatientData))
+            
+            // Dispatch custom event to notify PatientPage of the update
+            window.dispatchEvent(new CustomEvent('patientDataUpdated'))
+            
             return 100
           }
           return prev + 10

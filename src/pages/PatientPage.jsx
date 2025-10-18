@@ -49,13 +49,42 @@ const PatientPage = () => {
   const [showMessages, setShowMessages] = useState(false)
   const [unreadMessages, setUnreadMessages] = useState(2)
 
-  // Mock data
-  const patientData = {
+  // Patient data with localStorage sync
+  const [patientData, setPatientData] = useState({
     name: "Sarah Ahmad",
     avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQzt3XBMupEnVPQ66F4TI5ejPbN6RYBl9xeIg&s",
     email: "sarah.ahmed@email.com",
     phone: "+92 300 1234567"
-  }
+  })
+
+  // Load patient data from localStorage on component mount
+  useEffect(() => {
+    const savedPatientData = localStorage.getItem('patientData')
+    if (savedPatientData) {
+      setPatientData(JSON.parse(savedPatientData))
+    }
+  }, [])
+
+  // Listen for localStorage changes to sync profile image updates
+  useEffect(() => {
+    const handleStorageChange = () => {
+      const savedPatientData = localStorage.getItem('patientData')
+      if (savedPatientData) {
+        setPatientData(JSON.parse(savedPatientData))
+      }
+    }
+
+    // Listen for storage events (from other tabs)
+    window.addEventListener('storage', handleStorageChange)
+    
+    // Also listen for custom events (from same tab)
+    window.addEventListener('patientDataUpdated', handleStorageChange)
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange)
+      window.removeEventListener('patientDataUpdated', handleStorageChange)
+    }
+  }, [])
 
   const summaryData = {
     doctors: { count: 12, label: "Available" },
@@ -421,7 +450,7 @@ const PatientPage = () => {
               <img
                 src={patientData.avatar}
                 alt={patientData.name}
-                className={`${sidebarCollapsed ? 'w-12 h-12' : 'w-30 h-30'} rounded-full object-cover mx-auto mb-4 transition-all duration-300`}
+                className={`${sidebarCollapsed ? 'w-12 h-12' : 'w-32 h-32'} rounded-full object-cover mx-auto mb-4 transition-all duration-300`}
                 style={{
                   boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)'
                 }}
