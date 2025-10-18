@@ -1,0 +1,1645 @@
+/**
+ * Apex Care - Doctor Profile Management Component
+ * 
+ * This component provides comprehensive profile management for doctors.
+ * It includes personal information, professional details, availability settings,
+ * consultation preferences, and account security management.
+ * 
+ * @author Apex Care Development Team
+ * @version 1.0.0
+ * @description Doctor profile management with comprehensive settings and preferences
+ */
+
+import React, { useState, useEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { 
+  User, 
+  Mail, 
+  Phone, 
+  MapPin, 
+  Calendar, 
+  Clock, 
+  Shield, 
+  Bell, 
+  Camera, 
+  Save, 
+  Edit3, 
+  Check, 
+  X, 
+  Upload,
+  GraduationCap,
+  Award,
+  Briefcase,
+  Globe,
+  Languages,
+  CreditCard,
+  Lock,
+  Eye,
+  EyeOff,
+  AlertCircle,
+  CheckCircle,
+  Star,
+  Users,
+  Monitor,
+  Building,
+  Heart,
+  Stethoscope,
+  FileText,
+  Settings
+} from 'lucide-react'
+
+/**
+ * Doctor Profile Management Component
+ * 
+ * Provides comprehensive profile management interface for doctors including:
+ * - Personal Information Management
+ * - Professional Details & Credentials
+ * - Availability & Schedule Settings
+ * - Consultation Preferences
+ * - Account Security & Privacy
+ * 
+ * @component
+ * @returns {JSX.Element} Doctor profile management interface
+ */
+const DoctorProfile = () => {
+  // State management for different profile sections
+  const [activeTab, setActiveTab] = useState('personal')
+  const [isEditing, setIsEditing] = useState(false)
+  const [uploadProgress, setUploadProgress] = useState(0)
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [saveStatus, setSaveStatus] = useState(null) // 'saving', 'saved', 'error'
+
+  // Profile image state with localStorage integration
+  const [profileImage, setProfileImage] = useState(() => {
+    const savedDoctorData = localStorage.getItem('doctorData')
+    if (savedDoctorData) {
+      const data = JSON.parse(savedDoctorData)
+      return data.avatar || "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=300&h=300&fit=crop&crop=face"
+    }
+    return "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=300&h=300&fit=crop&crop=face"
+  })
+
+  // Personal Information State
+  const [personalInfo, setPersonalInfo] = useState({
+    firstName: "Dr. Ayesha",
+    lastName: "Malik",
+    email: "ayesha.malik@apexcare.com",
+    phone: "+92 300 1234567",
+    dateOfBirth: "1985-03-15",
+    gender: "Female",
+    address: "123 Medical Plaza, Block 6, PECHS, Karachi",
+    city: "Karachi",
+    country: "Pakistan",
+    postalCode: "75400",
+    emergencyContact: {
+      name: "Ahmed Malik",
+      relationship: "Spouse",
+      phone: "+92 300 9876543"
+    }
+  })
+
+  // Professional Information State
+  const [professionalInfo, setProfessionalInfo] = useState({
+    specialty: "Cardiologist",
+    subSpecialties: ["Interventional Cardiology", "Heart Failure"],
+    licenseNumber: "PMC-12345",
+    licenseExpiry: "2026-12-31",
+    experience: "12 years",
+    education: [
+      {
+        degree: "MBBS",
+        institution: "Aga Khan University",
+        year: "2008",
+        country: "Pakistan"
+      },
+      {
+        degree: "FCPS Cardiology",
+        institution: "College of Physicians and Surgeons Pakistan",
+        year: "2015",
+        country: "Pakistan"
+      }
+    ],
+    certifications: [
+      {
+        name: "Advanced Cardiac Life Support (ACLS)",
+        issuer: "American Heart Association",
+        expiry: "2025-06-30"
+      },
+      {
+        name: "Interventional Cardiology Fellowship",
+        issuer: "Johns Hopkins Hospital",
+        expiry: "2024-12-31"
+      }
+    ],
+    languages: ["English", "Urdu", "Arabic"],
+    consultationFee: 5000,
+    currency: "PKR"
+  })
+
+  // Availability Settings State
+  const [availabilitySettings, setAvailabilitySettings] = useState({
+    workingDays: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+    workingHours: {
+      start: "09:00",
+      end: "17:00"
+    },
+    breakTime: {
+      start: "13:00",
+      end: "14:00"
+    },
+    consultationTypes: {
+      inPerson: true,
+      online: true,
+      homeVisit: false
+    },
+    maxPatientsPerDay: 20,
+    appointmentDuration: 30, // minutes
+    advanceBookingDays: 30
+  })
+
+  // Consultation Preferences State
+  const [consultationPreferences, setConsultationPreferences] = useState({
+    preferredCommunication: "Video Call",
+    autoConfirmAppointments: false,
+    sendReminders: true,
+    reminderTiming: "24 hours",
+    followUpRequired: true,
+    prescriptionDelivery: "Digital",
+    reportSharing: "Secure Portal",
+    emergencyAvailability: true,
+    weekendConsultations: false
+  })
+
+  // Security & Privacy State
+  const [securitySettings, setSecuritySettings] = useState({
+    twoFactorAuth: true,
+    loginNotifications: true,
+    dataSharing: false,
+    marketingEmails: false,
+    profileVisibility: "Public",
+    contactSharing: false
+  })
+
+  // Password Change State
+  const [passwordChange, setPasswordChange] = useState({
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: ""
+  })
+
+  /**
+   * Handle profile image upload with progress simulation
+   * 
+   * @param {Event} e - File input change event
+   * 
+   * TODO: Backend Integration
+   * - Implement actual file upload to cloud storage (AWS S3, Cloudinary, etc.)
+   * - Add image compression and optimization
+   * - Implement proper error handling for upload failures
+   * - Add support for multiple image formats and size validation
+   * - Store image URL in doctor profile database
+   */
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0]
+    if (file) {
+      setUploadProgress(0)
+      const interval = setInterval(() => {
+        setUploadProgress(prev => {
+          if (prev >= 100) {
+            clearInterval(interval)
+            const newImageUrl = URL.createObjectURL(file)
+            setProfileImage(newImageUrl)
+
+            // Update localStorage with new image
+            const updatedDoctorData = {
+              name: "Dr. Ayesha Malik",
+              avatar: newImageUrl,
+              email: "ayesha.malik@apexcare.com",
+              phone: "+92 300 1234567"
+            }
+            localStorage.setItem('doctorData', JSON.stringify(updatedDoctorData))
+            window.dispatchEvent(new CustomEvent('doctorDataUpdated'))
+            return 100
+          }
+          return prev + 10
+        })
+      }, 100)
+    }
+  }
+
+  /**
+   * Save profile changes to backend
+   * 
+   * @param {string} section - The section being saved
+   * 
+   * TODO: Backend Integration
+   * - Implement API endpoint: PUT /api/doctors/{doctorId}/profile
+   * - Add proper validation for all form fields
+   * - Implement optimistic updates with rollback on failure
+   * - Add audit logging for profile changes
+   * - Implement rate limiting for profile updates
+   */
+  const handleSave = async (section) => {
+    setSaveStatus('saving')
+    
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      
+      // TODO: Replace with actual API call
+      // const response = await fetch(`/api/doctors/${doctorId}/profile/${section}`, {
+      //   method: 'PUT',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //     'Authorization': `Bearer ${authToken}`
+      //   },
+      //   body: JSON.stringify(getSectionData(section))
+      // })
+      
+      setSaveStatus('saved')
+      setTimeout(() => setSaveStatus(null), 2000)
+    } catch (error) {
+      setSaveStatus('error')
+      setTimeout(() => setSaveStatus(null), 3000)
+    }
+  }
+
+  /**
+   * Get data for specific section
+   * 
+   * @param {string} section - The section name
+   * @returns {Object} Section data
+   */
+  const getSectionData = (section) => {
+    switch (section) {
+      case 'personal': return personalInfo
+      case 'professional': return professionalInfo
+      case 'availability': return availabilitySettings
+      case 'consultation': return consultationPreferences
+      case 'security': return securitySettings
+      default: return {}
+    }
+  }
+
+  /**
+   * Handle password change
+   * 
+   * TODO: Backend Integration
+   * - Implement API endpoint: PUT /api/doctors/{doctorId}/password
+   * - Add password strength validation
+   * - Implement secure password hashing
+   * - Add password history to prevent reuse
+   * - Send email notification on password change
+   */
+  const handlePasswordChange = async () => {
+    if (passwordChange.newPassword !== passwordChange.confirmPassword) {
+      alert('Passwords do not match')
+      return
+    }
+    
+    setSaveStatus('saving')
+    try {
+      // TODO: Implement actual password change API
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      setSaveStatus('saved')
+      setPasswordChange({ currentPassword: "", newPassword: "", confirmPassword: "" })
+    } catch (error) {
+      setSaveStatus('error')
+    }
+  }
+
+  // Tab configuration with icons
+  const tabs = [
+    { id: 'personal', label: 'Personal', icon: User },
+    { id: 'professional', label: 'Professional', icon: GraduationCap },
+    { id: 'availability', label: 'Availability', icon: Clock },
+    { id: 'consultation', label: 'Consultation', icon: Stethoscope },
+    { id: 'security', label: 'Security', icon: Shield }
+  ]
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-[#0F172A] to-[#1E293B] font-inter">
+      {/* Header */}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="bg-[#0F172A]/80 backdrop-blur-md border-b border-[#1E293B]/30 p-6 pt-6"
+        style={{ boxShadow: '0 2px 10px rgba(0, 0, 0, 0.15)' }}
+      >
+        <div className="max-w-7xl mx-auto">
+          <h1 className="text-3xl font-bold text-[#F8FAFC] mb-2">Profile Management</h1>
+          <p className="text-[#94A3B8]">Manage your professional profile and preferences</p>
+        </div>
+      </motion.div>
+
+      <div className="max-w-7xl mx-auto p-6">
+        {/* Capsule Toggler */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="flex justify-center mb-8"
+        >
+          <div className="flex h-12 w-full max-w-6xl border border-[#374151] rounded-full overflow-hidden bg-transparent gap-0">
+            {tabs.map((tab, index) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex-1 flex items-center justify-center space-x-2 text-sm font-medium transition-all duration-300 ease-in-out ${
+                  activeTab === tab.id
+                    ? 'bg-gradient-to-r from-[#2563EB] to-[#14B8A6] text-white shadow-[0_0_8px_rgba(37,99,235,0.5)]'
+                    : 'text-[#94A3B8] hover:text-[#F8FAFC] hover:bg-[#374151]'
+                } ${
+                  index === 0 ? 'rounded-l-full' :
+                  index === 4 ? 'rounded-r-full' : ''
+                }`}
+                style={{
+                  ...(index === 0 && {
+                    clipPath: 'polygon(0% 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%)'
+                  }),
+                  ...(index === 1 && {
+                    transform: 'skewX(-15deg)'
+                  }),
+                  ...(index === 2 && {
+                    transform: 'skewX(-15deg)'
+                  }),
+                  ...(index === 3 && {
+                    transform: 'skewX(-15deg)'
+                  }),
+                  ...(index === 4 && {
+                    clipPath: 'polygon(10px 0%, 100% 0%, 100% 100%, 0% 100%)'
+                  })
+                }}
+              >
+                <span style={{
+                  transform: index >= 1 && index <= 3 ? 'skewX(15deg)' : 'none',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem'
+                }}>
+                  <tab.icon size={16} />
+                  <span className="hidden sm:inline">{tab.label}</span>
+                </span>
+              </button>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Content Sections */}
+        <AnimatePresence mode="wait">
+          {/* Personal Information Section */}
+          {activeTab === 'personal' && (
+            <motion.div
+              key="personal"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.3 }}
+              className="bg-[#1E293B] rounded-xl p-8 border border-[#1E293B]/50"
+              style={{ boxShadow: '0 2px 10px rgba(0, 0, 0, 0.15)' }}
+            >
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-bold text-[#F8FAFC] flex items-center gap-3">
+                  <User className="w-6 h-6 text-[#14B8A6]" />
+                  Personal Information
+                </h2>
+                <div className="flex items-center gap-3">
+                  {saveStatus === 'saving' && (
+                    <div className="flex items-center gap-2 text-[#F59E0B]">
+                      <div className="w-4 h-4 border-2 border-[#F59E0B] border-t-transparent rounded-full animate-spin"></div>
+                      <span className="text-sm">Saving...</span>
+                    </div>
+                  )}
+                  {saveStatus === 'saved' && (
+                    <div className="flex items-center gap-2 text-green-400">
+                      <CheckCircle size={16} />
+                      <span className="text-sm">Saved</span>
+                    </div>
+                  )}
+                  {saveStatus === 'error' && (
+                    <div className="flex items-center gap-2 text-red-400">
+                      <AlertCircle size={16} />
+                      <span className="text-sm">Error</span>
+                    </div>
+                  )}
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => setIsEditing(!isEditing)}
+                    className="px-4 py-2 bg-[#14B8A6] text-white rounded-lg hover:bg-[#14B8A6]/80 transition-colors flex items-center gap-2"
+                  >
+                    <Edit3 size={16} />
+                    {isEditing ? 'Cancel' : 'Edit'}
+                  </motion.button>
+                </div>
+              </div>
+
+              {/* Profile Image Section */}
+              <div className="flex items-center gap-6 mb-8 p-6 bg-[#0F172A] rounded-xl">
+                <div className="relative">
+                  <img
+                    src={profileImage}
+                    alt="Profile"
+                    className="w-24 h-24 rounded-full object-cover border-4 border-[#14B8A6]"
+                  />
+                  {isEditing && (
+                    <label className="absolute bottom-0 right-0 w-8 h-8 bg-[#14B8A6] rounded-full flex items-center justify-center cursor-pointer hover:bg-[#14B8A6]/80 transition-colors">
+                      <Camera size={16} className="text-white" />
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        className="hidden"
+                      />
+                    </label>
+                  )}
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-[#F8FAFC]">{personalInfo.firstName} {personalInfo.lastName}</h3>
+                  <p className="text-[#14B8A6] font-medium">{professionalInfo.specialty}</p>
+                  <p className="text-[#94A3B8] text-sm">{professionalInfo.experience} experience</p>
+                </div>
+                {uploadProgress > 0 && uploadProgress < 100 && (
+                  <div className="ml-auto">
+                    <div className="w-32 bg-[#374151] rounded-full h-2">
+                      <div
+                        className="bg-[#14B8A6] h-2 rounded-full transition-all duration-300"
+                        style={{ width: `${uploadProgress}%` }}
+                      ></div>
+                    </div>
+                    <p className="text-[#94A3B8] text-xs mt-1">{uploadProgress}% uploaded</p>
+                  </div>
+                )}
+              </div>
+
+              {/* Personal Information Form */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-[#F8FAFC] font-medium mb-2">First Name</label>
+                  <input
+                    type="text"
+                    value={personalInfo.firstName}
+                    onChange={(e) => setPersonalInfo({...personalInfo, firstName: e.target.value})}
+                    disabled={!isEditing}
+                    className="w-full px-4 py-3 bg-[#0F172A] border border-[#374151] rounded-lg text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#14B8A6] disabled:opacity-50 disabled:cursor-not-allowed"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[#F8FAFC] font-medium mb-2">Last Name</label>
+                  <input
+                    type="text"
+                    value={personalInfo.lastName}
+                    onChange={(e) => setPersonalInfo({...personalInfo, lastName: e.target.value})}
+                    disabled={!isEditing}
+                    className="w-full px-4 py-3 bg-[#0F172A] border border-[#374151] rounded-lg text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#14B8A6] disabled:opacity-50 disabled:cursor-not-allowed"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[#F8FAFC] font-medium mb-2">Email</label>
+                  <input
+                    type="email"
+                    value={personalInfo.email}
+                    onChange={(e) => setPersonalInfo({...personalInfo, email: e.target.value})}
+                    disabled={!isEditing}
+                    className="w-full px-4 py-3 bg-[#0F172A] border border-[#374151] rounded-lg text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#14B8A6] disabled:opacity-50 disabled:cursor-not-allowed"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[#F8FAFC] font-medium mb-2">Phone</label>
+                  <input
+                    type="tel"
+                    value={personalInfo.phone}
+                    onChange={(e) => setPersonalInfo({...personalInfo, phone: e.target.value})}
+                    disabled={!isEditing}
+                    className="w-full px-4 py-3 bg-[#0F172A] border border-[#374151] rounded-lg text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#14B8A6] disabled:opacity-50 disabled:cursor-not-allowed"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[#F8FAFC] font-medium mb-2">Date of Birth</label>
+                  <input
+                    type="date"
+                    value={personalInfo.dateOfBirth}
+                    onChange={(e) => setPersonalInfo({...personalInfo, dateOfBirth: e.target.value})}
+                    disabled={!isEditing}
+                    className="w-full px-4 py-3 bg-[#0F172A] border border-[#374151] rounded-lg text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#14B8A6] disabled:opacity-50 disabled:cursor-not-allowed"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[#F8FAFC] font-medium mb-2">Gender</label>
+                  <select
+                    value={personalInfo.gender}
+                    onChange={(e) => setPersonalInfo({...personalInfo, gender: e.target.value})}
+                    disabled={!isEditing}
+                    className="w-full px-4 py-3 bg-[#0F172A] border border-[#374151] rounded-lg text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#14B8A6] disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+                <div className="md:col-span-2">
+                  <label className="block text-[#F8FAFC] font-medium mb-2">Address</label>
+                  <input
+                    type="text"
+                    value={personalInfo.address}
+                    onChange={(e) => setPersonalInfo({...personalInfo, address: e.target.value})}
+                    disabled={!isEditing}
+                    className="w-full px-4 py-3 bg-[#0F172A] border border-[#374151] rounded-lg text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#14B8A6] disabled:opacity-50 disabled:cursor-not-allowed"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[#F8FAFC] font-medium mb-2">City</label>
+                  <input
+                    type="text"
+                    value={personalInfo.city}
+                    onChange={(e) => setPersonalInfo({...personalInfo, city: e.target.value})}
+                    disabled={!isEditing}
+                    className="w-full px-4 py-3 bg-[#0F172A] border border-[#374151] rounded-lg text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#14B8A6] disabled:opacity-50 disabled:cursor-not-allowed"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[#F8FAFC] font-medium mb-2">Country</label>
+                  <input
+                    type="text"
+                    value={personalInfo.country}
+                    onChange={(e) => setPersonalInfo({...personalInfo, country: e.target.value})}
+                    disabled={!isEditing}
+                    className="w-full px-4 py-3 bg-[#0F172A] border border-[#374151] rounded-lg text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#14B8A6] disabled:opacity-50 disabled:cursor-not-allowed"
+                  />
+                </div>
+              </div>
+
+              {/* Emergency Contact */}
+              <div className="mt-8">
+                <h3 className="text-lg font-semibold text-[#F8FAFC] mb-4 flex items-center gap-2">
+                  <Phone className="w-5 h-5 text-[#14B8A6]" />
+                  Emergency Contact
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div>
+                    <label className="block text-[#F8FAFC] font-medium mb-2">Name</label>
+                    <input
+                      type="text"
+                      value={personalInfo.emergencyContact.name}
+                      onChange={(e) => setPersonalInfo({
+                        ...personalInfo, 
+                        emergencyContact: {...personalInfo.emergencyContact, name: e.target.value}
+                      })}
+                      disabled={!isEditing}
+                      className="w-full px-4 py-3 bg-[#0F172A] border border-[#374151] rounded-lg text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#14B8A6] disabled:opacity-50 disabled:cursor-not-allowed"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[#F8FAFC] font-medium mb-2">Relationship</label>
+                    <input
+                      type="text"
+                      value={personalInfo.emergencyContact.relationship}
+                      onChange={(e) => setPersonalInfo({
+                        ...personalInfo, 
+                        emergencyContact: {...personalInfo.emergencyContact, relationship: e.target.value}
+                      })}
+                      disabled={!isEditing}
+                      className="w-full px-4 py-3 bg-[#0F172A] border border-[#374151] rounded-lg text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#14B8A6] disabled:opacity-50 disabled:cursor-not-allowed"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[#F8FAFC] font-medium mb-2">Phone</label>
+                    <input
+                      type="tel"
+                      value={personalInfo.emergencyContact.phone}
+                      onChange={(e) => setPersonalInfo({
+                        ...personalInfo, 
+                        emergencyContact: {...personalInfo.emergencyContact, phone: e.target.value}
+                      })}
+                      disabled={!isEditing}
+                      className="w-full px-4 py-3 bg-[#0F172A] border border-[#374151] rounded-lg text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#14B8A6] disabled:opacity-50 disabled:cursor-not-allowed"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Save Button */}
+              {isEditing && (
+                <div className="mt-8 flex justify-end">
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => handleSave('personal')}
+                    className="px-6 py-3 bg-gradient-to-r from-[#2563EB] to-[#14B8A6] text-white rounded-lg hover:from-[#1D4ED8] hover:to-[#0F766E] transition-all duration-300 flex items-center gap-2"
+                  >
+                    <Save size={16} />
+                    Save Changes
+                  </motion.button>
+                </div>
+              )}
+            </motion.div>
+          )}
+
+                    {/* Professional Information Section */}
+                    {activeTab === 'professional' && (
+            <motion.div
+              key="professional"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.3 }}
+              className="bg-[#1E293B] rounded-xl p-8 border border-[#1E293B]/50"
+              style={{ boxShadow: '0 2px 10px rgba(0, 0, 0, 0.15)' }}
+            >
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-bold text-[#F8FAFC] flex items-center gap-3">
+                  <GraduationCap className="w-6 h-6 text-[#14B8A6]" />
+                  Professional Information
+                </h2>
+                <div className="flex items-center gap-3">
+                  {saveStatus === 'saving' && (
+                    <div className="flex items-center gap-2 text-[#F59E0B]">
+                      <div className="w-4 h-4 border-2 border-[#F59E0B] border-t-transparent rounded-full animate-spin"></div>
+                      <span className="text-sm">Saving...</span>
+                    </div>
+                  )}
+                  {saveStatus === 'saved' && (
+                    <div className="flex items-center gap-2 text-green-400">
+                      <CheckCircle size={16} />
+                      <span className="text-sm">Saved</span>
+                    </div>
+                  )}
+                  {saveStatus === 'error' && (
+                    <div className="flex items-center gap-2 text-red-400">
+                      <AlertCircle size={16} />
+                      <span className="text-sm">Error</span>
+                    </div>
+                  )}
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => setIsEditing(!isEditing)}
+                    className="px-4 py-2 bg-[#14B8A6] text-white rounded-lg hover:bg-[#14B8A6]/80 transition-colors flex items-center gap-2"
+                  >
+                    <Edit3 size={16} />
+                    {isEditing ? 'Cancel' : 'Edit'}
+                  </motion.button>
+                </div>
+              </div>
+
+              {/* Professional Details */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <div>
+                  <label className="block text-[#F8FAFC] font-medium mb-2">Specialty</label>
+                  <input
+                    type="text"
+                    value={professionalInfo.specialty}
+                    onChange={(e) => setProfessionalInfo({...professionalInfo, specialty: e.target.value})}
+                    disabled={!isEditing}
+                    className="w-full px-4 py-3 bg-[#0F172A] border border-[#374151] rounded-lg text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#14B8A6] disabled:opacity-50 disabled:cursor-not-allowed"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[#F8FAFC] font-medium mb-2">License Number</label>
+                  <input
+                    type="text"
+                    value={professionalInfo.licenseNumber}
+                    onChange={(e) => setProfessionalInfo({...professionalInfo, licenseNumber: e.target.value})}
+                    disabled={!isEditing}
+                    className="w-full px-4 py-3 bg-[#0F172A] border border-[#374151] rounded-lg text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#14B8A6] disabled:opacity-50 disabled:cursor-not-allowed"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[#F8FAFC] font-medium mb-2">License Expiry</label>
+                    <input
+                      type="date"
+                      value={professionalInfo.licenseExpiry}
+                      onChange={(e) => setProfessionalInfo({...professionalInfo, licenseExpiry: e.target.value})}
+                      disabled={!isEditing}
+                      className="w-full px-4 py-3 bg-[#0F172A] border border-[#374151] rounded-lg text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#14B8A6] disabled:opacity-50 disabled:cursor-not-allowed"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[#F8FAFC] font-medium mb-2">Experience</label>
+                    <input
+                      type="text"
+                      value={professionalInfo.experience}
+                      onChange={(e) => setProfessionalInfo({...professionalInfo, experience: e.target.value})}
+                      disabled={!isEditing}
+                      className="w-full px-4 py-3 bg-[#0F172A] border border-[#374151] rounded-lg text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#14B8A6] disabled:opacity-50 disabled:cursor-not-allowed"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[#F8FAFC] font-medium mb-2">Consultation Fee ({professionalInfo.currency})</label>
+                    <input
+                      type="number"
+                      value={professionalInfo.consultationFee}
+                      onChange={(e) => setProfessionalInfo({...professionalInfo, consultationFee: parseInt(e.target.value)})}
+                      disabled={!isEditing}
+                      className="w-full px-4 py-3 bg-[#0F172A] border border-[#374151] rounded-lg text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#14B8A6] disabled:opacity-50 disabled:cursor-not-allowed"
+                    />
+                  </div>
+                </div>
+  
+                {/* Sub-specialties */}
+                <div className="mb-8">
+                  <label className="block text-[#F8FAFC] font-medium mb-2">Sub-specialties</label>
+                  <div className="flex flex-wrap gap-2">
+                    {professionalInfo.subSpecialties.map((specialty, index) => (
+                      <span key={index} className="px-3 py-1 bg-[#14B8A6]/20 text-[#14B8A6] rounded-full text-sm">
+                        {specialty}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+  
+                {/* Languages */}
+                <div className="mb-8">
+                  <label className="block text-[#F8FAFC] font-medium mb-2">Languages</label>
+                  <div className="flex flex-wrap gap-2">
+                    {professionalInfo.languages.map((language, index) => (
+                      <span key={index} className="px-3 py-1 bg-[#2563EB]/20 text-[#2563EB] rounded-full text-sm">
+                        {language}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+  
+                {/* Education */}
+                <div className="mb-8">
+                  <h3 className="text-lg font-semibold text-[#F8FAFC] mb-4 flex items-center gap-2">
+                    <GraduationCap className="w-5 h-5 text-[#14B8A6]" />
+                    Education
+                  </h3>
+                  <div className="space-y-4">
+                    {professionalInfo.education.map((edu, index) => (
+                      <div key={index} className="p-4 bg-[#0F172A] rounded-lg">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-[#94A3B8] text-sm mb-1">Degree</label>
+                            <input
+                              type="text"
+                              value={edu.degree}
+                              onChange={(e) => {
+                                const newEducation = [...professionalInfo.education]
+                                newEducation[index].degree = e.target.value
+                                setProfessionalInfo({...professionalInfo, education: newEducation})
+                              }}
+                              disabled={!isEditing}
+                              className="w-full px-3 py-2 bg-[#1E293B] border border-[#374151] rounded-lg text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#14B8A6] disabled:opacity-50 disabled:cursor-not-allowed"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-[#94A3B8] text-sm mb-1">Institution</label>
+                            <input
+                              type="text"
+                              value={edu.institution}
+                              onChange={(e) => {
+                                const newEducation = [...professionalInfo.education]
+                                newEducation[index].institution = e.target.value
+                                setProfessionalInfo({...professionalInfo, education: newEducation})
+                              }}
+                              disabled={!isEditing}
+                              className="w-full px-3 py-2 bg-[#1E293B] border border-[#374151] rounded-lg text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#14B8A6] disabled:opacity-50 disabled:cursor-not-allowed"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-[#94A3B8] text-sm mb-1">Year</label>
+                            <input
+                              type="text"
+                              value={edu.year}
+                              onChange={(e) => {
+                                const newEducation = [...professionalInfo.education]
+                                newEducation[index].year = e.target.value
+                                setProfessionalInfo({...professionalInfo, education: newEducation})
+                              }}
+                              disabled={!isEditing}
+                              className="w-full px-3 py-2 bg-[#1E293B] border border-[#374151] rounded-lg text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#14B8A6] disabled:opacity-50 disabled:cursor-not-allowed"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-[#94A3B8] text-sm mb-1">Country</label>
+                            <input
+                              type="text"
+                              value={edu.country}
+                              onChange={(e) => {
+                                const newEducation = [...professionalInfo.education]
+                                newEducation[index].country = e.target.value
+                                setProfessionalInfo({...professionalInfo, education: newEducation})
+                              }}
+                              disabled={!isEditing}
+                              className="w-full px-3 py-2 bg-[#1E293B] border border-[#374151] rounded-lg text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#14B8A6] disabled:opacity-50 disabled:cursor-not-allowed"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+  
+                {/* Certifications */}
+                <div className="mb-8">
+                  <h3 className="text-lg font-semibold text-[#F8FAFC] mb-4 flex items-center gap-2">
+                    <Award className="w-5 h-5 text-[#14B8A6]" />
+                    Certifications
+                  </h3>
+                  <div className="space-y-4">
+                    {professionalInfo.certifications.map((cert, index) => (
+                      <div key={index} className="p-4 bg-[#0F172A] rounded-lg">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-[#94A3B8] text-sm mb-1">Certification Name</label>
+                            <input
+                              type="text"
+                              value={cert.name}
+                              onChange={(e) => {
+                                const newCertifications = [...professionalInfo.certifications]
+                                newCertifications[index].name = e.target.value
+                                setProfessionalInfo({...professionalInfo, certifications: newCertifications})
+                              }}
+                              disabled={!isEditing}
+                              className="w-full px-3 py-2 bg-[#1E293B] border border-[#374151] rounded-lg text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#14B8A6] disabled:opacity-50 disabled:cursor-not-allowed"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-[#94A3B8] text-sm mb-1">Issuer</label>
+                            <input
+                              type="text"
+                              value={cert.issuer}
+                              onChange={(e) => {
+                                const newCertifications = [...professionalInfo.certifications]
+                                newCertifications[index].issuer = e.target.value
+                                setProfessionalInfo({...professionalInfo, certifications: newCertifications})
+                              }}
+                              disabled={!isEditing}
+                              className="w-full px-3 py-2 bg-[#1E293B] border border-[#374151] rounded-lg text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#14B8A6] disabled:opacity-50 disabled:cursor-not-allowed"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-[#94A3B8] text-sm mb-1">Expiry Date</label>
+                            <input
+                              type="date"
+                              value={cert.expiry}
+                              onChange={(e) => {
+                                const newCertifications = [...professionalInfo.certifications]
+                                newCertifications[index].expiry = e.target.value
+                                setProfessionalInfo({...professionalInfo, certifications: newCertifications})
+                              }}
+                              disabled={!isEditing}
+                              className="w-full px-3 py-2 bg-[#1E293B] border border-[#374151] rounded-lg text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#14B8A6] disabled:opacity-50 disabled:cursor-not-allowed"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+  
+                {/* Save Button */}
+                {isEditing && (
+                  <div className="mt-8 flex justify-end">
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => handleSave('professional')}
+                      className="px-6 py-3 bg-gradient-to-r from-[#2563EB] to-[#14B8A6] text-white rounded-lg hover:from-[#1D4ED8] hover:to-[#0F766E] transition-all duration-300 flex items-center gap-2"
+                    >
+                      <Save size={16} />
+                      Save Changes
+                    </motion.button>
+                  </div>
+                )}
+              </motion.div>
+            )}
+  
+            {/* Availability Settings Section */}
+            {activeTab === 'availability' && (
+              <motion.div
+                key="availability"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.3 }}
+                className="bg-[#1E293B] rounded-xl p-8 border border-[#1E293B]/50"
+                style={{ boxShadow: '0 2px 10px rgba(0, 0, 0, 0.15)' }}
+              >
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-2xl font-bold text-[#F8FAFC] flex items-center gap-3">
+                    <Clock className="w-6 h-6 text-[#14B8A6]" />
+                    Availability Settings
+                  </h2>
+                  <div className="flex items-center gap-3">
+                    {saveStatus === 'saving' && (
+                      <div className="flex items-center gap-2 text-[#F59E0B]">
+                        <div className="w-4 h-4 border-2 border-[#F59E0B] border-t-transparent rounded-full animate-spin"></div>
+                        <span className="text-sm">Saving...</span>
+                      </div>
+                    )}
+                    {saveStatus === 'saved' && (
+                      <div className="flex items-center gap-2 text-green-400">
+                        <CheckCircle size={16} />
+                        <span className="text-sm">Saved</span>
+                      </div>
+                    )}
+                    {saveStatus === 'error' && (
+                      <div className="flex items-center gap-2 text-red-400">
+                        <AlertCircle size={16} />
+                        <span className="text-sm">Error</span>
+                      </div>
+                    )}
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => setIsEditing(!isEditing)}
+                      className="px-4 py-2 bg-[#14B8A6] text-white rounded-lg hover:bg-[#14B8A6]/80 transition-colors flex items-center gap-2"
+                    >
+                      <Edit3 size={16} />
+                      {isEditing ? 'Cancel' : 'Edit'}
+                    </motion.button>
+                  </div>
+                </div>
+  
+                {/* Working Days */}
+                <div className="mb-8">
+                  <label className="block text-[#F8FAFC] font-medium mb-4">Working Days</label>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map((day) => (
+                      <label key={day} className="flex items-center space-x-2 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={availabilitySettings.workingDays.includes(day)}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setAvailabilitySettings({
+                                ...availabilitySettings,
+                                workingDays: [...availabilitySettings.workingDays, day]
+                              })
+                            } else {
+                              setAvailabilitySettings({
+                                ...availabilitySettings,
+                                workingDays: availabilitySettings.workingDays.filter(d => d !== day)
+                              })
+                            }
+                          }}
+                          disabled={!isEditing}
+                          className="w-4 h-4 text-[#14B8A6] bg-[#0F172A] border-[#374151] rounded focus:ring-[#14B8A6] disabled:opacity-50"
+                        />
+                        <span className="text-[#F8FAFC] text-sm">{day}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+  
+                {/* Working Hours */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                  <div>
+                    <label className="block text-[#F8FAFC] font-medium mb-2">Start Time</label>
+                    <input
+                      type="time"
+                      value={availabilitySettings.workingHours.start}
+                      onChange={(e) => setAvailabilitySettings({
+                        ...availabilitySettings,
+                        workingHours: {...availabilitySettings.workingHours, start: e.target.value}
+                      })}
+                      disabled={!isEditing}
+                      className="w-full px-4 py-3 bg-[#0F172A] border border-[#374151] rounded-lg text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#14B8A6] disabled:opacity-50 disabled:cursor-not-allowed"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[#F8FAFC] font-medium mb-2">End Time</label>
+                    <input
+                      type="time"
+                      value={availabilitySettings.workingHours.end}
+                      onChange={(e) => setAvailabilitySettings({
+                        ...availabilitySettings,
+                        workingHours: {...availabilitySettings.workingHours, end: e.target.value}
+                      })}
+                      disabled={!isEditing}
+                      className="w-full px-4 py-3 bg-[#0F172A] border border-[#374151] rounded-lg text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#14B8A6] disabled:opacity-50 disabled:cursor-not-allowed"
+                    />
+                  </div>
+                </div>
+  
+                {/* Break Time */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                  <div>
+                    <label className="block text-[#F8FAFC] font-medium mb-2">Break Start Time</label>
+                    <input
+                      type="time"
+                      value={availabilitySettings.breakTime.start}
+                      onChange={(e) => setAvailabilitySettings({
+                        ...availabilitySettings,
+                        breakTime: {...availabilitySettings.breakTime, start: e.target.value}
+                      })}
+                      disabled={!isEditing}
+                      className="w-full px-4 py-3 bg-[#0F172A] border border-[#374151] rounded-lg text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#14B8A6] disabled:opacity-50 disabled:cursor-not-allowed"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[#F8FAFC] font-medium mb-2">Break End Time</label>
+                    <input
+                      type="time"
+                      value={availabilitySettings.breakTime.end}
+                      onChange={(e) => setAvailabilitySettings({
+                        ...availabilitySettings,
+                        breakTime: {...availabilitySettings.breakTime, end: e.target.value}
+                      })}
+                      disabled={!isEditing}
+                      className="w-full px-4 py-3 bg-[#0F172A] border border-[#374151] rounded-lg text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#14B8A6] disabled:opacity-50 disabled:cursor-not-allowed"
+                    />
+                  </div>
+                </div>
+
+                {/* Consultation Types */}
+                <div className="mb-8">
+                  <label className="block text-[#F8FAFC] font-medium mb-4">Consultation Types</label>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <label className="flex items-center space-x-3 cursor-pointer p-4 bg-[#0F172A] rounded-lg hover:bg-[#0F172A]/80 transition-colors">
+                      <input
+                        type="checkbox"
+                        checked={availabilitySettings.consultationTypes.inPerson}
+                        onChange={(e) => setAvailabilitySettings({
+                          ...availabilitySettings,
+                          consultationTypes: {...availabilitySettings.consultationTypes, inPerson: e.target.checked}
+                        })}
+                        disabled={!isEditing}
+                        className="w-4 h-4 text-[#14B8A6] bg-[#0F172A] border-[#374151] rounded focus:ring-[#14B8A6] disabled:opacity-50"
+                      />
+                      <Building className="w-5 h-5 text-[#2563EB]" />
+                      <span className="text-[#F8FAFC]">In-Person</span>
+                    </label>
+                    <label className="flex items-center space-x-3 cursor-pointer p-4 bg-[#0F172A] rounded-lg hover:bg-[#0F172A]/80 transition-colors">
+                      <input
+                        type="checkbox"
+                        checked={availabilitySettings.consultationTypes.online}
+                        onChange={(e) => setAvailabilitySettings({
+                          ...availabilitySettings,
+                          consultationTypes: {...availabilitySettings.consultationTypes, online: e.target.checked}
+                        })}
+                        disabled={!isEditing}
+                        className="w-4 h-4 text-[#14B8A6] bg-[#0F172A] border-[#374151] rounded focus:ring-[#14B8A6] disabled:opacity-50"
+                      />
+                      <Monitor className="w-5 h-5 text-[#14B8A6]" />
+                      <span className="text-[#F8FAFC]">Online</span>
+                    </label>
+                    <label className="flex items-center space-x-3 cursor-pointer p-4 bg-[#0F172A] rounded-lg hover:bg-[#0F172A]/80 transition-colors">
+                      <input
+                        type="checkbox"
+                        checked={availabilitySettings.consultationTypes.homeVisit}
+                        onChange={(e) => setAvailabilitySettings({
+                          ...availabilitySettings,
+                          consultationTypes: {...availabilitySettings.consultationTypes, homeVisit: e.target.checked}
+                        })}
+                        disabled={!isEditing}
+                        className="w-4 h-4 text-[#14B8A6] bg-[#0F172A] border-[#374151] rounded focus:ring-[#14B8A6] disabled:opacity-50"
+                      />
+                      <MapPin className="w-5 h-5 text-[#22C55E]" />
+                      <span className="text-[#F8FAFC]">Home Visit</span>
+                    </label>
+                  </div>
+                </div>
+
+                {/* Additional Settings */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                  <div>
+                    <label className="block text-[#F8FAFC] font-medium mb-2">Max Patients Per Day</label>
+                    <input
+                      type="number"
+                      value={availabilitySettings.maxPatientsPerDay}
+                      onChange={(e) => setAvailabilitySettings({
+                        ...availabilitySettings,
+                        maxPatientsPerDay: parseInt(e.target.value)
+                      })}
+                      disabled={!isEditing}
+                      className="w-full px-4 py-3 bg-[#0F172A] border border-[#374151] rounded-lg text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#14B8A6] disabled:opacity-50 disabled:cursor-not-allowed"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[#F8FAFC] font-medium mb-2">Appointment Duration (minutes)</label>
+                    <input
+                      type="number"
+                      value={availabilitySettings.appointmentDuration}
+                      onChange={(e) => setAvailabilitySettings({
+                        ...availabilitySettings,
+                        appointmentDuration: parseInt(e.target.value)
+                      })}
+                      disabled={!isEditing}
+                      className="w-full px-4 py-3 bg-[#0F172A] border border-[#374151] rounded-lg text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#14B8A6] disabled:opacity-50 disabled:cursor-not-allowed"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[#F8FAFC] font-medium mb-2">Advance Booking (days)</label>
+                    <input
+                      type="number"
+                      value={availabilitySettings.advanceBookingDays}
+                      onChange={(e) => setAvailabilitySettings({
+                        ...availabilitySettings,
+                        advanceBookingDays: parseInt(e.target.value)
+                      })}
+                      disabled={!isEditing}
+                      className="w-full px-4 py-3 bg-[#0F172A] border border-[#374151] rounded-lg text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#14B8A6] disabled:opacity-50 disabled:cursor-not-allowed"
+                    />
+                  </div>
+                </div>
+
+                {/* Save Button */}
+                {isEditing && (
+                  <div className="mt-8 flex justify-end">
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => handleSave('availability')}
+                      className="px-6 py-3 bg-gradient-to-r from-[#2563EB] to-[#14B8A6] text-white rounded-lg hover:from-[#1D4ED8] hover:to-[#0F766E] transition-all duration-300 flex items-center gap-2"
+                    >
+                      <Save size={16} />
+                      Save Changes
+                    </motion.button>
+                  </div>
+                )}
+              </motion.div>
+            )}
+
+            {/* Consultation Preferences Section */}
+            {activeTab === 'consultation' && (
+              <motion.div
+                key="consultation"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.3 }}
+                className="bg-[#1E293B] rounded-xl p-8 border border-[#1E293B]/50"
+                style={{ boxShadow: '0 2px 10px rgba(0, 0, 0, 0.15)' }}
+              >
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-2xl font-bold text-[#F8FAFC] flex items-center gap-3">
+                    <Stethoscope className="w-6 h-6 text-[#14B8A6]" />
+                    Consultation Preferences
+                  </h2>
+                  <div className="flex items-center gap-3">
+                    {saveStatus === 'saving' && (
+                      <div className="flex items-center gap-2 text-[#F59E0B]">
+                        <div className="w-4 h-4 border-2 border-[#F59E0B] border-t-transparent rounded-full animate-spin"></div>
+                        <span className="text-sm">Saving...</span>
+                      </div>
+                    )}
+                    {saveStatus === 'saved' && (
+                      <div className="flex items-center gap-2 text-green-400">
+                        <CheckCircle size={16} />
+                        <span className="text-sm">Saved</span>
+                      </div>
+                    )}
+                    {saveStatus === 'error' && (
+                      <div className="flex items-center gap-2 text-red-400">
+                        <AlertCircle size={16} />
+                        <span className="text-sm">Error</span>
+                      </div>
+                    )}
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => setIsEditing(!isEditing)}
+                      className="px-4 py-2 bg-[#14B8A6] text-white rounded-lg hover:bg-[#14B8A6]/80 transition-colors flex items-center gap-2"
+                    >
+                      <Edit3 size={16} />
+                      {isEditing ? 'Cancel' : 'Edit'}
+                    </motion.button>
+                  </div>
+                </div>
+
+                {/* Communication Preferences */}
+                <div className="mb-8">
+                  <label className="block text-[#F8FAFC] font-medium mb-4">Preferred Communication Method</label>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {['Video Call', 'Phone Call', 'Chat'].map((method) => (
+                      <label key={method} className="flex items-center space-x-3 cursor-pointer p-4 bg-[#0F172A] rounded-lg hover:bg-[#0F172A]/80 transition-colors">
+                        <input
+                          type="radio"
+                          name="communication"
+                          value={method}
+                          checked={consultationPreferences.preferredCommunication === method}
+                          onChange={(e) => setConsultationPreferences({
+                            ...consultationPreferences,
+                            preferredCommunication: e.target.value
+                          })}
+                          disabled={!isEditing}
+                          className="w-4 h-4 text-[#14B8A6] bg-[#0F172A] border-[#374151] focus:ring-[#14B8A6] disabled:opacity-50"
+                        />
+                        <span className="text-[#F8FAFC]">{method}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Appointment Settings */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                  <div className="space-y-4">
+                    <label className="flex items-center space-x-3 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={consultationPreferences.autoConfirmAppointments}
+                        onChange={(e) => setConsultationPreferences({
+                          ...consultationPreferences,
+                          autoConfirmAppointments: e.target.checked
+                        })}
+                        disabled={!isEditing}
+                        className="w-4 h-4 text-[#14B8A6] bg-[#0F172A] border-[#374151] rounded focus:ring-[#14B8A6] disabled:opacity-50"
+                      />
+                      <span className="text-[#F8FAFC]">Auto-confirm appointments</span>
+                    </label>
+                    <label className="flex items-center space-x-3 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={consultationPreferences.sendReminders}
+                        onChange={(e) => setConsultationPreferences({
+                          ...consultationPreferences,
+                          sendReminders: e.target.checked
+                        })}
+                        disabled={!isEditing}
+                        className="w-4 h-4 text-[#14B8A6] bg-[#0F172A] border-[#374151] rounded focus:ring-[#14B8A6] disabled:opacity-50"
+                      />
+                      <span className="text-[#F8FAFC]">Send appointment reminders</span>
+                    </label>
+                    <label className="flex items-center space-x-3 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={consultationPreferences.followUpRequired}
+                        onChange={(e) => setConsultationPreferences({
+                          ...consultationPreferences,
+                          followUpRequired: e.target.checked
+                        })}
+                        disabled={!isEditing}
+                        className="w-4 h-4 text-[#14B8A6] bg-[#0F172A] border-[#374151] rounded focus:ring-[#14B8A6] disabled:opacity-50"
+                      />
+                      <span className="text-[#F8FAFC]">Require follow-up appointments</span>
+                    </label>
+                    <label className="flex items-center space-x-3 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={consultationPreferences.emergencyAvailability}
+                        onChange={(e) => setConsultationPreferences({
+                          ...consultationPreferences,
+                          emergencyAvailability: e.target.checked
+                        })}
+                        disabled={!isEditing}
+                        className="w-4 h-4 text-[#14B8A6] bg-[#0F172A] border-[#374151] rounded focus:ring-[#14B8A6] disabled:opacity-50"
+                      />
+                      <span className="text-[#F8FAFC]">Emergency availability</span>
+                    </label>
+                    <label className="flex items-center space-x-3 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={consultationPreferences.weekendConsultations}
+                        onChange={(e) => setConsultationPreferences({
+                          ...consultationPreferences,
+                          weekendConsultations: e.target.checked
+                        })}
+                        disabled={!isEditing}
+                        className="w-4 h-4 text-[#14B8A6] bg-[#0F172A] border-[#374151] rounded focus:ring-[#14B8A6] disabled:opacity-50"
+                      />
+                      <span className="text-[#F8FAFC]">Weekend consultations</span>
+                    </label>
+                  </div>
+                  <div className="space-y-6">
+                    <div>
+                      <label className="block text-[#F8FAFC] font-medium mb-2">Reminder Timing</label>
+                      <select
+                        value={consultationPreferences.reminderTiming}
+                        onChange={(e) => setConsultationPreferences({
+                          ...consultationPreferences,
+                          reminderTiming: e.target.value
+                        })}
+                        disabled={!isEditing}
+                        className="w-full px-4 py-3 bg-[#0F172A] border border-[#374151] rounded-lg text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#14B8A6] disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        <option value="1 hour">1 hour before</option>
+                        <option value="24 hours">24 hours before</option>
+                        <option value="48 hours">48 hours before</option>
+                        <option value="1 week">1 week before</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-[#F8FAFC] font-medium mb-2">Prescription Delivery</label>
+                      <select
+                        value={consultationPreferences.prescriptionDelivery}
+                        onChange={(e) => setConsultationPreferences({
+                          ...consultationPreferences,
+                          prescriptionDelivery: e.target.value
+                        })}
+                        disabled={!isEditing}
+                        className="w-full px-4 py-3 bg-[#0F172A] border border-[#374151] rounded-lg text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#14B8A6] disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        <option value="Digital">Digital</option>
+                        <option value="Physical">Physical</option>
+                        <option value="Both">Both</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-[#F8FAFC] font-medium mb-2">Report Sharing</label>
+                      <select
+                        value={consultationPreferences.reportSharing}
+                        onChange={(e) => setConsultationPreferences({
+                          ...consultationPreferences,
+                          reportSharing: e.target.value
+                        })}
+                        disabled={!isEditing}
+                        className="w-full px-4 py-3 bg-[#0F172A] border border-[#374151] rounded-lg text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#14B8A6] disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        <option value="Secure Portal">Secure Portal</option>
+                        <option value="Email">Email</option>
+                        <option value="Physical Copy">Physical Copy</option>
+                        <option value="All Methods">All Methods</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Save Button */}
+                {isEditing && (
+                  <div className="mt-8 flex justify-end">
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => handleSave('consultation')}
+                      className="px-6 py-3 bg-gradient-to-r from-[#2563EB] to-[#14B8A6] text-white rounded-lg hover:from-[#1D4ED8] hover:to-[#0F766E] transition-all duration-300 flex items-center gap-2"
+                    >
+                      <Save size={16} />
+                      Save Changes
+                    </motion.button>
+                  </div>
+                )}
+              </motion.div>
+            )}
+
+            {/* Security & Privacy Section */}
+            {activeTab === 'security' && (
+              <motion.div
+                key="security"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.3 }}
+                className="bg-[#1E293B] rounded-xl p-8 border border-[#1E293B]/50"
+                style={{ boxShadow: '0 2px 10px rgba(0, 0, 0, 0.15)' }}
+              >
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-2xl font-bold text-[#F8FAFC] flex items-center gap-3">
+                    <Shield className="w-6 h-6 text-[#14B8A6]" />
+                    Security & Privacy
+                  </h2>
+                  <div className="flex items-center gap-3">
+                    {saveStatus === 'saving' && (
+                      <div className="flex items-center gap-2 text-[#F59E0B]">
+                        <div className="w-4 h-4 border-2 border-[#F59E0B] border-t-transparent rounded-full animate-spin"></div>
+                        <span className="text-sm">Saving...</span>
+                      </div>
+                    )}
+                    {saveStatus === 'saved' && (
+                      <div className="flex items-center gap-2 text-green-400">
+                        <CheckCircle size={16} />
+                        <span className="text-sm">Saved</span>
+                      </div>
+                    )}
+                    {saveStatus === 'error' && (
+                      <div className="flex items-center gap-2 text-red-400">
+                        <AlertCircle size={16} />
+                        <span className="text-sm">Error</span>
+                      </div>
+                    )}
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => setIsEditing(!isEditing)}
+                      className="px-4 py-2 bg-[#14B8A6] text-white rounded-lg hover:bg-[#14B8A6]/80 transition-colors flex items-center gap-2"
+                    >
+                      <Edit3 size={16} />
+                      {isEditing ? 'Cancel' : 'Edit'}
+                    </motion.button>
+                  </div>
+                </div>
+
+                {/* Security Settings */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                  <div className="space-y-6">
+                    <h3 className="text-lg font-semibold text-[#F8FAFC] flex items-center gap-2">
+                      <Lock className="w-5 h-5 text-[#14B8A6]" />
+                      Security Settings
+                    </h3>
+                    <div className="space-y-4">
+                      <label className="flex items-center justify-between cursor-pointer p-4 bg-[#0F172A] rounded-lg hover:bg-[#0F172A]/80 transition-colors">
+                        <div className="flex items-center space-x-3">
+                          <Shield className="w-5 h-5 text-[#14B8A6]" />
+                          <span className="text-[#F8FAFC]">Two-Factor Authentication</span>
+                        </div>
+                        <input
+                          type="checkbox"
+                          checked={securitySettings.twoFactorAuth}
+                          onChange={(e) => setSecuritySettings({
+                            ...securitySettings,
+                            twoFactorAuth: e.target.checked
+                          })}
+                          disabled={!isEditing}
+                          className="w-4 h-4 text-[#14B8A6] bg-[#0F172A] border-[#374151] rounded focus:ring-[#14B8A6] disabled:opacity-50"
+                        />
+                      </label>
+                      <label className="flex items-center justify-between cursor-pointer p-4 bg-[#0F172A] rounded-lg hover:bg-[#0F172A]/80 transition-colors">
+                        <div className="flex items-center space-x-3">
+                          <Bell className="w-5 h-5 text-[#14B8A6]" />
+                          <span className="text-[#F8FAFC]">Login Notifications</span>
+                        </div>
+                        <input
+                          type="checkbox"
+                          checked={securitySettings.loginNotifications}
+                          onChange={(e) => setSecuritySettings({
+                            ...securitySettings,
+                            loginNotifications: e.target.checked
+                          })}
+                          disabled={!isEditing}
+                          className="w-4 h-4 text-[#14B8A6] bg-[#0F172A] border-[#374151] rounded focus:ring-[#14B8A6] disabled:opacity-50"
+                        />
+                      </label>
+                    </div>
+                  </div>
+
+                  <div className="space-y-6">
+                    <h3 className="text-lg font-semibold text-[#F8FAFC] flex items-center gap-2">
+                      <Eye className="w-5 h-5 text-[#14B8A6]" />
+                      Privacy Settings
+                    </h3>
+                    <div className="space-y-4">
+                      <label className="flex items-center justify-between cursor-pointer p-4 bg-[#0F172A] rounded-lg hover:bg-[#0F172A]/80 transition-colors">
+                        <div className="flex items-center space-x-3">
+                          <Users className="w-5 h-5 text-[#14B8A6]" />
+                          <span className="text-[#F8FAFC]">Data Sharing</span>
+                        </div>
+                        <input
+                          type="checkbox"
+                          checked={securitySettings.dataSharing}
+                          onChange={(e) => setSecuritySettings({
+                            ...securitySettings,
+                            dataSharing: e.target.checked
+                          })}
+                          disabled={!isEditing}
+                          className="w-4 h-4 text-[#14B8A6] bg-[#0F172A] border-[#374151] rounded focus:ring-[#14B8A6] disabled:opacity-50"
+                        />
+                      </label>
+                      <label className="flex items-center justify-between cursor-pointer p-4 bg-[#0F172A] rounded-lg hover:bg-[#0F172A]/80 transition-colors">
+                        <div className="flex items-center space-x-3">
+                          <Mail className="w-5 h-5 text-[#14B8A6]" />
+                          <span className="text-[#F8FAFC]">Marketing Emails</span>
+                        </div>
+                        <input
+                          type="checkbox"
+                          checked={securitySettings.marketingEmails}
+                          onChange={(e) => setSecuritySettings({
+                            ...securitySettings,
+                            marketingEmails: e.target.checked
+                          })}
+                          disabled={!isEditing}
+                          className="w-4 h-4 text-[#14B8A6] bg-[#0F172A] border-[#374151] rounded focus:ring-[#14B8A6] disabled:opacity-50"
+                        />
+                      </label>
+                      <label className="flex items-center justify-between cursor-pointer p-4 bg-[#0F172A] rounded-lg hover:bg-[#0F172A]/80 transition-colors">
+                        <div className="flex items-center space-x-3">
+                          <Phone className="w-5 h-5 text-[#14B8A6]" />
+                          <span className="text-[#F8FAFC]">Contact Sharing</span>
+                        </div>
+                        <input
+                          type="checkbox"
+                          checked={securitySettings.contactSharing}
+                          onChange={(e) => setSecuritySettings({
+                            ...securitySettings,
+                            contactSharing: e.target.checked
+                          })}
+                          disabled={!isEditing}
+                          className="w-4 h-4 text-[#14B8A6] bg-[#0F172A] border-[#374151] rounded focus:ring-[#14B8A6] disabled:opacity-50"
+                        />
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Profile Visibility */}
+                <div className="mb-8">
+                  <label className="block text-[#F8FAFC] font-medium mb-4">Profile Visibility</label>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {['Public', 'Private', 'Professional Only'].map((visibility) => (
+                      <label key={visibility} className="flex items-center space-x-3 cursor-pointer p-4 bg-[#0F172A] rounded-lg hover:bg-[#0F172A]/80 transition-colors">
+                        <input
+                          type="radio"
+                          name="visibility"
+                          value={visibility}
+                          checked={securitySettings.profileVisibility === visibility}
+                          onChange={(e) => setSecuritySettings({
+                            ...securitySettings,
+                            profileVisibility: e.target.value
+                          })}
+                          disabled={!isEditing}
+                          className="w-4 h-4 text-[#14B8A6] bg-[#0F172A] border-[#374151] focus:ring-[#14B8A6] disabled:opacity-50"
+                        />
+                        <span className="text-[#F8FAFC]">{visibility}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Password Change Section */}
+                <div className="mb-8">
+                  <h3 className="text-lg font-semibold text-[#F8FAFC] mb-4 flex items-center gap-2">
+                    <Lock className="w-5 h-5 text-[#14B8A6]" />
+                    Change Password
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div>
+                      <label className="block text-[#F8FAFC] font-medium mb-2">Current Password</label>
+                      <div className="relative">
+                        <input
+                          type={showPassword ? "text" : "password"}
+                          value={passwordChange.currentPassword}
+                          onChange={(e) => setPasswordChange({...passwordChange, currentPassword: e.target.value})}
+                          disabled={!isEditing}
+                          className="w-full px-4 py-3 bg-[#0F172A] border border-[#374151] rounded-lg text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#14B8A6] disabled:opacity-50 disabled:cursor-not-allowed pr-12"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#94A3B8] hover:text-[#F8FAFC] transition-colors"
+                        >
+                          {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                        </button>
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-[#F8FAFC] font-medium mb-2">New Password</label>
+                      <div className="relative">
+                        <input
+                          type={showPassword ? "text" : "password"}
+                          value={passwordChange.newPassword}
+                          onChange={(e) => setPasswordChange({...passwordChange, newPassword: e.target.value})}
+                          disabled={!isEditing}
+                          className="w-full px-4 py-3 bg-[#0F172A] border border-[#374151] rounded-lg text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#14B8A6] disabled:opacity-50 disabled:cursor-not-allowed pr-12"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#94A3B8] hover:text-[#F8FAFC] transition-colors"
+                        >
+                          {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                        </button>
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-[#F8FAFC] font-medium mb-2">Confirm Password</label>
+                      <div className="relative">
+                        <input
+                          type={showConfirmPassword ? "text" : "password"}
+                          value={passwordChange.confirmPassword}
+                          onChange={(e) => setPasswordChange({...passwordChange, confirmPassword: e.target.value})}
+                          disabled={!isEditing}
+                          className="w-full px-4 py-3 bg-[#0F172A] border border-[#374151] rounded-lg text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#14B8A6] disabled:opacity-50 disabled:cursor-not-allowed pr-12"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#94A3B8] hover:text-[#F8FAFC] transition-colors"
+                        >
+                          {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  {isEditing && (
+                    <div className="mt-4">
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={handlePasswordChange}
+                        className="px-6 py-3 bg-gradient-to-r from-[#EF4444] to-[#DC2626] text-white rounded-lg hover:from-[#DC2626] hover:to-[#B91C1C] transition-all duration-300 flex items-center gap-2"
+                      >
+                        <Lock size={16} />
+                        Change Password
+                      </motion.button>
+                    </div>
+                  )}
+                </div>
+
+                {/* Save Button */}
+                {isEditing && (
+                  <div className="mt-8 flex justify-end">
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => handleSave('security')}
+                      className="px-6 py-3 bg-gradient-to-r from-[#2563EB] to-[#14B8A6] text-white rounded-lg hover:from-[#1D4ED8] hover:to-[#0F766E] transition-all duration-300 flex items-center gap-2"
+                    >
+                      <Save size={16} />
+                      Save Changes
+                    </motion.button>
+                  </div>
+                )}
+              </motion.div>
+            )}
+        </AnimatePresence>
+      </div>
+    </div>
+  )
+}
+
+export default DoctorProfile
+             

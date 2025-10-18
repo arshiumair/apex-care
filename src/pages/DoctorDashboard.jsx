@@ -15,6 +15,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Link, useNavigate } from 'react-router-dom'
 import Navbar from '../components/Navbar'
 import FeatureUnderUpdate from '../components/FeatureUnderUpdate'
+import DoctorProfile from './DoctorProfile'
 import { 
   LayoutDashboard, 
   CalendarDays, 
@@ -828,14 +829,14 @@ const DoctorDashboard = () => {
     { id: 5, text: "Appointment reminder: Bilal Ahmed at 4:30 PM", time: "3h ago", type: "calendar", read: true }
   ])
 
-  // Doctor profile data
-  const doctorProfile = {
+  // Doctor profile data - now using state for dynamic updates
+  const [doctorProfile, setDoctorProfile] = useState({
     name: "Dr. Ayesha Malik",
     specialty: "Cardiologist",
     role: "MBBS, FCPS",
     experience: "12 years",
     image: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=300&h=300&fit=crop&crop=face"
-  }
+  })
 
   // Placeholder data arrays
   const appointments = [
@@ -1082,6 +1083,42 @@ const DoctorDashboard = () => {
   }
 
   const unreadNotificationsCount = notificationAlerts.filter(n => !n.read).length
+
+  // Load doctor data from localStorage on component mount
+  useEffect(() => {
+    const savedDoctorData = localStorage.getItem('doctorData')
+    if (savedDoctorData) {
+      const data = JSON.parse(savedDoctorData)
+      setDoctorProfile(prev => ({
+        ...prev,
+        name: data.name || prev.name,
+        image: data.avatar || prev.image
+      }))
+    }
+  }, [])
+
+  // Listen for doctor data updates from DoctorProfile component
+  useEffect(() => {
+    const handleStorageChange = () => {
+      const savedDoctorData = localStorage.getItem('doctorData')
+      if (savedDoctorData) {
+        const data = JSON.parse(savedDoctorData)
+        setDoctorProfile(prev => ({
+          ...prev,
+          name: data.name || prev.name,
+          image: data.avatar || prev.image
+        }))
+      }
+    }
+
+    window.addEventListener('storage', handleStorageChange)
+    window.addEventListener('doctorDataUpdated', handleStorageChange)
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange)
+      window.removeEventListener('doctorDataUpdated', handleStorageChange)
+    }
+  }, [])
 
   // Click outside to close dropdowns
   const messagesRef = useRef(null)
@@ -2019,11 +2056,7 @@ const DoctorDashboard = () => {
 
           {/* Profile View */}
           {activeMenu === 'profile' && (
-            <FeatureUnderUpdate
-              featureName="Profile"
-              description="The Profile page is currently under development. Soon you'll be able to manage your personal information, professional details, profile picture, and account settings."
-              onBack={() => setActiveMenu('dashboard')}
-            />
+            <DoctorProfile />
           )}
 
           {/* Payments View */}
