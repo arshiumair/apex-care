@@ -1158,6 +1158,11 @@ const DoctorDashboard = () => {
       case 'online': return <Circle size={8} className="text-green-500 fill-current" />
       case 'busy': return <Circle size={8} className="text-blue-500 fill-current" />
       case 'offline': return <Circle size={8} className="text-red-500 fill-current" />
+      case 'ongoing': return <Circle size={8} className="text-green-500 fill-current" />
+      case 'upcoming': return <Circle size={8} className="text-blue-500 fill-current" />
+      case 'pending': return <Circle size={8} className="text-yellow-500 fill-current" />
+      case 'confirmed': return <Circle size={8} className="text-green-500 fill-current" />
+      case 'completed': return <Circle size={8} className="text-gray-500 fill-current" />
       default: return null
     }
   }
@@ -1664,7 +1669,6 @@ const DoctorDashboard = () => {
                         <div className="text-right">
                           <p className="text-[#F8FAFC] text-xs font-medium">{appointment.time}</p>
                           <div className="flex items-center justify-end gap-1 mt-1">
-                            {getStatusIcon(appointment.status)}
                           <span
                             className="px-2 py-1 rounded-full text-xs text-white"
                             style={{ backgroundColor: getStatusColor(appointment.status) }}
