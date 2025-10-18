@@ -48,15 +48,45 @@ import {
  * - Privacy settings
  * - Profile picture upload
  * 
+ * BACKEND INTEGRATION NOTES:
+ * - All data is currently stored in localStorage for demo purposes
+ * - Replace localStorage calls with actual API endpoints
+ * - Implement proper error handling and loading states
+ * - Add authentication headers to API requests
+ * - Consider implementing optimistic updates for better UX
+ * 
+ * API ENDPOINTS NEEDED:
+ * - GET /api/patient/profile - Fetch patient profile data
+ * - PUT /api/patient/profile - Update patient profile
+ * - POST /api/patient/profile/image - Upload profile image
+ * - GET /api/patient/medical-history - Fetch medical history
+ * - PUT /api/patient/medical-history - Update medical history
+ * - GET /api/patient/emergency-contacts - Fetch emergency contacts
+ * - PUT /api/patient/emergency-contacts - Update emergency contacts
+ * - GET /api/patient/notifications - Fetch notification preferences
+ * - PUT /api/patient/notifications - Update notification preferences
+ * - GET /api/patient/privacy - Fetch privacy settings
+ * - PUT /api/patient/privacy - Update privacy settings
+ * 
  * @returns {JSX.Element} Patient profile management page
  */
 const PatientProfile = () => {
-  // State management for different sections
+  // ============================================================================
+  // STATE MANAGEMENT - BACKEND INTEGRATION READY
+  // ============================================================================
+  
+  // UI State Management
   const [activeTab, setActiveTab] = useState('personal') // 'personal', 'medical', 'contacts', 'preferences', 'privacy'
   const [isEditing, setIsEditing] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
+  
+  // Profile Image State - TODO: Replace with API call
   const [profileImage, setProfileImage] = useState(() => {
-    // Load profile image from localStorage or use default
+    // BACKEND TODO: Replace localStorage with API call
+    // const response = await fetch('/api/patient/profile/image', { headers: { Authorization: token } })
+    // return response.data.imageUrl || defaultImage
+    
+    // Current localStorage implementation (demo only)
     const savedPatientData = localStorage.getItem('patientData')
     if (savedPatientData) {
       const data = JSON.parse(savedPatientData)
@@ -66,7 +96,31 @@ const PatientProfile = () => {
   })
   const [uploadProgress, setUploadProgress] = useState(0)
 
-  // Personal information state
+  // ============================================================================
+  // DATA STRUCTURES - BACKEND API SCHEMA
+  // ============================================================================
+  
+  /**
+   * Personal Information State
+   * BACKEND API: GET/PUT /api/patient/profile
+   * Expected API Response Schema:
+   * {
+   *   "id": "patient_id",
+   *   "firstName": "string",
+   *   "lastName": "string", 
+   *   "email": "string (validated)",
+   *   "phone": "string (formatted)",
+   *   "dateOfBirth": "ISO date string",
+   *   "gender": "male|female|other|prefer-not-to-say",
+   *   "address": "string",
+   *   "emergencyContact": "string",
+   *   "bloodType": "A+|A-|B+|B-|AB+|AB-|O+|O-",
+   *   "allergies": "string (comma-separated)",
+   *   "currentMedications": "string (comma-separated)",
+   *   "createdAt": "ISO timestamp",
+   *   "updatedAt": "ISO timestamp"
+   * }
+   */
   const [personalInfo, setPersonalInfo] = useState({
     firstName: 'Sarah',
     lastName: 'Ahmad',
@@ -81,7 +135,43 @@ const PatientProfile = () => {
     currentMedications: 'Metformin, Lisinopril'
   })
 
-  // Medical history state
+  /**
+   * Medical History State
+   * BACKEND API: GET/PUT /api/patient/medical-history
+   * Expected API Response Schema:
+   * {
+   *   "conditions": [
+   *     {
+   *       "id": "string",
+   *       "condition": "string",
+   *       "diagnosed": "ISO date string",
+   *       "status": "Active|Controlled|Resolved",
+   *       "severity": "Mild|Moderate|Severe",
+   *       "notes": "string"
+   *     }
+   *   ],
+   *   "surgeries": [
+   *     {
+   *       "id": "string",
+   *       "surgery": "string",
+   *       "date": "ISO date string",
+   *       "hospital": "string",
+   *       "surgeon": "string",
+   *       "notes": "string"
+   *     }
+   *   ],
+   *   "immunizations": [
+   *     {
+   *       "id": "string",
+   *       "vaccine": "string",
+   *       "date": "ISO date string",
+   *       "nextDue": "ISO date string",
+   *       "batchNumber": "string",
+   *       "provider": "string"
+   *     }
+   *   ]
+   * }
+   */
   const [medicalHistory, setMedicalHistory] = useState({
     conditions: [
       { id: 1, condition: 'Type 2 Diabetes', diagnosed: '2020-03-15', status: 'Active' },
@@ -96,7 +186,24 @@ const PatientProfile = () => {
     ]
   })
 
-  // Emergency contacts state
+  /**
+   * Emergency Contacts State
+   * BACKEND API: GET/PUT /api/patient/emergency-contacts
+   * Expected API Response Schema:
+   * [
+   *   {
+   *     "id": "string",
+   *     "name": "string",
+   *     "relationship": "string",
+   *     "phone": "string (formatted)",
+   *     "email": "string (validated)",
+   *     "isPrimary": "boolean",
+   *     "address": "string (optional)",
+   *     "createdAt": "ISO timestamp",
+   *     "updatedAt": "ISO timestamp"
+   *   }
+   * ]
+   */
   const [emergencyContacts, setEmergencyContacts] = useState([
     {
       id: 1,
@@ -116,7 +223,33 @@ const PatientProfile = () => {
     }
   ])
 
-  // Notification preferences state
+  /**
+   * Notification Preferences State
+   * BACKEND API: GET/PUT /api/patient/notifications
+   * Expected API Response Schema:
+   * {
+   *   "email": {
+   *     "appointmentReminders": "boolean",
+   *     "prescriptionRefills": "boolean",
+   *     "testResults": "boolean",
+   *     "healthTips": "boolean",
+   *     "promotional": "boolean",
+   *     "billing": "boolean"
+   *   },
+   *   "sms": {
+   *     "appointmentReminders": "boolean",
+   *     "prescriptionRefills": "boolean",
+   *     "testResults": "boolean",
+   *     "emergencyAlerts": "boolean"
+   *   },
+   *   "push": {
+   *     "appointmentReminders": "boolean",
+   *     "prescriptionRefills": "boolean",
+   *     "testResults": "boolean",
+   *     "healthTips": "boolean"
+   *   }
+   * }
+   */
   const [notifications, setNotifications] = useState({
     email: {
       appointmentReminders: true,
@@ -139,7 +272,25 @@ const PatientProfile = () => {
     }
   })
 
-  // Privacy settings state
+  /**
+   * Privacy Settings State
+   * BACKEND API: GET/PUT /api/patient/privacy
+   * Expected API Response Schema:
+   * {
+   *   "profileVisibility": "public|private|doctors-only",
+   *   "dataSharing": {
+   *     "withDoctors": "boolean",
+   *     "withFamily": "boolean",
+   *     "withResearchers": "boolean",
+   *     "withInsurance": "boolean",
+   *     "withThirdParties": "boolean"
+   *   },
+   *   "twoFactorAuth": "boolean",
+   *   "sessionTimeout": "number (minutes)",
+   *   "dataRetention": "number (years)",
+   *   "auditLogging": "boolean"
+   * }
+   */
   const [privacySettings, setPrivacySettings] = useState({
     profileVisibility: 'private', // 'public', 'private', 'doctors-only'
     dataSharing: {
@@ -152,12 +303,23 @@ const PatientProfile = () => {
     sessionTimeout: 30 // minutes
   })
 
-  // Form validation state
+  // ============================================================================
+  // FORM VALIDATION & ERROR HANDLING
+  // ============================================================================
   const [errors, setErrors] = useState({})
   const [isSaving, setIsSaving] = useState(false)
 
+  // ============================================================================
+  // EVENT HANDLERS - BACKEND INTEGRATION READY
+  // ============================================================================
+  
   /**
    * Handle personal information changes
+   * BACKEND TODO: Implement real-time validation with API
+   * - Add debounced validation calls to backend
+   * - Implement optimistic updates for better UX
+   * - Add field-specific validation (email format, phone format, etc.)
+   * 
    * @param {Event} e - Input change event
    */
   const handlePersonalInfoChange = (e) => {
@@ -173,16 +335,33 @@ const PatientProfile = () => {
         [name]: ''
       }))
     }
+    
+    // BACKEND TODO: Add real-time validation
+    // debounceValidation(name, value)
   }
 
   /**
    * Handle profile image upload
+   * BACKEND TODO: Replace with actual file upload API
+   * - Implement proper file validation (size, type, dimensions)
+   * - Add image compression/resizing before upload
+   * - Implement proper error handling for upload failures
+   * - Add progress tracking for large files
+   * - Store image in cloud storage (AWS S3, Cloudinary, etc.)
+   * 
+   * API ENDPOINT: POST /api/patient/profile/image
+   * Expected Request: FormData with image file
+   * Expected Response: { "imageUrl": "string", "thumbnailUrl": "string" }
+   * 
    * @param {Event} e - File input change event
    */
   const handleImageUpload = (e) => {
     const file = e.target.files[0]
     if (file) {
-      // Simulate upload progress
+      // BACKEND TODO: Add file validation
+      // if (!validateImageFile(file)) return
+      
+      // Simulate upload progress (replace with real upload)
       setUploadProgress(0)
       const interval = setInterval(() => {
         setUploadProgress(prev => {
@@ -191,7 +370,17 @@ const PatientProfile = () => {
             const newImageUrl = URL.createObjectURL(file)
             setProfileImage(newImageUrl)
             
-            // Update the avatar in localStorage to sync with PatientPage
+            // BACKEND TODO: Replace with API call
+            // const formData = new FormData()
+            // formData.append('image', file)
+            // const response = await fetch('/api/patient/profile/image', {
+            //   method: 'POST',
+            //   headers: { Authorization: `Bearer ${token}` },
+            //   body: formData
+            // })
+            // const { imageUrl } = await response.json()
+            
+            // Current localStorage implementation (demo only)
             const updatedPatientData = {
               name: "Sarah Ahmad",
               avatar: newImageUrl,
@@ -287,42 +476,124 @@ const PatientProfile = () => {
 
   /**
    * Validate form data
+   * BACKEND TODO: Implement server-side validation
+   * - Add comprehensive validation rules
+   * - Implement async validation for unique fields (email, phone)
+   * - Add validation for medical data (blood type, allergies format)
+   * - Implement proper error message localization
+   * 
    * @returns {boolean} True if valid, false otherwise
    */
   const validateForm = () => {
     const newErrors = {}
-    
+
+    // Basic required field validation
     if (!personalInfo.firstName.trim()) newErrors.firstName = 'First name is required'
     if (!personalInfo.lastName.trim()) newErrors.lastName = 'Last name is required'
     if (!personalInfo.email.trim()) newErrors.email = 'Email is required'
     if (!personalInfo.phone.trim()) newErrors.phone = 'Phone number is required'
-    
+
     // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (personalInfo.email && !emailRegex.test(personalInfo.email)) {
       newErrors.email = 'Please enter a valid email address'
     }
-    
+
+    // BACKEND TODO: Add more comprehensive validation
+    // - Phone number format validation
+    // - Date of birth validation (not in future, reasonable age)
+    // - Blood type validation against allowed values
+    // - Address format validation
+    // - Medical history data validation
+
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
 
   /**
    * Save profile changes
+   * BACKEND TODO: Implement actual API calls for saving data
+   * - Replace localStorage with proper API endpoints
+   * - Implement proper error handling and retry logic
+   * - Add loading states and progress indicators
+   * - Implement optimistic updates for better UX
+   * - Add audit logging for data changes
+   * - Implement proper success/error notifications
    */
   const handleSave = async () => {
     if (!validateForm()) return
-    
+
     setIsSaving(true)
-    
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 2000))
-    
-    setIsSaving(false)
-    setIsEditing(false)
-    
-    // Show success message (in a real app, you'd use a toast notification)
-    alert('Profile updated successfully!')
+
+    try {
+      // BACKEND TODO: Replace with actual API calls
+      // const requests = [
+      //   fetch('/api/patient/profile', {
+      //     method: 'PUT',
+      //     headers: { 
+      //       'Content-Type': 'application/json',
+      //       'Authorization': `Bearer ${token}` 
+      //     },
+      //     body: JSON.stringify(personalInfo)
+      //   }),
+      //   fetch('/api/patient/medical-history', {
+      //     method: 'PUT',
+      //     headers: { 
+      //       'Content-Type': 'application/json',
+      //       'Authorization': `Bearer ${token}` 
+      //     },
+      //     body: JSON.stringify(medicalHistory)
+      //   }),
+      //   fetch('/api/patient/emergency-contacts', {
+      //     method: 'PUT',
+      //     headers: { 
+      //       'Content-Type': 'application/json',
+      //       'Authorization': `Bearer ${token}` 
+      //     },
+      //     body: JSON.stringify(emergencyContacts)
+      //   }),
+      //   fetch('/api/patient/notifications', {
+      //     method: 'PUT',
+      //     headers: { 
+      //       'Content-Type': 'application/json',
+      //       'Authorization': `Bearer ${token}` 
+      //     },
+      //     body: JSON.stringify(notifications)
+      //   }),
+      //   fetch('/api/patient/privacy', {
+      //     method: 'PUT',
+      //     headers: { 
+      //       'Content-Type': 'application/json',
+      //       'Authorization': `Bearer ${token}` 
+      //     },
+      //     body: JSON.stringify(privacySettings)
+      //   })
+      // ]
+      // 
+      // const responses = await Promise.all(requests)
+      // const hasErrors = responses.some(response => !response.ok)
+      // 
+      // if (hasErrors) {
+      //   throw new Error('Some updates failed')
+      // }
+
+      // Simulate API call (current demo implementation)
+      await new Promise(resolve => setTimeout(resolve, 2000))
+
+      setIsSaving(false)
+      setIsEditing(false)
+
+      // BACKEND TODO: Replace with proper notification system
+      // toast.success('Profile updated successfully!')
+      alert('Profile updated successfully!')
+      
+    } catch (error) {
+      setIsSaving(false)
+      // BACKEND TODO: Implement proper error handling
+      // toast.error('Failed to update profile. Please try again.')
+      alert('Failed to update profile. Please try again.')
+      console.error('Save error:', error)
+    }
   }
 
   /**
@@ -1076,3 +1347,68 @@ const PatientProfile = () => {
 }
 
 export default PatientProfile
+
+// ============================================================================
+// BACKEND INTEGRATION GUIDE
+// ============================================================================
+
+/**
+ * BACKEND INTEGRATION CHECKLIST:
+ * 
+ * 1. AUTHENTICATION & AUTHORIZATION:
+ *    - Implement JWT token-based authentication
+ *    - Add token refresh mechanism
+ *    - Implement role-based access control (patient vs doctor)
+ *    - Add session management and timeout handling
+ * 
+ * 2. API ENDPOINTS TO IMPLEMENT:
+ *    - GET /api/patient/profile - Fetch patient profile data
+ *    - PUT /api/patient/profile - Update patient profile
+ *    - POST /api/patient/profile/image - Upload profile image
+ *    - GET /api/patient/medical-history - Fetch medical history
+ *    - PUT /api/patient/medical-history - Update medical history
+ *    - GET /api/patient/emergency-contacts - Fetch emergency contacts
+ *    - PUT /api/patient/emergency-contacts - Update emergency contacts
+ *    - GET /api/patient/notifications - Fetch notification preferences
+ *    - PUT /api/patient/notifications - Update notification preferences
+ *    - GET /api/patient/privacy - Fetch privacy settings
+ *    - PUT /api/patient/privacy - Update privacy settings
+ * 
+ * 3. DATA VALIDATION:
+ *    - Implement server-side validation for all fields
+ *    - Add email uniqueness validation
+ *    - Add phone number format validation
+ *    - Add medical data validation (blood type, allergies)
+ *    - Implement file upload validation (image size, type, dimensions)
+ * 
+ * 4. ERROR HANDLING:
+ *    - Implement proper HTTP status codes
+ *    - Add detailed error messages
+ *    - Implement retry logic for failed requests
+ *    - Add offline support with data synchronization
+ * 
+ * 5. SECURITY CONSIDERATIONS:
+ *    - Implement rate limiting for API endpoints
+ *    - Add input sanitization to prevent XSS
+ *    - Implement CSRF protection
+ *    - Add audit logging for sensitive data changes
+ *    - Implement data encryption for sensitive information
+ * 
+ * 6. PERFORMANCE OPTIMIZATIONS:
+ *    - Implement data pagination for large datasets
+ *    - Add caching for frequently accessed data
+ *    - Implement optimistic updates for better UX
+ *    - Add image compression and CDN integration
+ * 
+ * 7. TESTING:
+ *    - Add unit tests for all functions
+ *    - Implement integration tests for API calls
+ *    - Add end-to-end tests for user workflows
+ *    - Implement error scenario testing
+ * 
+ * 8. MONITORING & ANALYTICS:
+ *    - Add performance monitoring
+ *    - Implement user behavior analytics
+ *    - Add error tracking and reporting
+ *    - Implement health checks for API endpoints
+ */
