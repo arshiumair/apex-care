@@ -60,14 +60,14 @@ const PatientProfile = () => {
 
   // Personal information state
   const [personalInfo, setPersonalInfo] = useState({
-    firstName: 'John',
-    lastName: 'Doe',
-    email: 'john.doe@example.com',
-    phone: '+1 (555) 123-4567',
+    firstName: 'Sarah',
+    lastName: 'Ahmad',
+    email: 'sarah.ahmed@email.com',
+    phone: '+92 300 1234567',
     dateOfBirth: '1990-05-15',
-    gender: 'male',
+    gender: 'female',
     address: '123 Main Street, City, State 12345',
-    emergencyContact: '+1 (555) 987-6543',
+    emergencyContact: '+92 300 9876543',
     bloodType: 'O+',
     allergies: 'Penicillin, Shellfish',
     currentMedications: 'Metformin, Lisinopril'
@@ -92,18 +92,18 @@ const PatientProfile = () => {
   const [emergencyContacts, setEmergencyContacts] = useState([
     {
       id: 1,
-      name: 'Jane Doe',
+      name: 'Ahmad Hassan',
       relationship: 'Spouse',
-      phone: '+1 (555) 987-6543',
-      email: 'jane.doe@example.com',
+      phone: '+92 300 9876543',
+      email: 'ahmad.hassan@email.com',
       isPrimary: true
     },
     {
       id: 2,
-      name: 'Robert Smith',
-      relationship: 'Brother',
-      phone: '+1 (555) 456-7890',
-      email: 'robert.smith@example.com',
+      name: 'Fatima Ahmad',
+      relationship: 'Sister',
+      phone: '+92 300 4567890',
+      email: 'fatima.ahmad@email.com',
       isPrimary: false
     }
   ])
@@ -471,7 +471,7 @@ const PatientProfile = () => {
                     {personalInfo.firstName} {personalInfo.lastName}
                   </h2>
                   <p className="text-[#94A3B8]">{personalInfo.email}</p>
-                  <p className="text-[#94A3B8] text-sm">Patient since 2020</p>
+                          <p className="text-[#94A3B8] text-sm">Patient since 2021</p>
                 </div>
                 {uploadProgress > 0 && uploadProgress < 100 && (
                   <div className="w-32">
