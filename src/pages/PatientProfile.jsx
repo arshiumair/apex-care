@@ -375,25 +375,52 @@ const PatientProfile = () => {
         transition={{ delay: 0.2 }}
         className="mb-8"
       >
-        <div className="flex space-x-1 bg-[#1E293B] p-1 rounded-xl border border-[#374151]">
+        <div className="flex h-12 w-full max-w-6xl border border-[#374151] rounded-full overflow-hidden bg-transparent gap-0">
           {[
-            { id: 'personal', label: 'Personal Info', icon: User },
-            { id: 'medical', label: 'Medical History', icon: Heart },
-            { id: 'contacts', label: 'Emergency Contacts', icon: UserPlus },
+            { id: 'personal', label: 'Personal', icon: User },
+            { id: 'medical', label: 'Medical', icon: Heart },
+            { id: 'contacts', label: 'Contacts', icon: UserPlus },
             { id: 'preferences', label: 'Notifications', icon: Bell },
-            { id: 'privacy', label: 'Privacy & Security', icon: Shield }
-          ].map(tab => (
+            { id: 'privacy', label: 'Privacy', icon: Shield }
+          ].map((tab, index) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex-1 flex items-center justify-center space-x-2 px-4 py-3 rounded-lg transition-all duration-300 ${
+              className={`flex-1 flex items-center justify-center space-x-2 text-sm font-medium transition-all duration-300 ease-in-out ${
                 activeTab === tab.id
-                  ? 'bg-gradient-to-r from-[#2563EB] to-[#14B8A6] text-white shadow-lg'
+                  ? 'bg-gradient-to-r from-[#2563EB] to-[#14B8A6] text-white shadow-[0_0_8px_rgba(37,99,235,0.5)]'
                   : 'text-[#94A3B8] hover:text-[#F8FAFC] hover:bg-[#374151]'
+              } ${
+                index === 0 ? 'rounded-l-full' : 
+                index === 4 ? 'rounded-r-full' : ''
               }`}
+              style={{
+                ...(index === 0 && {
+                  clipPath: 'polygon(0% 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%)'
+                }),
+                ...(index === 1 && {
+                  transform: 'skewX(-15deg)'
+                }),
+                ...(index === 2 && {
+                  transform: 'skewX(-15deg)'
+                }),
+                ...(index === 3 && {
+                  transform: 'skewX(-15deg)'
+                }),
+                ...(index === 4 && {
+                  clipPath: 'polygon(10px 0%, 100% 0%, 100% 100%, 0% 100%)'
+                })
+              }}
             >
-              <tab.icon size={16} />
-              <span className="hidden sm:inline">{tab.label}</span>
+              <span style={{ 
+                transform: index >= 1 && index <= 3 ? 'skewX(15deg)' : 'none',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem'
+              }}>
+                <tab.icon size={16} />
+                <span className="hidden sm:inline">{tab.label}</span>
+              </span>
             </button>
           ))}
         </div>
