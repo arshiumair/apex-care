@@ -45,7 +45,9 @@ import {
   Heart,
   Stethoscope,
   FileText,
-  Settings
+  Settings,
+  UserPlus,
+  Trash2
 } from 'lucide-react'
 
 /**
@@ -92,11 +94,15 @@ const DoctorProfile = () => {
     city: "Karachi",
     country: "Pakistan",
     postalCode: "75400",
-    emergencyContact: {
-      name: "Ahmed Malik",
-      relationship: "Spouse",
-      phone: "+92 300 9876543"
-    }
+    emergencyContacts: []
+  })
+
+  // Emergency contact form state
+  const [showEmergencyForm, setShowEmergencyForm] = useState(false)
+  const [emergencyForm, setEmergencyForm] = useState({
+    name: "",
+    relationship: "",
+    phone: ""
   })
 
   // Professional Information State
@@ -258,6 +264,8 @@ const DoctorProfile = () => {
       // })
       
       setSaveStatus('saved')
+      // Exit edit mode after successful save
+      setIsEditing(false)
       setTimeout(() => setSaveStatus(null), 2000)
     } catch (error) {
       setSaveStatus('error')
@@ -280,6 +288,49 @@ const DoctorProfile = () => {
       case 'security': return securitySettings
       default: return {}
     }
+  }
+
+  /**
+   * Handle adding emergency contact
+   */
+  const handleAddEmergencyContact = () => {
+    if (emergencyForm.name && emergencyForm.relationship && emergencyForm.phone) {
+      const newContact = {
+        id: Date.now(), // Simple ID generation
+        name: emergencyForm.name,
+        relationship: emergencyForm.relationship,
+        phone: emergencyForm.phone
+      }
+      
+      setPersonalInfo({
+        ...personalInfo,
+        emergencyContacts: [...personalInfo.emergencyContacts, newContact]
+      })
+      
+      // Reset form
+      setEmergencyForm({ name: "", relationship: "", phone: "" })
+      setShowEmergencyForm(false)
+    }
+  }
+
+  /**
+   * Handle removing emergency contact
+   * 
+   * @param {number} contactId - The contact ID to remove
+   */
+  const handleRemoveEmergencyContact = (contactId) => {
+    setPersonalInfo({
+      ...personalInfo,
+      emergencyContacts: personalInfo.emergencyContacts.filter(contact => contact.id !== contactId)
+    })
+  }
+
+  /**
+   * Cancel emergency contact form
+   */
+  const handleCancelEmergencyForm = () => {
+    setEmergencyForm({ name: "", relationship: "", phone: "" })
+    setShowEmergencyForm(false)
   }
 
   /**
@@ -407,7 +458,7 @@ const DoctorProfile = () => {
                 <div className="flex items-center gap-3">
                   {saveStatus === 'saving' && (
                     <div className="flex items-center gap-2 text-[#F59E0B]">
-                      <div className="w-4 h-4 border-2 border-[#F59E0B] border-t-transparent rounded-full animate-spin"></div>
+                      <div className="w-4 h-4 border-2 border-[#F59E0B] border-t-transparent rounded-lg animate-spin"></div>
                       <span className="text-sm">Saving...</span>
                     </div>
                   )}
@@ -427,7 +478,7 @@ const DoctorProfile = () => {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => setIsEditing(!isEditing)}
-                    className="px-4 py-2 bg-[#14B8A6] text-white rounded-lg hover:bg-[#14B8A6]/80 transition-colors flex items-center gap-2"
+                    className="px-6 py-3 bg-gradient-to-r from-[#2563EB] to-[#14B8A6] text-white rounded-full hover:from-[#1D4ED8] hover:to-[#0F766E] transition-all duration-300 flex items-center gap-2"
                   >
                     <Edit3 size={16} />
                     {isEditing ? 'Cancel' : 'Edit'}
@@ -462,9 +513,9 @@ const DoctorProfile = () => {
                 </div>
                 {uploadProgress > 0 && uploadProgress < 100 && (
                   <div className="ml-auto">
-                    <div className="w-32 bg-[#374151] rounded-full h-2">
+                    <div className="w-32 bg-[#374151] rounded-lg h-2">
                       <div
-                        className="bg-[#14B8A6] h-2 rounded-full transition-all duration-300"
+                        className="bg-[#14B8A6] h-2 rounded-lg transition-all duration-300"
                         style={{ width: `${uploadProgress}%` }}
                       ></div>
                     </div>
@@ -570,53 +621,144 @@ const DoctorProfile = () => {
                 </div>
               </div>
 
-              {/* Emergency Contact */}
+              {/* Emergency Contacts */}
               <div className="mt-8">
                 <h3 className="text-lg font-semibold text-[#F8FAFC] mb-4 flex items-center gap-2">
                   <Phone className="w-5 h-5 text-[#14B8A6]" />
-                  Emergency Contact
+                  Emergency Contacts
                 </h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div>
-                    <label className="block text-[#F8FAFC] font-medium mb-2">Name</label>
-                    <input
-                      type="text"
-                      value={personalInfo.emergencyContact.name}
-                      onChange={(e) => setPersonalInfo({
-                        ...personalInfo, 
-                        emergencyContact: {...personalInfo.emergencyContact, name: e.target.value}
-                      })}
-                      disabled={!isEditing}
-                      className="w-full px-4 py-3 bg-[#0F172A] border border-[#374151] rounded-lg text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#14B8A6] disabled:opacity-50 disabled:cursor-not-allowed"
-                    />
+                
+                {/* Display existing emergency contacts */}
+                {personalInfo.emergencyContacts.length > 0 && (
+                  <div className="space-y-4 mb-6">
+                    {personalInfo.emergencyContacts.map((contact) => (
+                      <div key={contact.id} className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div>
+                          <label className="block text-[#F8FAFC] font-medium mb-2">Name</label>
+                          <input
+                            type="text"
+                            value={contact.name}
+                            disabled={true}
+                            className="w-full px-4 py-3 bg-[#1E293B] border border-[#374151] rounded-lg text-[#F8FAFC] opacity-75 cursor-not-allowed"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-[#F8FAFC] font-medium mb-2">Relationship</label>
+                          <input
+                            type="text"
+                            value={contact.relationship}
+                            disabled={true}
+                            className="w-full px-4 py-3 bg-[#1E293B] border border-[#374151] rounded-lg text-[#F8FAFC] opacity-75 cursor-not-allowed"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-[#F8FAFC] font-medium mb-2">Phone</label>
+                          <div className="flex items-center gap-2">
+                            <input
+                              type="tel"
+                              value={contact.phone}
+                              disabled={true}
+                              className="flex-1 px-4 py-3 bg-[#1E293B] border border-[#374151] rounded-lg text-[#F8FAFC] opacity-75 cursor-not-allowed"
+                            />
+                              {isEditing && (
+                                <button
+                                  onClick={() => handleRemoveEmergencyContact(contact.id)}
+                                  className="p-3 text-red-500 hover:text-red-400 hover:bg-red-500/10 rounded-full transition-colors"
+                                  title="Remove contact"
+                                >
+                                  <Trash2 size={16} />
+                                </button>
+                              )}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                  <div>
-                    <label className="block text-[#F8FAFC] font-medium mb-2">Relationship</label>
-                    <input
-                      type="text"
-                      value={personalInfo.emergencyContact.relationship}
-                      onChange={(e) => setPersonalInfo({
-                        ...personalInfo, 
-                        emergencyContact: {...personalInfo.emergencyContact, relationship: e.target.value}
-                      })}
-                      disabled={!isEditing}
-                      className="w-full px-4 py-3 bg-[#0F172A] border border-[#374151] rounded-lg text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#14B8A6] disabled:opacity-50 disabled:cursor-not-allowed"
-                    />
+                )}
+
+                {/* Add Emergency Contact Form */}
+                {showEmergencyForm && (
+                  <div className="p-4 bg-[#0F172A] rounded-lg border border-[#374151] mb-4">
+                    <h4 className="text-[#F8FAFC] font-medium mb-4">Add Emergency Contact</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                      <div>
+                        <label className="block text-[#F8FAFC] font-medium mb-2">Name</label>
+                        <input
+                          type="text"
+                          value={emergencyForm.name}
+                          onChange={(e) => setEmergencyForm({...emergencyForm, name: e.target.value})}
+                          disabled={!isEditing}
+                          className="w-full px-4 py-3 bg-[#1E293B] border border-[#374151] rounded-lg text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#14B8A6] disabled:opacity-50 disabled:cursor-not-allowed"
+                          placeholder="Enter contact name"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[#F8FAFC] font-medium mb-2">Relationship</label>
+                        <input
+                          type="text"
+                          value={emergencyForm.relationship}
+                          onChange={(e) => setEmergencyForm({...emergencyForm, relationship: e.target.value})}
+                          disabled={!isEditing}
+                          className="w-full px-4 py-3 bg-[#1E293B] border border-[#374151] rounded-lg text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#14B8A6] disabled:opacity-50 disabled:cursor-not-allowed"
+                          placeholder="e.g., Spouse, Parent, Sibling"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[#F8FAFC] font-medium mb-2">Phone</label>
+                        <input
+                          type="tel"
+                          value={emergencyForm.phone}
+                          onChange={(e) => setEmergencyForm({...emergencyForm, phone: e.target.value})}
+                          disabled={!isEditing}
+                          className="w-full px-4 py-3 bg-[#1E293B] border border-[#374151] rounded-lg text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#14B8A6] disabled:opacity-50 disabled:cursor-not-allowed"
+                          placeholder="Enter phone number"
+                        />
+                      </div>
+                    </div>
+                    <div className="flex gap-3 mt-4">
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={handleAddEmergencyContact}
+                        disabled={!emergencyForm.name || !emergencyForm.relationship || !emergencyForm.phone}
+                        className="px-6 py-3 bg-gradient-to-r from-[#2563EB] to-[#14B8A6] text-white rounded-lg hover:from-[#1D4ED8] hover:to-[#0F766E] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                      >
+                        <Check size={16} />
+                        Add Contact
+                      </motion.button>
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={handleCancelEmergencyForm}
+                        className="px-6 py-3 bg-[#374151] text-[#F8FAFC] rounded-full hover:bg-[#4B5563] transition-colors flex items-center gap-2"
+                      >
+                        <X size={16} />
+                        Cancel
+                      </motion.button>
+                    </div>
                   </div>
-                  <div>
-                    <label className="block text-[#F8FAFC] font-medium mb-2">Phone</label>
-                    <input
-                      type="tel"
-                      value={personalInfo.emergencyContact.phone}
-                      onChange={(e) => setPersonalInfo({
-                        ...personalInfo, 
-                        emergencyContact: {...personalInfo.emergencyContact, phone: e.target.value}
-                      })}
-                      disabled={!isEditing}
-                      className="w-full px-4 py-3 bg-[#0F172A] border border-[#374151] rounded-lg text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#14B8A6] disabled:opacity-50 disabled:cursor-not-allowed"
-                    />
+                )}
+
+                {/* Add Contact Button */}
+                {personalInfo.emergencyContacts.length < 3 && !showEmergencyForm && (
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => setShowEmergencyForm(true)}
+                    disabled={!isEditing}
+                    className="px-6 py-3 bg-gradient-to-r from-[#2563EB] to-[#14B8A6] text-white rounded-full hover:from-[#1D4ED8] hover:to-[#0F766E] transition-all duration-300 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <UserPlus size={16} />
+                    Add Emergency Contact
+                  </motion.button>
+                )}
+
+                {/* Max contacts reached message */}
+                {personalInfo.emergencyContacts.length >= 3 && (
+                  <div className="text-center p-4 text-[#94A3B8] text-sm">
+                    Maximum of 3 emergency contacts allowed
                   </div>
-                </div>
+                )}
               </div>
 
               {/* Save Button */}
@@ -626,7 +768,7 @@ const DoctorProfile = () => {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => handleSave('personal')}
-                    className="px-6 py-3 bg-gradient-to-r from-[#2563EB] to-[#14B8A6] text-white rounded-lg hover:from-[#1D4ED8] hover:to-[#0F766E] transition-all duration-300 flex items-center gap-2"
+                    className="px-6 py-3 bg-gradient-to-r from-[#2563EB] to-[#14B8A6] text-white rounded-full hover:from-[#1D4ED8] hover:to-[#0F766E] transition-all duration-300 flex items-center gap-2"
                   >
                     <Save size={16} />
                     Save Changes
@@ -654,7 +796,7 @@ const DoctorProfile = () => {
                 <div className="flex items-center gap-3">
                   {saveStatus === 'saving' && (
                     <div className="flex items-center gap-2 text-[#F59E0B]">
-                      <div className="w-4 h-4 border-2 border-[#F59E0B] border-t-transparent rounded-full animate-spin"></div>
+                      <div className="w-4 h-4 border-2 border-[#F59E0B] border-t-transparent rounded-lg animate-spin"></div>
                       <span className="text-sm">Saving...</span>
                     </div>
                   )}
@@ -674,7 +816,7 @@ const DoctorProfile = () => {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => setIsEditing(!isEditing)}
-                    className="px-4 py-2 bg-[#14B8A6] text-white rounded-lg hover:bg-[#14B8A6]/80 transition-colors flex items-center gap-2"
+                    className="px-6 py-3 bg-gradient-to-r from-[#2563EB] to-[#14B8A6] text-white rounded-full hover:from-[#1D4ED8] hover:to-[#0F766E] transition-all duration-300 flex items-center gap-2"
                   >
                     <Edit3 size={16} />
                     {isEditing ? 'Cancel' : 'Edit'}
@@ -741,7 +883,7 @@ const DoctorProfile = () => {
                   <label className="block text-[#F8FAFC] font-medium mb-2">Sub-specialties</label>
                   <div className="flex flex-wrap gap-2">
                     {professionalInfo.subSpecialties.map((specialty, index) => (
-                      <span key={index} className="px-3 py-1 bg-[#14B8A6]/20 text-[#14B8A6] rounded-full text-sm">
+                      <span key={index} className="px-3 py-1 bg-[#14B8A6]/20 text-[#14B8A6] rounded-lg text-sm">
                         {specialty}
                       </span>
                     ))}
@@ -753,7 +895,7 @@ const DoctorProfile = () => {
                   <label className="block text-[#F8FAFC] font-medium mb-2">Languages</label>
                   <div className="flex flex-wrap gap-2">
                     {professionalInfo.languages.map((language, index) => (
-                      <span key={index} className="px-3 py-1 bg-[#2563EB]/20 text-[#2563EB] rounded-full text-sm">
+                      <span key={index} className="px-3 py-1 bg-[#2563EB]/20 text-[#2563EB] rounded-lg text-sm">
                         {language}
                       </span>
                     ))}
@@ -897,7 +1039,7 @@ const DoctorProfile = () => {
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       onClick={() => handleSave('professional')}
-                      className="px-6 py-3 bg-gradient-to-r from-[#2563EB] to-[#14B8A6] text-white rounded-lg hover:from-[#1D4ED8] hover:to-[#0F766E] transition-all duration-300 flex items-center gap-2"
+                      className="px-6 py-3 bg-gradient-to-r from-[#2563EB] to-[#14B8A6] text-white rounded-full hover:from-[#1D4ED8] hover:to-[#0F766E] transition-all duration-300 flex items-center gap-2"
                     >
                       <Save size={16} />
                       Save Changes
@@ -925,7 +1067,7 @@ const DoctorProfile = () => {
                   <div className="flex items-center gap-3">
                     {saveStatus === 'saving' && (
                       <div className="flex items-center gap-2 text-[#F59E0B]">
-                        <div className="w-4 h-4 border-2 border-[#F59E0B] border-t-transparent rounded-full animate-spin"></div>
+                        <div className="w-4 h-4 border-2 border-[#F59E0B] border-t-transparent rounded-lg animate-spin"></div>
                         <span className="text-sm">Saving...</span>
                       </div>
                     )}
@@ -945,7 +1087,7 @@ const DoctorProfile = () => {
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       onClick={() => setIsEditing(!isEditing)}
-                      className="px-4 py-2 bg-[#14B8A6] text-white rounded-lg hover:bg-[#14B8A6]/80 transition-colors flex items-center gap-2"
+                      className="px-6 py-3 bg-gradient-to-r from-[#2563EB] to-[#14B8A6] text-white rounded-full hover:from-[#1D4ED8] hover:to-[#0F766E] transition-all duration-300 flex items-center gap-2"
                     >
                       <Edit3 size={16} />
                       {isEditing ? 'Cancel' : 'Edit'}
@@ -1143,7 +1285,7 @@ const DoctorProfile = () => {
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       onClick={() => handleSave('availability')}
-                      className="px-6 py-3 bg-gradient-to-r from-[#2563EB] to-[#14B8A6] text-white rounded-lg hover:from-[#1D4ED8] hover:to-[#0F766E] transition-all duration-300 flex items-center gap-2"
+                      className="px-6 py-3 bg-gradient-to-r from-[#2563EB] to-[#14B8A6] text-white rounded-full hover:from-[#1D4ED8] hover:to-[#0F766E] transition-all duration-300 flex items-center gap-2"
                     >
                       <Save size={16} />
                       Save Changes
@@ -1171,7 +1313,7 @@ const DoctorProfile = () => {
                   <div className="flex items-center gap-3">
                     {saveStatus === 'saving' && (
                       <div className="flex items-center gap-2 text-[#F59E0B]">
-                        <div className="w-4 h-4 border-2 border-[#F59E0B] border-t-transparent rounded-full animate-spin"></div>
+                        <div className="w-4 h-4 border-2 border-[#F59E0B] border-t-transparent rounded-lg animate-spin"></div>
                         <span className="text-sm">Saving...</span>
                       </div>
                     )}
@@ -1191,7 +1333,7 @@ const DoctorProfile = () => {
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       onClick={() => setIsEditing(!isEditing)}
-                      className="px-4 py-2 bg-[#14B8A6] text-white rounded-lg hover:bg-[#14B8A6]/80 transition-colors flex items-center gap-2"
+                      className="px-6 py-3 bg-gradient-to-r from-[#2563EB] to-[#14B8A6] text-white rounded-full hover:from-[#1D4ED8] hover:to-[#0F766E] transition-all duration-300 flex items-center gap-2"
                     >
                       <Edit3 size={16} />
                       {isEditing ? 'Cancel' : 'Edit'}
@@ -1353,7 +1495,7 @@ const DoctorProfile = () => {
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       onClick={() => handleSave('consultation')}
-                      className="px-6 py-3 bg-gradient-to-r from-[#2563EB] to-[#14B8A6] text-white rounded-lg hover:from-[#1D4ED8] hover:to-[#0F766E] transition-all duration-300 flex items-center gap-2"
+                      className="px-6 py-3 bg-gradient-to-r from-[#2563EB] to-[#14B8A6] text-white rounded-full hover:from-[#1D4ED8] hover:to-[#0F766E] transition-all duration-300 flex items-center gap-2"
                     >
                       <Save size={16} />
                       Save Changes
@@ -1381,7 +1523,7 @@ const DoctorProfile = () => {
                   <div className="flex items-center gap-3">
                     {saveStatus === 'saving' && (
                       <div className="flex items-center gap-2 text-[#F59E0B]">
-                        <div className="w-4 h-4 border-2 border-[#F59E0B] border-t-transparent rounded-full animate-spin"></div>
+                        <div className="w-4 h-4 border-2 border-[#F59E0B] border-t-transparent rounded-lg animate-spin"></div>
                         <span className="text-sm">Saving...</span>
                       </div>
                     )}
@@ -1401,7 +1543,7 @@ const DoctorProfile = () => {
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       onClick={() => setIsEditing(!isEditing)}
-                      className="px-4 py-2 bg-[#14B8A6] text-white rounded-lg hover:bg-[#14B8A6]/80 transition-colors flex items-center gap-2"
+                      className="px-6 py-3 bg-gradient-to-r from-[#2563EB] to-[#14B8A6] text-white rounded-full hover:from-[#1D4ED8] hover:to-[#0F766E] transition-all duration-300 flex items-center gap-2"
                     >
                       <Edit3 size={16} />
                       {isEditing ? 'Cancel' : 'Edit'}
@@ -1621,7 +1763,7 @@ const DoctorProfile = () => {
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       onClick={() => handleSave('security')}
-                      className="px-6 py-3 bg-gradient-to-r from-[#2563EB] to-[#14B8A6] text-white rounded-lg hover:from-[#1D4ED8] hover:to-[#0F766E] transition-all duration-300 flex items-center gap-2"
+                      className="px-6 py-3 bg-gradient-to-r from-[#2563EB] to-[#14B8A6] text-white rounded-full hover:from-[#1D4ED8] hover:to-[#0F766E] transition-all duration-300 flex items-center gap-2"
                     >
                       <Save size={16} />
                       Save Changes
