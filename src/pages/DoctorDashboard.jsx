@@ -1411,9 +1411,13 @@ const DoctorDashboard = () => {
               <img
                 src={doctorProfile.image}
                 alt={doctorProfile.name}
-                className={`${sidebarCollapsed ? 'w-12 h-12' : 'w-30 h-30'} rounded-full object-cover mx-auto mb-4 transition-all duration-300`}
+                className={`${sidebarCollapsed ? 'w-12 h-12' : 'w-24 h-24'} rounded-full object-cover mx-auto mb-4 transition-all duration-300`}
                 style={{
-                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)'
+                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
+                  maxWidth: '96px',
+                  maxHeight: '96px',
+                  minWidth: '48px',
+                  minHeight: '48px'
                 }}
               />
               <AnimatePresence>

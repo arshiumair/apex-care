@@ -639,7 +639,7 @@ const DoctorProfile = () => {
                             type="text"
                             value={contact.name}
                             disabled={true}
-                            className="w-full px-4 py-3 bg-[#1E293B] border border-[#374151] rounded-lg text-[#F8FAFC] opacity-75 cursor-not-allowed"
+                            className="w-full px-4 py-3 bg-[#0F172A] border border-[#374151] rounded-lg text-[#F8FAFC] opacity-75 cursor-not-allowed"
                           />
                         </div>
                         <div>
@@ -648,7 +648,7 @@ const DoctorProfile = () => {
                             type="text"
                             value={contact.relationship}
                             disabled={true}
-                            className="w-full px-4 py-3 bg-[#1E293B] border border-[#374151] rounded-lg text-[#F8FAFC] opacity-75 cursor-not-allowed"
+                            className="w-full px-4 py-3 bg-[#0F172A] border border-[#374151] rounded-lg text-[#F8FAFC] opacity-75 cursor-not-allowed"
                           />
                         </div>
                         <div>
@@ -658,7 +658,7 @@ const DoctorProfile = () => {
                               type="tel"
                               value={contact.phone}
                               disabled={true}
-                              className="flex-1 px-4 py-3 bg-[#1E293B] border border-[#374151] rounded-lg text-[#F8FAFC] opacity-75 cursor-not-allowed"
+                              className="flex-1 px-4 py-3 bg-[#0F172A] border border-[#374151] rounded-lg text-[#F8FAFC] opacity-75 cursor-not-allowed"
                             />
                               {isEditing && (
                                 <button
