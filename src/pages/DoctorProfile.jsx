@@ -105,6 +105,19 @@ const DoctorProfile = () => {
     phone: ""
   })
 
+  // Education form modal state
+  const [showEducationModal, setShowEducationModal] = useState(false)
+  const [educationForm, setEducationForm] = useState({
+    institution: "",
+    degree: "",
+    startMonth: "",
+    startYear: "",
+    endMonth: "",
+    endYear: "",
+    currentlyStudying: false,
+    country: ""
+  })
+
   // Professional Information State
   const [professionalInfo, setProfessionalInfo] = useState({
     specialty: "Cardiologist",
@@ -331,6 +344,57 @@ const DoctorProfile = () => {
   const handleCancelEmergencyForm = () => {
     setEmergencyForm({ name: "", relationship: "", phone: "" })
     setShowEmergencyForm(false)
+  }
+
+  /**
+   * Handle adding education entry
+   */
+  const handleAddEducation = () => {
+    if (educationForm.institution && educationForm.degree && educationForm.startYear) {
+      const newEducation = {
+        degree: educationForm.degree,
+        institution: educationForm.institution,
+        year: educationForm.currentlyStudying 
+          ? `${educationForm.startYear} - Present`
+          : `${educationForm.startYear} - ${educationForm.endYear}`,
+        country: educationForm.country || "Pakistan"
+      }
+      
+      setProfessionalInfo({
+        ...professionalInfo,
+        education: [...professionalInfo.education, newEducation]
+      })
+      
+      // Reset form and close modal
+      setEducationForm({
+        institution: "",
+        degree: "",
+        startMonth: "",
+        startYear: "",
+        endMonth: "",
+        endYear: "",
+        currentlyStudying: false,
+        country: ""
+      })
+      setShowEducationModal(false)
+    }
+  }
+
+  /**
+   * Cancel education form
+   */
+  const handleCancelEducationForm = () => {
+    setEducationForm({
+      institution: "",
+      degree: "",
+      startMonth: "",
+      startYear: "",
+      endMonth: "",
+      endYear: "",
+      currentlyStudying: false,
+      country: ""
+    })
+    setShowEducationModal(false)
   }
 
   /**
@@ -904,132 +968,301 @@ const DoctorProfile = () => {
   
                 {/* Education */}
                 <div className="mb-8">
-                  <h3 className="text-lg font-semibold text-[#F8FAFC] mb-4 flex items-center gap-2">
-                    <GraduationCap className="w-5 h-5 text-[#14B8A6]" />
-                    Education
-                  </h3>
+                  <div className="flex items-center justify-between mb-6">
+                    <h3 className="text-lg font-semibold text-[#F8FAFC] flex items-center gap-2">
+                      <GraduationCap className="w-5 h-5 text-[#14B8A6]" />
+                      Education
+                    </h3>
+                    {isEditing && (
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => setShowEducationModal(true)}
+                        className="px-4 py-2 bg-gradient-to-r from-[#2563EB] to-[#14B8A6] text-white rounded-full hover:from-[#1D4ED8] hover:to-[#0F766E] transition-all duration-300 flex items-center gap-2 text-sm"
+                      >
+                        <UserPlus size={16} />
+                        Add Education
+                      </motion.button>
+                    )}
+                  </div>
+                  
                   <div className="space-y-4">
                     {professionalInfo.education.map((edu, index) => (
-                      <div key={index} className="p-4 bg-[#0F172A] rounded-lg">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div>
-                            <label className="block text-[#94A3B8] text-sm mb-1">Degree</label>
-                            <input
-                              type="text"
-                              value={edu.degree}
-                              onChange={(e) => {
-                                const newEducation = [...professionalInfo.education]
-                                newEducation[index].degree = e.target.value
-                                setProfessionalInfo({...professionalInfo, education: newEducation})
-                              }}
-                              disabled={!isEditing}
-                              className="w-full px-3 py-2 bg-[#1E293B] border border-[#374151] rounded-lg text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#14B8A6] disabled:opacity-50 disabled:cursor-not-allowed"
-                            />
+                      <div key={index} className="bg-[#0F172A] border border-[#374151] rounded-lg p-6 hover:border-[#14B8A6]/30 transition-colors">
+                        <div className="flex items-start gap-4">
+                          {/* Education Icon */}
+                          <div className="w-12 h-12 bg-[#1E293B] rounded-lg flex items-center justify-center flex-shrink-0">
+                            <GraduationCap className="w-6 h-6 text-[#14B8A6]" />
                           </div>
-                          <div>
-                            <label className="block text-[#94A3B8] text-sm mb-1">Institution</label>
-                            <input
-                              type="text"
-                              value={edu.institution}
-                              onChange={(e) => {
-                                const newEducation = [...professionalInfo.education]
-                                newEducation[index].institution = e.target.value
-                                setProfessionalInfo({...professionalInfo, education: newEducation})
-                              }}
-                              disabled={!isEditing}
-                              className="w-full px-3 py-2 bg-[#1E293B] border border-[#374151] rounded-lg text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#14B8A6] disabled:opacity-50 disabled:cursor-not-allowed"
-                            />
-                          </div>
-                          <div>
-                            <label className="block text-[#94A3B8] text-sm mb-1">Year</label>
-                            <input
-                              type="text"
-                              value={edu.year}
-                              onChange={(e) => {
-                                const newEducation = [...professionalInfo.education]
-                                newEducation[index].year = e.target.value
-                                setProfessionalInfo({...professionalInfo, education: newEducation})
-                              }}
-                              disabled={!isEditing}
-                              className="w-full px-3 py-2 bg-[#1E293B] border border-[#374151] rounded-lg text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#14B8A6] disabled:opacity-50 disabled:cursor-not-allowed"
-                            />
-                          </div>
-                          <div>
-                            <label className="block text-[#94A3B8] text-sm mb-1">Country</label>
-                            <input
-                              type="text"
-                              value={edu.country}
-                              onChange={(e) => {
-                                const newEducation = [...professionalInfo.education]
-                                newEducation[index].country = e.target.value
-                                setProfessionalInfo({...professionalInfo, education: newEducation})
-                              }}
-                              disabled={!isEditing}
-                              className="w-full px-3 py-2 bg-[#1E293B] border border-[#374151] rounded-lg text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#14B8A6] disabled:opacity-50 disabled:cursor-not-allowed"
-                            />
+                          
+                          {/* Education Details */}
+                          <div className="flex-1">
+                            <div className="flex items-start justify-between mb-2">
+                              <div>
+                                <h4 className="text-[#F8FAFC] font-semibold text-lg">
+                                  {isEditing ? (
+                                    <input
+                                      type="text"
+                                      value={edu.degree}
+                                      onChange={(e) => {
+                                        const newEducation = [...professionalInfo.education]
+                                        newEducation[index].degree = e.target.value
+                                        setProfessionalInfo({...professionalInfo, education: newEducation})
+                                      }}
+                                      className="bg-transparent border-none text-[#F8FAFC] font-semibold text-lg focus:outline-none focus:ring-2 focus:ring-[#14B8A6] rounded px-2 py-1"
+                                      placeholder="Degree Title"
+                                    />
+                                  ) : (
+                                    edu.degree
+                                  )}
+                                </h4>
+                                <p className="text-[#14B8A6] font-medium">
+                                  {isEditing ? (
+                                    <input
+                                      type="text"
+                                      value={edu.institution}
+                                      onChange={(e) => {
+                                        const newEducation = [...professionalInfo.education]
+                                        newEducation[index].institution = e.target.value
+                                        setProfessionalInfo({...professionalInfo, education: newEducation})
+                                      }}
+                                      className="bg-transparent border-none text-[#14B8A6] font-medium focus:outline-none focus:ring-2 focus:ring-[#14B8A6] rounded px-2 py-1"
+                                      placeholder="Institution Name"
+                                    />
+                                  ) : (
+                                    edu.institution
+                                  )}
+                                </p>
+                              </div>
+                              {isEditing && (
+                                <button
+                                  onClick={() => {
+                                    const newEducation = professionalInfo.education.filter((_, i) => i !== index)
+                                    setProfessionalInfo({...professionalInfo, education: newEducation})
+                                  }}
+                                  className="p-2 text-[#94A3B8] hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
+                                  title="Remove education"
+                                >
+                                  <Trash2 size={16} />
+                                </button>
+                              )}
+                            </div>
+                            
+                            <p className="text-[#94A3B8] text-sm mb-3">
+                              {isEditing ? (
+                                <input
+                                  type="text"
+                                  value={`${edu.degree} from ${edu.institution}, ${edu.year} (${edu.country})`}
+                                  onChange={(e) => {
+                                    // Parse the combined string back to individual fields
+                                    const parts = e.target.value.split(', ')
+                                    if (parts.length >= 3) {
+                                      const newEducation = [...professionalInfo.education]
+                                      newEducation[index].degree = parts[0].split(' from ')[0]
+                                      newEducation[index].institution = parts[0].split(' from ')[1] || ''
+                                      newEducation[index].year = parts[1] || ''
+                                      newEducation[index].country = parts[2].replace(/[()]/g, '') || ''
+                                      setProfessionalInfo({...professionalInfo, education: newEducation})
+                                    }
+                                  }}
+                                  className="bg-transparent border-none text-[#94A3B8] text-sm focus:outline-none focus:ring-2 focus:ring-[#14B8A6] rounded px-2 py-1 w-full"
+                                  placeholder="Degree description and details"
+                                />
+                              ) : (
+                                `${edu.degree} from ${edu.institution}, ${edu.year} (${edu.country})`
+                              )}
+                            </p>
+                            
+                            <div className="flex items-center gap-4 text-[#94A3B8] text-sm">
+                              <span>
+                                {isEditing ? (
+                                  <input
+                                    type="text"
+                                    value={edu.year}
+                                    onChange={(e) => {
+                                      const newEducation = [...professionalInfo.education]
+                                      newEducation[index].year = e.target.value
+                                      setProfessionalInfo({...professionalInfo, education: newEducation})
+                                    }}
+                                    className="bg-transparent border-none text-[#94A3B8] text-sm focus:outline-none focus:ring-2 focus:ring-[#14B8A6] rounded px-2 py-1"
+                                    placeholder="Year"
+                                  />
+                                ) : (
+                                  edu.year
+                                )}
+                              </span>
+                              <span>•</span>
+                              <span>
+                                {isEditing ? (
+                                  <input
+                                    type="text"
+                                    value={edu.country}
+                                    onChange={(e) => {
+                                      const newEducation = [...professionalInfo.education]
+                                      newEducation[index].country = e.target.value
+                                      setProfessionalInfo({...professionalInfo, education: newEducation})
+                                    }}
+                                    className="bg-transparent border-none text-[#94A3B8] text-sm focus:outline-none focus:ring-2 focus:ring-[#14B8A6] rounded px-2 py-1"
+                                    placeholder="Country"
+                                  />
+                                ) : (
+                                  edu.country
+                                )}
+                              </span>
+                            </div>
                           </div>
                         </div>
                       </div>
                     ))}
                   </div>
+                  
+                  {/* Show all education link */}
+                  {professionalInfo.education.length > 2 && (
+                    <div className="text-center mt-6">
+                      <button className="text-[#14B8A6] hover:text-[#0F766E] transition-colors flex items-center gap-2 mx-auto">
+                        <span>Show all {professionalInfo.education.length} education entries</span>
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </button>
+                    </div>
+                  )}
                 </div>
   
                 {/* Certifications */}
                 <div className="mb-8">
-                  <h3 className="text-lg font-semibold text-[#F8FAFC] mb-4 flex items-center gap-2">
-                    <Award className="w-5 h-5 text-[#14B8A6]" />
-                    Certifications
-                  </h3>
+                  <div className="flex items-center justify-between mb-6">
+                    <h3 className="text-lg font-semibold text-[#F8FAFC] flex items-center gap-2">
+                      <Award className="w-5 h-5 text-[#14B8A6]" />
+                      Certifications
+                    </h3>
+                    {isEditing && (
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="px-4 py-2 bg-gradient-to-r from-[#2563EB] to-[#14B8A6] text-white rounded-full hover:from-[#1D4ED8] hover:to-[#0F766E] transition-all duration-300 flex items-center gap-2 text-sm"
+                      >
+                        <UserPlus size={16} />
+                        Add Certification
+                      </motion.button>
+                    )}
+                  </div>
+                  
                   <div className="space-y-4">
                     {professionalInfo.certifications.map((cert, index) => (
-                      <div key={index} className="p-4 bg-[#0F172A] rounded-lg">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div>
-                            <label className="block text-[#94A3B8] text-sm mb-1">Certification Name</label>
-                            <input
-                              type="text"
-                              value={cert.name}
-                              onChange={(e) => {
-                                const newCertifications = [...professionalInfo.certifications]
-                                newCertifications[index].name = e.target.value
-                                setProfessionalInfo({...professionalInfo, certifications: newCertifications})
-                              }}
-                              disabled={!isEditing}
-                              className="w-full px-3 py-2 bg-[#1E293B] border border-[#374151] rounded-lg text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#14B8A6] disabled:opacity-50 disabled:cursor-not-allowed"
-                            />
+                      <div key={index} className="bg-[#0F172A] border border-[#374151] rounded-lg p-6 hover:border-[#14B8A6]/30 transition-colors">
+                        <div className="flex items-start gap-4">
+                          {/* Certification Icon */}
+                          <div className="w-12 h-12 bg-[#1E293B] rounded-lg flex items-center justify-center flex-shrink-0">
+                            <Award className="w-6 h-6 text-[#14B8A6]" />
                           </div>
-                          <div>
-                            <label className="block text-[#94A3B8] text-sm mb-1">Issuer</label>
-                            <input
-                              type="text"
-                              value={cert.issuer}
-                              onChange={(e) => {
-                                const newCertifications = [...professionalInfo.certifications]
-                                newCertifications[index].issuer = e.target.value
-                                setProfessionalInfo({...professionalInfo, certifications: newCertifications})
-                              }}
-                              disabled={!isEditing}
-                              className="w-full px-3 py-2 bg-[#1E293B] border border-[#374151] rounded-lg text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#14B8A6] disabled:opacity-50 disabled:cursor-not-allowed"
-                            />
-                          </div>
-                          <div>
-                            <label className="block text-[#94A3B8] text-sm mb-1">Expiry Date</label>
-                            <input
-                              type="date"
-                              value={cert.expiry}
-                              onChange={(e) => {
-                                const newCertifications = [...professionalInfo.certifications]
-                                newCertifications[index].expiry = e.target.value
-                                setProfessionalInfo({...professionalInfo, certifications: newCertifications})
-                              }}
-                              disabled={!isEditing}
-                              className="w-full px-3 py-2 bg-[#1E293B] border border-[#374151] rounded-lg text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#14B8A6] disabled:opacity-50 disabled:cursor-not-allowed"
-                            />
+                          
+                          {/* Certification Details */}
+                          <div className="flex-1">
+                            <div className="flex items-start justify-between mb-2">
+                              <div>
+                                <h4 className="text-[#F8FAFC] font-semibold text-lg">
+                                  {isEditing ? (
+                                    <input
+                                      type="text"
+                                      value={cert.name}
+                                      onChange={(e) => {
+                                        const newCertifications = [...professionalInfo.certifications]
+                                        newCertifications[index].name = e.target.value
+                                        setProfessionalInfo({...professionalInfo, certifications: newCertifications})
+                                      }}
+                                      className="bg-transparent border-none text-[#F8FAFC] font-semibold text-lg focus:outline-none focus:ring-2 focus:ring-[#14B8A6] rounded px-2 py-1"
+                                      placeholder="Certification Name"
+                                    />
+                                  ) : (
+                                    cert.name
+                                  )}
+                                </h4>
+                                <p className="text-[#14B8A6] font-medium">
+                                  {isEditing ? (
+                                    <input
+                                      type="text"
+                                      value={cert.issuer}
+                                      onChange={(e) => {
+                                        const newCertifications = [...professionalInfo.certifications]
+                                        newCertifications[index].issuer = e.target.value
+                                        setProfessionalInfo({...professionalInfo, certifications: newCertifications})
+                                      }}
+                                      className="bg-transparent border-none text-[#14B8A6] font-medium focus:outline-none focus:ring-2 focus:ring-[#14B8A6] rounded px-2 py-1"
+                                      placeholder="Issuing Organization"
+                                    />
+                                  ) : (
+                                    cert.issuer
+                                  )}
+                                </p>
+                              </div>
+                              {isEditing && (
+                                <button
+                                  onClick={() => {
+                                    const newCertifications = professionalInfo.certifications.filter((_, i) => i !== index)
+                                    setProfessionalInfo({...professionalInfo, certifications: newCertifications})
+                                  }}
+                                  className="p-2 text-[#94A3B8] hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
+                                  title="Remove certification"
+                                >
+                                  <Trash2 size={16} />
+                                </button>
+                              )}
+                            </div>
+                            
+                            {/* Skills/Tags */}
+                            <div className="flex flex-wrap gap-2 mb-3">
+                              <span className="px-3 py-1 bg-[#14B8A6]/20 text-[#14B8A6] rounded-full text-sm">
+                                Professional Certification
+                              </span>
+                              <span className="px-3 py-1 bg-[#2563EB]/20 text-[#2563EB] rounded-full text-sm">
+                                Medical License
+                              </span>
+                              <span className="px-3 py-1 bg-[#22C55E]/20 text-[#22C55E] rounded-full text-sm">
+                                Continuing Education
+                              </span>
+                              <span className="text-[#14B8A6] text-sm">+ 2 more</span>
+                            </div>
+                            
+                            <div className="flex items-center gap-4 text-[#94A3B8] text-sm">
+                              <span>
+                                {isEditing ? (
+                                  <input
+                                    type="date"
+                                    value={cert.expiry}
+                                    onChange={(e) => {
+                                      const newCertifications = [...professionalInfo.certifications]
+                                      newCertifications[index].expiry = e.target.value
+                                      setProfessionalInfo({...professionalInfo, certifications: newCertifications})
+                                    }}
+                                    className="bg-transparent border-none text-[#94A3B8] text-sm focus:outline-none focus:ring-2 focus:ring-[#14B8A6] rounded px-2 py-1"
+                                  />
+                                ) : (
+                                  `Expires ${new Date(cert.expiry).toLocaleDateString()}`
+                                )}
+                              </span>
+                              <span>•</span>
+                              <button className="text-[#14B8A6] hover:text-[#0F766E] transition-colors">
+                                View certificate
+                              </button>
+                            </div>
                           </div>
                         </div>
                       </div>
                     ))}
                   </div>
+                  
+                  {/* Show all certifications link */}
+                  {professionalInfo.certifications.length > 2 && (
+                    <div className="text-center mt-6">
+                      <button className="text-[#14B8A6] hover:text-[#0F766E] transition-colors flex items-center gap-2 mx-auto">
+                        <span>Show all {professionalInfo.certifications.length} certifications</span>
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </button>
+                    </div>
+                  )}
                 </div>
   
                 {/* Save Button */}
@@ -1772,6 +2005,221 @@ const DoctorProfile = () => {
                 )}
               </motion.div>
             )}
+        </AnimatePresence>
+
+        {/* Education Modal */}
+        <AnimatePresence>
+          {showEducationModal && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+            >
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                className="bg-[#0F172A] border border-[#374151] rounded-xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto"
+              >
+                {/* Modal Header */}
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-2xl font-bold text-[#F8FAFC]">Education</h2>
+                  <button
+                    onClick={handleCancelEducationForm}
+                    className="p-2 text-[#94A3B8] hover:text-[#F8FAFC] hover:bg-[#374151] rounded-lg transition-colors"
+                  >
+                    <X size={24} />
+                  </button>
+                </div>
+
+                {/* Modal Description */}
+                <p className="text-[#94A3B8] mb-6 leading-relaxed">
+                  Add your educational background to let patients and colleagues know where you studied or are currently studying. 
+                  Even if you didn't finish, it's important to include it here. And if you've earned a college degree, 
+                  you don't need to add your high school/GED.
+                </p>
+
+                {/* Form Fields */}
+                <div className="space-y-6">
+                  {/* Institution Name */}
+                  <div>
+                    <label className="block text-[#F8FAFC] font-semibold mb-2">Name of institution</label>
+                    <input
+                      type="text"
+                      value={educationForm.institution}
+                      onChange={(e) => setEducationForm({...educationForm, institution: e.target.value})}
+                      placeholder="Enter institution name"
+                      className="w-full px-4 py-3 bg-[#1E293B] border border-[#374151] rounded-lg text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#14B8A6] placeholder-[#94A3B8]"
+                    />
+                    <p className="text-[#94A3B8] text-sm mt-1">100 characters remaining</p>
+                  </div>
+
+                  {/* Degree */}
+                  <div>
+                    <label className="block text-[#F8FAFC] font-semibold mb-2">Degree</label>
+                    <select
+                      value={educationForm.degree}
+                      onChange={(e) => setEducationForm({...educationForm, degree: e.target.value})}
+                      className="w-full px-4 py-3 bg-[#1E293B] border border-[#374151] rounded-lg text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#14B8A6]"
+                    >
+                      <option value="">Select Degree</option>
+                      <option value="MBBS">MBBS (Bachelor of Medicine, Bachelor of Surgery)</option>
+                      <option value="MD">MD (Doctor of Medicine)</option>
+                      <option value="MS">MS (Master of Surgery)</option>
+                      <option value="FCPS">FCPS (Fellow of College of Physicians and Surgeons)</option>
+                      <option value="MRCP">MRCP (Member of Royal College of Physicians)</option>
+                      <option value="FRCS">FRCS (Fellow of Royal College of Surgeons)</option>
+                      <option value="PhD">PhD (Doctor of Philosophy)</option>
+                      <option value="MSc">MSc (Master of Science)</option>
+                      <option value="BSc">BSc (Bachelor of Science)</option>
+                      <option value="Diploma">Diploma</option>
+                      <option value="Certificate">Certificate</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+
+                  {/* Start Date */}
+                  <div>
+                    <h3 className="text-[#F8FAFC] font-semibold mb-4">Start date</h3>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-[#F8FAFC] font-medium mb-2">Month</label>
+                        <select
+                          value={educationForm.startMonth}
+                          onChange={(e) => setEducationForm({...educationForm, startMonth: e.target.value})}
+                          className="w-full px-4 py-3 bg-[#1E293B] border border-[#374151] rounded-lg text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#14B8A6]"
+                        >
+                          <option value="">Select month</option>
+                          <option value="January">January</option>
+                          <option value="February">February</option>
+                          <option value="March">March</option>
+                          <option value="April">April</option>
+                          <option value="May">May</option>
+                          <option value="June">June</option>
+                          <option value="July">July</option>
+                          <option value="August">August</option>
+                          <option value="September">September</option>
+                          <option value="October">October</option>
+                          <option value="November">November</option>
+                          <option value="December">December</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-[#F8FAFC] font-medium mb-2">Year</label>
+                        <select
+                          value={educationForm.startYear}
+                          onChange={(e) => setEducationForm({...educationForm, startYear: e.target.value})}
+                          className="w-full px-4 py-3 bg-[#1E293B] border border-[#374151] rounded-lg text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#14B8A6]"
+                        >
+                          <option value="">Select year</option>
+                          {Array.from({length: 50}, (_, i) => {
+                            const year = new Date().getFullYear() - i
+                            return <option key={year} value={year}>{year}</option>
+                          })}
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Separator */}
+                  <div className="border-t border-[#374151]"></div>
+
+                  {/* End Date */}
+                  <div>
+                    <h3 className="text-[#F8FAFC] font-semibold mb-4">Graduation date or expected graduation date</h3>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-[#F8FAFC] font-medium mb-2">Month</label>
+                        <select
+                          value={educationForm.endMonth}
+                          onChange={(e) => setEducationForm({...educationForm, endMonth: e.target.value})}
+                          disabled={educationForm.currentlyStudying}
+                          className="w-full px-4 py-3 bg-[#1E293B] border border-[#374151] rounded-lg text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#14B8A6] disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          <option value="">Select month</option>
+                          <option value="January">January</option>
+                          <option value="February">February</option>
+                          <option value="March">March</option>
+                          <option value="April">April</option>
+                          <option value="May">May</option>
+                          <option value="June">June</option>
+                          <option value="July">July</option>
+                          <option value="August">August</option>
+                          <option value="September">September</option>
+                          <option value="October">October</option>
+                          <option value="November">November</option>
+                          <option value="December">December</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-[#F8FAFC] font-medium mb-2">Year</label>
+                        <select
+                          value={educationForm.endYear}
+                          onChange={(e) => setEducationForm({...educationForm, endYear: e.target.value})}
+                          disabled={educationForm.currentlyStudying}
+                          className="w-full px-4 py-3 bg-[#1E293B] border border-[#374151] rounded-lg text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#14B8A6] disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          <option value="">Select year</option>
+                          {Array.from({length: 50}, (_, i) => {
+                            const year = new Date().getFullYear() + 10 - i
+                            return <option key={year} value={year}>{year}</option>
+                          })}
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Currently Studying Checkbox */}
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="checkbox"
+                      id="currentlyStudying"
+                      checked={educationForm.currentlyStudying}
+                      onChange={(e) => setEducationForm({...educationForm, currentlyStudying: e.target.checked})}
+                      className="w-4 h-4 text-[#14B8A6] bg-[#1E293B] border-[#374151] rounded focus:ring-[#14B8A6]"
+                    />
+                    <label htmlFor="currentlyStudying" className="text-[#F8FAFC] cursor-pointer">
+                      I currently study here
+                    </label>
+                  </div>
+
+                  {/* Country */}
+                  <div>
+                    <label className="block text-[#F8FAFC] font-semibold mb-2">Country</label>
+                    <input
+                      type="text"
+                      value={educationForm.country}
+                      onChange={(e) => setEducationForm({...educationForm, country: e.target.value})}
+                      placeholder="Enter country"
+                      className="w-full px-4 py-3 bg-[#1E293B] border border-[#374151] rounded-lg text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#14B8A6] placeholder-[#94A3B8]"
+                    />
+                  </div>
+                </div>
+
+                {/* Modal Actions */}
+                <div className="flex justify-end gap-3 mt-8">
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={handleCancelEducationForm}
+                    className="px-6 py-3 bg-[#374151] text-[#F8FAFC] rounded-full hover:bg-[#4B5563] transition-colors"
+                  >
+                    Cancel
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={handleAddEducation}
+                    disabled={!educationForm.institution || !educationForm.degree || !educationForm.startYear}
+                    className="px-6 py-3 bg-gradient-to-r from-[#2563EB] to-[#14B8A6] text-white rounded-full hover:from-[#1D4ED8] hover:to-[#0F766E] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Save
+                  </motion.button>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
         </AnimatePresence>
       </div>
     </div>
