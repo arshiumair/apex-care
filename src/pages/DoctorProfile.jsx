@@ -397,8 +397,7 @@ const DoctorProfile = () => {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
               transition={{ duration: 0.3 }}
-              className="bg-[#1E293B] rounded-xl p-8 border border-[#1E293B]/50"
-              style={{ boxShadow: '0 2px 10px rgba(0, 0, 0, 0.15)' }}
+              className="p-8"
             >
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-2xl font-bold text-[#F8FAFC] flex items-center gap-3">
@@ -645,8 +644,7 @@ const DoctorProfile = () => {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
               transition={{ duration: 0.3 }}
-              className="bg-[#1E293B] rounded-xl p-8 border border-[#1E293B]/50"
-              style={{ boxShadow: '0 2px 10px rgba(0, 0, 0, 0.15)' }}
+              className="p-8"
             >
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-2xl font-bold text-[#F8FAFC] flex items-center gap-3">
@@ -917,8 +915,7 @@ const DoctorProfile = () => {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
                 transition={{ duration: 0.3 }}
-                className="bg-[#1E293B] rounded-xl p-8 border border-[#1E293B]/50"
-                style={{ boxShadow: '0 2px 10px rgba(0, 0, 0, 0.15)' }}
+                className="p-8"
               >
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="text-2xl font-bold text-[#F8FAFC] flex items-center gap-3">
@@ -1164,8 +1161,7 @@ const DoctorProfile = () => {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
                 transition={{ duration: 0.3 }}
-                className="bg-[#1E293B] rounded-xl p-8 border border-[#1E293B]/50"
-                style={{ boxShadow: '0 2px 10px rgba(0, 0, 0, 0.15)' }}
+                className="p-8"
               >
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="text-2xl font-bold text-[#F8FAFC] flex items-center gap-3">
@@ -1375,8 +1371,7 @@ const DoctorProfile = () => {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
                 transition={{ duration: 0.3 }}
-                className="bg-[#1E293B] rounded-xl p-8 border border-[#1E293B]/50"
-                style={{ boxShadow: '0 2px 10px rgba(0, 0, 0, 0.15)' }}
+                className="p-8"
               >
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="text-2xl font-bold text-[#F8FAFC] flex items-center gap-3">
