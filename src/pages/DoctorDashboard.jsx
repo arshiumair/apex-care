@@ -1408,14 +1408,16 @@ const DoctorDashboard = () => {
           {/* Doctor Profile */}
           <div className={`${sidebarCollapsed ? 'p-2 pt-16' : 'p-6 pt-16'}`}>
             <div className="text-center">
-              <img
-                src={doctorProfile.image}
-                alt={doctorProfile.name}
-                className={`${sidebarCollapsed ? 'w-12 h-12' : 'w-30 h-30'} rounded-full object-cover mx-auto mb-4 transition-all duration-300`}
-                style={{
-                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)'
-                }}
-              />
+              <div className={`${sidebarCollapsed ? 'w-12 h-12' : 'w-32 h-32'} mx-auto mb-4 flex-shrink-0`}>
+                <img
+                  src={doctorProfile.image}
+                  alt={doctorProfile.name}
+                  className="w-full h-full rounded-full object-cover transition-all duration-300"
+                  style={{
+                    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)'
+                  }}
+                />
+              </div>
               <AnimatePresence>
               {!sidebarCollapsed && (
                 <motion.div

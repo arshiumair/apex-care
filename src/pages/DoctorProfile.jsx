@@ -118,6 +118,21 @@ const DoctorProfile = () => {
     country: ""
   })
 
+  // Certification form modal state
+  const [showCertificationModal, setShowCertificationModal] = useState(false)
+  const [certificationForm, setCertificationForm] = useState({
+    name: "",
+    issuingOrganization: "",
+    issueMonth: "",
+    issueYear: "",
+    expirationMonth: "",
+    expirationYear: "",
+    credentialId: "",
+    credentialUrl: "",
+    skills: [],
+    media: []
+  })
+
   // Professional Information State
   const [professionalInfo, setProfessionalInfo] = useState({
     specialty: "Cardiologist",
@@ -398,6 +413,60 @@ const DoctorProfile = () => {
   }
 
   /**
+   * Handle adding certification entry
+   */
+  const handleAddCertification = () => {
+    if (certificationForm.name && certificationForm.issuingOrganization && certificationForm.issueYear) {
+      const newCertification = {
+        name: certificationForm.name,
+        issuer: certificationForm.issuingOrganization,
+        expiry: certificationForm.expirationYear 
+          ? `${certificationForm.expirationYear}-${certificationForm.expirationMonth || '01'}-01`
+          : '2025-12-31' // Default expiry if not provided
+      }
+      
+      setProfessionalInfo({
+        ...professionalInfo,
+        certifications: [...professionalInfo.certifications, newCertification]
+      })
+      
+      // Reset form and close modal
+      setCertificationForm({
+        name: "",
+        issuingOrganization: "",
+        issueMonth: "",
+        issueYear: "",
+        expirationMonth: "",
+        expirationYear: "",
+        credentialId: "",
+        credentialUrl: "",
+        skills: [],
+        media: []
+      })
+      setShowCertificationModal(false)
+    }
+  }
+
+  /**
+   * Cancel certification form
+   */
+  const handleCancelCertificationForm = () => {
+    setCertificationForm({
+      name: "",
+      issuingOrganization: "",
+      issueMonth: "",
+      issueYear: "",
+      expirationMonth: "",
+      expirationYear: "",
+      credentialId: "",
+      credentialUrl: "",
+      skills: [],
+      media: []
+    })
+    setShowCertificationModal(false)
+  }
+
+  /**
    * Handle password change
    * 
    * TODO: Backend Integration
@@ -552,15 +621,15 @@ const DoctorProfile = () => {
 
               {/* Profile Image Section */}
               <div className="flex items-center gap-6 mb-8 p-6 bg-[#0F172A] rounded-xl">
-                <div className="relative">
+                <div className="relative w-16 h-16 flex-shrink-0">
                   <img
                     src={profileImage}
                     alt="Profile"
-                    className="w-24 h-24 rounded-full object-cover border-4 border-[#14B8A6]"
+                    className="w-full h-full rounded-full object-cover border-2 border-[#14B8A6]"
                   />
                   {isEditing && (
-                    <label className="absolute bottom-0 right-0 w-8 h-8 bg-[#14B8A6] rounded-full flex items-center justify-center cursor-pointer hover:bg-[#14B8A6]/80 transition-colors">
-                      <Camera size={16} className="text-white" />
+                    <label className="absolute bottom-0 right-0 w-6 h-6 bg-[#14B8A6] rounded-full flex items-center justify-center cursor-pointer hover:bg-[#14B8A6]/80 transition-colors">
+                      <Camera size={12} className="text-white" />
                       <input
                         type="file"
                         accept="image/*"
@@ -1140,6 +1209,7 @@ const DoctorProfile = () => {
                       <motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
+                        onClick={() => setShowCertificationModal(true)}
                         className="px-4 py-2 bg-gradient-to-r from-[#2563EB] to-[#14B8A6] text-white rounded-full hover:from-[#1D4ED8] hover:to-[#0F766E] transition-all duration-300 flex items-center gap-2 text-sm"
                       >
                         <UserPlus size={16} />
@@ -2212,6 +2282,213 @@ const DoctorProfile = () => {
                     whileTap={{ scale: 0.95 }}
                     onClick={handleAddEducation}
                     disabled={!educationForm.institution || !educationForm.degree || !educationForm.startYear}
+                    className="px-6 py-3 bg-gradient-to-r from-[#2563EB] to-[#14B8A6] text-white rounded-full hover:from-[#1D4ED8] hover:to-[#0F766E] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Save
+                  </motion.button>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Certification Modal */}
+        <AnimatePresence>
+          {showCertificationModal && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+            >
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                className="bg-[#0F172A] border border-[#374151] rounded-xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto"
+              >
+                {/* Modal Header */}
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-2xl font-bold text-[#F8FAFC]">Add license or certification</h2>
+                  <button
+                    onClick={handleCancelCertificationForm}
+                    className="p-2 text-[#94A3B8] hover:text-[#F8FAFC] hover:bg-[#374151] rounded-lg transition-colors"
+                  >
+                    <X size={24} />
+                  </button>
+                </div>
+
+                {/* Required fields note */}
+                <p className="text-[#94A3B8] text-sm mb-6">* Indicates required</p>
+
+                {/* Form Fields */}
+                <div className="space-y-6">
+                  {/* Name */}
+                  <div>
+                    <label className="block text-[#F8FAFC] font-semibold mb-2">
+                      Name<span className="text-red-400">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={certificationForm.name}
+                      onChange={(e) => setCertificationForm({...certificationForm, name: e.target.value})}
+                      placeholder="Ex: Advanced Cardiac Life Support (ACLS)"
+                      className="w-full px-4 py-3 bg-[#1E293B] border border-[#374151] rounded-lg text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#14B8A6] placeholder-[#94A3B8]"
+                    />
+                  </div>
+
+                  {/* Issuing Organization */}
+                  <div>
+                    <label className="block text-[#F8FAFC] font-semibold mb-2">
+                      Issuing organization<span className="text-red-400">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={certificationForm.issuingOrganization}
+                      onChange={(e) => setCertificationForm({...certificationForm, issuingOrganization: e.target.value})}
+                      placeholder="Ex: American Heart Association"
+                      className="w-full px-4 py-3 bg-[#1E293B] border border-[#374151] rounded-lg text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#14B8A6] placeholder-[#94A3B8]"
+                    />
+                  </div>
+
+                  {/* Issue Date */}
+                  <div>
+                    <label className="block text-[#F8FAFC] font-semibold mb-4">Issue date</label>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-[#F8FAFC] font-medium mb-2">Month</label>
+                        <select
+                          value={certificationForm.issueMonth}
+                          onChange={(e) => setCertificationForm({...certificationForm, issueMonth: e.target.value})}
+                          className="w-full px-4 py-3 bg-[#1E293B] border border-[#374151] rounded-lg text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#14B8A6]"
+                        >
+                          <option value="">Month</option>
+                          <option value="January">January</option>
+                          <option value="February">February</option>
+                          <option value="March">March</option>
+                          <option value="April">April</option>
+                          <option value="May">May</option>
+                          <option value="June">June</option>
+                          <option value="July">July</option>
+                          <option value="August">August</option>
+                          <option value="September">September</option>
+                          <option value="October">October</option>
+                          <option value="November">November</option>
+                          <option value="December">December</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-[#F8FAFC] font-medium mb-2">Year</label>
+                        <select
+                          value={certificationForm.issueYear}
+                          onChange={(e) => setCertificationForm({...certificationForm, issueYear: e.target.value})}
+                          className="w-full px-4 py-3 bg-[#1E293B] border border-[#374151] rounded-lg text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#14B8A6]"
+                        >
+                          <option value="">Year</option>
+                          {Array.from({length: 50}, (_, i) => {
+                            const year = new Date().getFullYear() - i
+                            return <option key={year} value={year}>{year}</option>
+                          })}
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Expiration Date */}
+                  <div>
+                    <label className="block text-[#F8FAFC] font-semibold mb-4">Expiration date</label>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-[#F8FAFC] font-medium mb-2">Month</label>
+                        <select
+                          value={certificationForm.expirationMonth}
+                          onChange={(e) => setCertificationForm({...certificationForm, expirationMonth: e.target.value})}
+                          className="w-full px-4 py-3 bg-[#1E293B] border border-[#374151] rounded-lg text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#14B8A6]"
+                        >
+                          <option value="">Month</option>
+                          <option value="January">January</option>
+                          <option value="February">February</option>
+                          <option value="March">March</option>
+                          <option value="April">April</option>
+                          <option value="May">May</option>
+                          <option value="June">June</option>
+                          <option value="July">July</option>
+                          <option value="August">August</option>
+                          <option value="September">September</option>
+                          <option value="October">October</option>
+                          <option value="November">November</option>
+                          <option value="December">December</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-[#F8FAFC] font-medium mb-2">Year</label>
+                        <select
+                          value={certificationForm.expirationYear}
+                          onChange={(e) => setCertificationForm({...certificationForm, expirationYear: e.target.value})}
+                          className="w-full px-4 py-3 bg-[#1E293B] border border-[#374151] rounded-lg text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#14B8A6]"
+                        >
+                          <option value="">Year</option>
+                          {Array.from({length: 50}, (_, i) => {
+                            const year = new Date().getFullYear() + 10 - i
+                            return <option key={year} value={year}>{year}</option>
+                          })}
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Credential ID */}
+                  <div>
+                    <label className="block text-[#F8FAFC] font-semibold mb-2">Credential ID</label>
+                    <input
+                      type="text"
+                      value={certificationForm.credentialId}
+                      onChange={(e) => setCertificationForm({...certificationForm, credentialId: e.target.value})}
+                      placeholder="Ex: ACLS-2024-12345"
+                      className="w-full px-4 py-3 bg-[#1E293B] border border-[#374151] rounded-lg text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#14B8A6] placeholder-[#94A3B8]"
+                    />
+                  </div>
+
+                  {/* Credential URL */}
+                  <div>
+                    <label className="block text-[#F8FAFC] font-semibold mb-2">Credential URL</label>
+                    <input
+                      type="url"
+                      value={certificationForm.credentialUrl}
+                      onChange={(e) => setCertificationForm({...certificationForm, credentialUrl: e.target.value})}
+                      placeholder="Ex: https://www.heart.org/certification"
+                      className="w-full px-4 py-3 bg-[#1E293B] border border-[#374151] rounded-lg text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#14B8A6] placeholder-[#94A3B8]"
+                    />
+                  </div>
+
+
+                  {/* Media Section */}
+                  <div>
+                    <h3 className="text-[#F8FAFC] font-semibold mb-2">Media</h3>
+                    <p className="text-[#94A3B8] text-sm mb-4">
+                      Add media like certification documents, license images, or verification links. 
+                      <button className="text-[#14B8A6] hover:text-[#0F766E] transition-colors ml-1">
+                        Learn more about supported file types
+                      </button>
+                    </p>
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="px-4 py-2 bg-gradient-to-r from-[#2563EB] to-[#14B8A6] text-white rounded-full hover:from-[#1D4ED8] hover:to-[#0F766E] transition-all duration-300 flex items-center gap-2 text-sm"
+                    >
+                      <UserPlus size={16} />
+                      Add media
+                    </motion.button>
+                  </div>
+                </div>
+
+                {/* Modal Actions */}
+                <div className="flex justify-end mt-8">
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={handleAddCertification}
+                    disabled={!certificationForm.name || !certificationForm.issuingOrganization || !certificationForm.issueYear}
                     className="px-6 py-3 bg-gradient-to-r from-[#2563EB] to-[#14B8A6] text-white rounded-full hover:from-[#1D4ED8] hover:to-[#0F766E] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Save
