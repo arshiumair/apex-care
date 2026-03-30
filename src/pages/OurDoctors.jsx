@@ -136,7 +136,7 @@ const OurDoctors = () => {
       specialty: "Cardiologist",
       experience: "12 years",
       description: "Specialized in advanced cardiac treatment and preventive care",
-      image: "https://media.licdn.com/dms/image/v2/D4E03AQEVGcireqKjzw/profile-displayphoto-scale_400_400/B4EZmgtlqVIwAo-/0/1759337932273?e=1762387200&v=beta&t=PpfN6qxeENns1zxIsh499qFepXJomk0SmGvQZ-1cSGU",
+      image: "https://media.licdn.com/dms/image/v2/D4E03AQEVGcireqKjzw/profile-displayphoto-scale_400_400/B4EZmgtlqVIwAo-/0/1759337932273?e=1776297600&v=beta&t=2gKGMP9s1DKAn6SA06E_tupiSpVLPyOGkvWeA9JVwmM",
       availability: { days: ["Mon", "Tue", "Wed", "Thu", "Fri"], start: "09:00", end: "17:00" }
     },
     {
